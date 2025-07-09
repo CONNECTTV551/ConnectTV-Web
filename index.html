@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">ConnectTV - Tu Plataforma de Streaming por Suscripción</title>
+    <meta name="description" content="Suscríbete a ConnectTV para acceso ilimitado a películas, series y documentales en HD y 4K. Elige el plan perfecto para ti.">
+    <meta name="keywords" content="streaming, suscripción, planes, películas, series, 4K, HD, online, entretenimiento, premium, vender servicio, whatsapp, redes sociales, ConnectTV, cuentas completas, comprobante de pago">
+    <meta name="author" content="ConnectTV Team">
+
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico"> 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        :root {
+            --primary-color: #e50914; /* Rojo vibrante */
+            --background-dark: #141414; /* Fondo oscuro principal */
+            --text-light: #f5f5f5; /* Color de texto claro */
+            --card-background: #222; /* Fondo para tarjetas de video/plan */
+            --button-hover: #c40812; /* Rojo más oscuro para hover de botones */
+            --border-color: #333; /* Color de bordes y líneas divisorias */
+            --modal-background: rgba(0, 0, 0, 0.85); /* Fondo oscuro semitransparente para el modal */
+            --modal-content-bg: #1f1f1f; /* Fondo del contenido del modal */
+            --admin-panel-bg: #2a2a2a; /* Fondo del panel de administración */
+            --input-bg: #3a3a3a;
+            --input-border: #555;
+            --success-color: #28a745;
+            --whatsapp-green: #25D366;
+            --whatsapp-green-dark: #1DA851;
+        }
+
+        /* Reset básico y estilos generales */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; /* Evita el scroll horizontal */
+        }
+
+        /* Clase para deshabilitar el scroll del body cuando el modal está abierto */
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: #000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        header .logo {
+            display: flex;
+            align-items: center;
+        }
+        header .logo img {
+            height: 40px;
+            vertical-align: middle;
+            /* Asegúrate de que el logo tenga un fondo transparente si es PNG/SVG para que se vea bien */
+        }
+        header .logo h1 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.8em;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+            line-height: 1;
+        }
+
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 25px;
+        }
+
+        header nav ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.05em;
+            transition: color 0.3s ease;
+        }
+
+        header nav ul li a:hover, header nav ul li a.active {
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-box input {
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            padding: 8px 12px 8px 35px;
+            color: var(--text-light);
+            font-size: 1em;
+            outline: none;
+            width: 180px;
+            transition: width 0.3s ease;
+        }
+        .search-box input:focus {
+            width: 250px;
+            border-color: var(--primary-color);
+        }
+        .search-box i {
+            position: absolute;
+            left: 10px;
+            color: #aaa;
+        }
+
+        .login-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .login-button:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* --- Main Content Layout --- */
+        .page-container {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        /* --- Sidebar (Navigation) --- */
+        aside {
+            background-color: #000;
+            padding: 20px 15px;
+            width: 220px;
+            flex-shrink: 0;
+            border-right: 1px solid var(--border-color);
+        }
+
+        aside nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        aside nav ul li {
+            margin-bottom: 15px;
+        }
+
+        aside nav ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 1.1em;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        aside nav ul li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        aside nav ul li a:hover, aside nav ul li a.active {
+            background-color: var(--border-color);
+            color: var(--primary-color);
+        }
+
+        /* --- Main Content Area --- */
+        main {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        /* Contenedor para las diferentes secciones de contenido */
+        .content-sections-wrapper {
+            position: relative; /* Para posicionar las secciones */
+        }
+
+        .content-section-page {
+            display: none; /* Oculto por defecto, se muestra con JS */
+            width: 100%;
+            padding: 0; /* Ya el main tiene padding */
+        }
+
+        .content-section-page.active-page {
+            display: block;
+        }
+
+
+        /* Hero Section (Ajustado para vender servicio) */
+        .hero-section {
+            background-image: url('https://via.placeholder.com/1600x500/0d0d0d/FFFFFF?text=ACCESO+ILIMITADO+AL+MEJOR+CONTENIDO'); /* Fondo */
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 40px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+            border-radius: 12px;
+            margin-bottom: 50px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+        }
+        .hero-section > * {
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-section h2 {
+            font-size: 3.8em;
+            margin-bottom: 15px;
+            color: white;
+            line-height: 1.1;
+        }
+
+        .hero-section p {
+            font-size: 1.4em;
+            max-width: 800px;
+            margin-bottom: 35px;
+            color: #ddd;
+        }
+
+        .hero-buttons .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 0 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .hero-buttons .btn:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-3px);
+        }
+
+        /* Sección de Planes de Suscripción (central y destacada) y Contenido Adicional */
+        .content-block {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #0a0a0a;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+            margin-bottom: 50px;
+        }
+        .content-block h3 {
+            font-size: 2.8em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            display: inline-block;
+        }
+        .content-block > p {
+            font-size: 1.2em;
+            color: #ccc;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .planes-grid, .cuentas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .plan-card, .cuenta-card {
+            background-color: var(--card-background);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+            padding: 30px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 480px; /* Ajuste para que las tarjetas de plan mantengan altura */
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .plan-card:hover, .cuenta-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.9);
+            border-color: var(--primary-color);
+        }
+
+        .plan-card.popular {
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.6);
+            position: relative;
+            transform: translateY(-8px);
+        }
+        .plan-card.popular::before {
+            content: "¡Más Popular!";
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 0 0 10px 10px;
+            font-size: 1em;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .plan-card img, .cuenta-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain; /* Usar 'contain' para iconos de servicio */
+            background-color: #000; /* Fondo si la imagen tiene transparencias o para centrar */
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+            padding: 10px; /* Pequeño padding para iconos */
+        }
+
+        .cuenta-card h4 {
+            font-size: 2.2em;
+            color: white; /* Nombre del servicio en blanco */
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .plan-card h4 {
+            font-size: 2.2em;
+            color: var(--primary-color); /* Nombre del plan en rojo */
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .plan-card .price, .cuenta-card .price {
+            font-size: 3em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .plan-card .price span, .cuenta-card .price span {
+            font-size: 0.5em;
+            font-weight: normal;
+            color: #aaa;
+        }
+
+        .plan-card ul, .cuenta-card ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .plan-card ul li, .cuenta-card ul li {
+            margin-bottom: 12px;
+            font-size: 1.05em;
+            color: #ccc;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .plan-card ul li i, .cuenta-card ul li i {
+            color: var(--primary-color);
+            margin-right: 12px;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .plan-card .select-plan-btn, .cuenta-card .buy-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 18px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: block; /* Asegura que el botón ocupe todo el ancho */
+        }
+
+        .plan-card .select-plan-btn:hover, .cuenta-card .buy-button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-3px);
+        }
+
+        /* Sección de Contenido Adicional (Ej. Cómo Funciona, Preguntas Frecuentes) */
+        .content-section {
+            padding: 40px 0;
+            margin-bottom: 50px;
+            background-color: #0a0a0a;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .content-section h3 {
+            text-align: center;
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 90%;
+        }
+
+        .content-section .accordion {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .accordion-item {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--text-light);
+            background-color: #2a2a2a;
+            transition: background-color 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background-color: #3a3a3a;
+        }
+
+        .accordion-header i {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-header i {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            color: #ccc;
+            font-size: 0.95em;
+        }
+
+        .accordion-content p {
+            padding-bottom: 18px;
+            margin-top: 0;
+        }
+
+        /* Video Grid - Estilos para la sección "Explora Nuestro Catálogo" */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            color: var(--text-light);
+            display: block;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+        }
+
+        .video-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-card-info {
+            padding: 15px;
+        }
+
+        .video-card-info h4 {
+            font-size: 1.1em;
+            margin-top: 0;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .video-card-info p {
+            font-size: 0.9em;
+            color: #aaa;
+            margin: 0;
+        }
+
+        /* Estilos específicos para la sección de Soporte */
+        .support-options {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .support-option-card {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .support-option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+        }
+
+        .support-option-card h4 {
+            color: white;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .support-option-card p {
+            color: #ccc;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+
+        .support-option-card .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .support-option-card .btn:hover {
+            background-color: var(--button-hover);
+        }
+        
+        .support-option-card .btn.whatsapp-btn {
+            background-color: var(--whatsapp-green);
+        }
+
+        .support-option-card .btn.whatsapp-btn:hover {
+            background-color: var(--whatsapp-green-dark);
+        }
+
+        /* Estilos para la sección de Carga de Comprobantes */
+        .upload-proof-section {
+            padding: 40px 20px;
+            background-color: #0a0a0a;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left; /* Restablecer el texto a la izquierda para el formulario */
+        }
+
+        .upload-proof-section h3 {
+            text-align: center;
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 90%;
+        }
+
+        .upload-proof-section p {
+            text-align: center;
+            color: #ccc;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .upload-form label {
+            display: block;
+            margin-bottom: 10px;
+            color: #ccc;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .upload-form input[type="text"],
+        .upload-form input[type="email"],
+        .upload-form input[type="file"],
+        .upload-form select,
+        .upload-form textarea {
+            width: calc(100% - 24px); /* Ajustar por padding */
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            color: var(--text-light);
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .upload-form input[type="file"] {
+            padding: 8px; /* Menos padding para el input file */
+            cursor: pointer;
+        }
+
+        .upload-form input[type="file"]::-webkit-file-upload-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .upload-form input[type="file"]::-webkit-file-upload-button:hover {
+            background-color: var(--button-hover);
+        }
+
+        .upload-form input[type="text"]:focus,
+        .upload-form input[type="email"]:focus,
+        .upload-form select:focus,
+        .upload-form textarea:focus {
+            border-color: var(--primary-color);
+        }
+
+        .upload-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .upload-form button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-top: 10px;
+        }
+
+        .upload-form button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-3px);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #000;
+            color: #aaa;
+            padding: 40px 30px;
+            text-align: center;
+            font-size: 0.9em;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        footer .footer-links, footer .footer-social, footer .footer-info {
+            margin-bottom: 25px;
+        }
+
+        footer .footer-links ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        footer .footer-links ul li a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer .footer-links ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-social a {
+            color: #aaa;
+            font-size: 1.5em;
+            margin: 0 12px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Nuevo botón de WhatsApp flotante */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 100px; /* Ajustado para que no choque con el back to top */
+            right: 30px;
+            z-index: 999;
+            background-color: var(--whatsapp-green); /* Color de WhatsApp */
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: transform 0.2s ease, background-color 0.3s ease;
+            text-decoration: none;
+        }
+        .whatsapp-button:hover {
+            background-color: var(--whatsapp-green-dark);
+            transform: scale(1.05);
+        }
+
+        .footer-copyright {
+            margin-top: 20px;
+            font-size: 0.85em;
+            color: #777;
+        }
+
+        /* Botón "Volver Arriba" */
+        #backToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            transition: background-color 0.3s ease;
+        }
+
+        #backToTopBtn:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* --- Modal de Inicio de Sesión --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: var(--modal-background);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--modal-content-bg);
+            margin: auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .close-button {
+            color: #aaa;
+            font-size: 2.2em;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 0.95em;
+        }
+
+        .modal-content input[type="email"],
+        .modal-content input[type="password"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            color: var(--text-light);
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .modal-content input[type="email"]:focus,
+        .modal-content input[type="password"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .modal-content button[type="submit"] {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content button[type="submit"]:hover {
+            background-color: var(--button-hover);
+        }
+
+        .modal-footer-links {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9em;
+        }
+
+        .modal-footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .modal-footer-links a:hover {
+            color: white;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Panel de Administración (simple, solo para demo de frontend) */
+        #adminPanel {
+            position: fixed;
+            top: 60px; /* Debajo del header */
+            left: 20px;
+            background-color: var(--admin-panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 800; /* Debajo de modales, pero sobre contenido */
+            display: none; /* Oculto por defecto */
+            max-width: 350px;
+            max-height: calc(100vh - 80px); /* Limitar altura y permitir scroll */
+            overflow-y: auto;
+        }
+
+        #adminPanel h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        #adminPanel label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 0.95em;
+        }
+
+        #adminPanel input[type="text"],
+        #adminPanel input[type="number"],
+        #adminPanel input[type="url"],
+        #adminPanel textarea {
+            width: calc(100% - 24px); /* Ajustar padding */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            color: var(--text-light);
+            font-size: 0.95em;
+            outline: none;
+        }
+        #adminPanel input[type="text"]:focus,
+        #adminPanel input[type="number"]:focus,
+        #adminPanel input[type="url"]:focus,
+        #adminPanel textarea:focus {
+            border-color: var(--primary-color);
+        }
+
+        #adminPanel button {
+            background-color: var(--success-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        #adminPanel button:hover {
+            background-color: #218838;
+        }
+        #adminPanel .close-admin-panel {
+            background-color: #6c757d;
+            margin-top: 10px;
+        }
+        #adminPanel .close-admin-panel:hover {
+            background-color: #5a6268;
+        }
+
+        /* Toggle para el panel de administración */
+        .admin-toggle-button {
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            z-index: 801; /* Sobre el panel cuando está cerrado */
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 0 0 8px 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            transition: background-color 0.3s ease;
+        }
+        .admin-toggle-button:hover {
+            background-color: var(--button-hover);
+        }
+        .admin-toggle-button.active {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            box-shadow: none;
+        }
+        /* Mostrar/ocultar panel para la versión móvil */
+        @media (max-width: 1024px) {
+            aside {
+                width: 180px;
+            }
+            .hero-section h2 {
+                font-size: 3em;
+            }
+            .hero-section p {
+                font-size: 1.2em;
+            }
+            .plan-card, .cuenta-card {
+                min-height: auto; /* Permite que la altura se ajuste */
+                height: auto;
+            }
+            #planes-suscripcion h3, #cuentas-completas h3, #soporte-heading, .upload-proof-section h3 {
+                font-size: 2.5em;
+            }
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 15px 20px;
+            }
+            header .logo {
+                margin-bottom: 10px;
+            }
+            header nav {
+                width: 100%;
+                order: 3;
+                margin-top: 15px;
+            }
+            header nav ul {
+                justify-content: center;
+                gap: 15px;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+                gap: 10px;
+            }
+            .search-box input {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .page-container {
+                flex-direction: column;
+            }
+            aside {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                order: 2;
+            }
+            aside nav ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            aside nav ul li {
+                margin-bottom: 0;
+            }
+            aside nav ul li a {
+                padding: 8px 12px;
+                font-size: 0.95em;
+            }
+            main {
+                padding: 20px;
+                order: 1;
+            }
+            .hero-section {
+                height: 400px;
+                padding: 0 20px;
+            }
+            .hero-section h2 {
+                font-size: 2.5em;
+            }
+            .hero-section p {
+                font-size: 1.1em;
+            }
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .hero-buttons .btn {
+                margin: 0;
+                width: 80%;
+                max-width: 300px;
+            }
+            .content-block {
+                padding: 30px 15px;
+            }
+            .content-block h3 {
+                font-size: 2.2em;
+            }
+            .planes-grid, .cuentas-grid {
+                grid-template-columns: 1fr;
+            }
+            .plan-card, .cuenta-card {
+                min-height: auto;
+                padding: 25px;
+            }
+            .plan-card img, .cuenta-card img {
+                height: 150px;
+            }
+            .plan-card h4, .cuenta-card h4 {
+                font-size: 2em;
+            }
+            .plan-card .price, .cuenta-card .price {
+                font-size: 2.5em;
+            }
+            .plan-card .select-plan-btn, .cuenta-card .buy-button {
+                font-size: 1.05em;
+                padding: 15px 20px;
+            }
+            .content-section h3, .upload-proof-section h3 {
+                font-size: 2em;
+                margin-bottom: 25px;
+            }
+            .accordion-header {
+                font-size: 1em;
+            }
+            footer .footer-links ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .footer-social a {
+                font-size: 1.2em;
+            }
+
+            /* Modal en móvil */
+            .modal-content {
+                padding: 25px;
+            }
+            .modal-content h2 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+            #adminPanel {
+                width: calc(100% - 40px);
+                left: 20px;
+                right: 20px;
+                top: 10px; /* Más arriba para no interferir tanto con el header principal */
+            }
+            .admin-toggle-button {
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 0 0 8px 8px;
+            }
+            .support-options {
+                padding: 0 10px; /* Ajuste para móviles */
+            }
+            .support-option-card .btn {
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+            .upload-proof-section {
+                padding: 30px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 10px 15px;
+            }
+            header .logo img {
+                height: 30px;
+            }
+            header .logo h1 {
+                font-size: 1.5em;
+            }
+            header nav ul {
+                flex-direction: column;
+                gap: 8px;
+            }
+            aside nav ul {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .hero-section {
+                height: 350px;
+            }
+            .hero-section h2 {
+                font-size: 2em;
+            }
+            .hero-section p {
+                font-size: 1em;
+            }
+            .hero-buttons .btn {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            .content-block h3 {
+                font-size: 1.8em;
+            }
+            .plan-card h4, .cuenta-card h4 {
+                font-size: 1.8em;
+            }
+            .plan-card .price, .cuenta-card .price {
+                font-size: 2.2em;
+            }
+            .plan-card .select-plan-btn, .cuenta-card .buy-button {
+                font-size: 1.05em;
+                padding: 15px 20px;
+            }
+            .content-section h3, .upload-proof-section h3 {
+                font-size: 1.8em;
+            }
+            .accordion-header {
+                font-size: 0.9em;
+            }
+            .whatsapp-button {
+                bottom: 80px; /* Ajuste para móvil */
+                right: 20px;
+                font-size: 1.8em;
+                padding: 12px;
+            }
+            #backToTopBtn {
+                bottom: 20px;
+                right: 20px;
+                font-size: 1em;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img id="companyLogo" src="https://via.placeholder.com/150x40/e50914/FFFFFF?text=ConnectTV" alt="Logo de ConnectTV">
+            <h1 id="companyNameHeader">ConnectTV</h1>
+        </div>
+
+        <nav aria-label="Navegación principal de la plataforma de streaming">
+            <ul>
+                <li><a href="#home-section" class="nav-link active" data-page="home-section">Inicio</a></li>
+                <li><a href="#catalogo-section" class="nav-link" data-page="catalogo-section">Catálogo</a></li>
+                <li><a href="#planes-suscripcion-section" class="nav-link" data-page="planes-suscripcion-section">Planes</a></li>
+                <li><a href="#cuentas-completas-section" class="nav-link" data-page="cuentas-completas-section">Tienda</a></li>
+                <li><a href="#upload-proof-section" class="nav-link" data-page="upload-proof-section">Pagar</a></li>
+                <li><a href="#soporte-section" class="nav-link" data-page="soporte-section">Soporte</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar contenido..." aria-label="Campo de búsqueda de contenido">
+            </div>
+            <button class="login-button" id="openLoginModal">Iniciar Sesión</button>
+        </div>
+    </header>
+
+    <button class="admin-toggle-button" id="toggleAdminPanel">
+        <i class="fas fa-tools"></i> Admin
+    </button>
+
+    <div id="adminPanel">
+        <h4><i class="fas fa-cogs"></i> Configuración del Sitio</h4>
+        <p style="font-size: 0.85em; color: #aaa; margin-bottom: 15px;">(Esto es solo para demostración. En un sistema real, esto sería gestionado por un backend seguro).</p>
+
+        <label for="inputCompanyName">Nombre de la Empresa:</label>
+        <input type="text" id="inputCompanyName" value="ConnectTV">
+        <label for="inputCompanyLogoUrl">URL del Logo (150x40px recomendado):</label>
+        <input type="url" id="inputCompanyLogoUrl" value="https://via.placeholder.com/150x40/e50914/FFFFFF?text=ConnectTV">
+        <label for="inputFaviconUrl">URL del Favicon:</label>
+        <input type="url" id="inputFaviconUrl" value="img/favicon.ico">
+
+        <hr style="border-color: #444; margin: 20px 0;">
+        <h5><i class="fas fa-dollar-sign"></i> Editar Planes de Suscripción</h5>
+
+        <label for="basicoPrice">Precio Plan Básico ($):</label>
+        <input type="number" id="basicoPrice" value="7.99" step="0.01">
+        <label for="basicoImgUrl">Imagen Plan Básico (URL):</label>
+        <input type="url" id="basicoImgUrl" value="https://via.placeholder.com/350x180/e50914/FFFFFF?text=Plan+Básico">
+
+        <hr style="border-color: #444; margin: 20px 0;">
+
+        <label for="estandarPrice">Precio Plan Estándar ($):</label>
+        <input type="number" id="estandarPrice" value="12.99" step="0.01">
+        <label for="estandarImgUrl">Imagen Plan Estándar (URL):</label>
+        <input type="url" id="estandarImgUrl" value="https://via.placeholder.com/350x180/e50914/FFFFFF?text=Plan+Estándar">
+
+        <hr style="border-color: #444; margin: 20px 0;">
+
+        <label for="premiumPrice">Precio Plan Premium ($):</label>
+        <input type="number" id="premiumPrice" value="17.99" step="0.01">
+        <label for="premiumImgUrl">Imagen Plan Premium (URL):</label>
+        <input type="url" id="premiumImgUrl" value="https://via.placeholder.com/350x180/e50914/FFFFFF?text=Plan+Premium">
+
+        <hr style="border-color: #444; margin: 20px 0;">
+        <h5><i class="fas fa-store"></i> Editar Cuentas Completas (Perfiles)</h5>
+        <p style="font-size: 0.8em; color: #bbb;">Edita los datos de cada perfil de cuenta directamente. Los cambios se guardan localmente.</p>
+
+        <label for="cuenta1Name">Nombre Servicio 1:</label>
+        <input type="text" id="cuenta1Name" value="Netflix">
+        <label for="cuenta1Price">Precio Servicio 1 ($):</label>
+        <input type="number" id="cuenta1Price" value="5.00" step="0.01">
+        <label for="cuenta1ImgUrl">Imagen Servicio 1 (URL):</label>
+        <input type="url" id="cuenta1ImgUrl" value="https://via.placeholder.com/180x180/E50914/FFFFFF?text=Netflix">
+        <label for="cuenta1Features">Características Servicio 1 (separar por ;):</label>
+        <textarea id="cuenta1Features">Perfil personal;Calidad 4K UHD;Descargas ilimitadas;Acceso 30 días</textarea>
+
+        <hr style="border-color: #444; margin: 20px 0;">
+
+        <label for="cuenta2Name">Nombre Servicio 2:</label>
+        <input type="text" id="cuenta2Name" value="Disney+">
+        <label for="cuenta2Price">Precio Servicio 2 ($):</label>
+        <input type="number" id="cuenta2Price" value="4.00" step="0.01">
+        <label for="cuenta2ImgUrl">Imagen Servicio 2 (URL):</label>
+        <input type="url" id="cuenta2ImgUrl" value="https://via.placeholder.com/180x180/0A3D62/FFFFFF?text=Disney+">
+        <label for="cuenta2Features">Características Servicio 2 (separar por ;):</label>
+        <textarea id="cuenta2Features">Perfil personal;Contenido familiar;Calidad Full HD;Acceso 30 días</textarea>
+
+        <hr style="border-color: #444; margin: 20px 0;">
+
+        <label for="cuenta3Name">Nombre Servicio 3:</label>
+        <input type="text" id="cuenta3Name" value="Max">
+        <label for="cuenta3Price">Precio Servicio 3 ($):</label>
+        <input type="number" id="cuenta3Price" value="4.50" step="0.01">
+        <label for="cuenta3ImgUrl">Imagen Servicio 3 (URL):</label>
+        <input type="url" id="cuenta3ImgUrl" value="https://via.placeholder.com/180x180/7F00FF/FFFFFF?text=Max">
+        <label for="cuenta3Features">Características Servicio 3 (separar por ;):</label>
+        <textarea id="cuenta3Features">Perfil personal;Series y películas HBO;Calidad 4K UHD;Acceso 30 días</textarea>
+        
+        <hr style="border-color: #444; margin: 20px 0;">
+        <h5><i class="fas fa-share-alt"></i> Redes Sociales y Contacto</h5>
+
+        <label for="whatsappNumber">Número de WhatsApp (con código de país, ej. 584121234567):</label>
+        <input type="text" id="whatsappNumber" value="584242357804">
+        <label for="footerWhatsappNumber">Número de WhatsApp en Footer (visible):</label>
+        <input type="text" id="footerWhatsappNumber" value="+58 (424) 235-7804"> <label for="facebookUrl">URL Facebook:</label>
+        <input type="url" id="facebookUrl" value="https://facebook.com/ConnectTV">
+        <label for="instagramUrl">URL Instagram:</label>
+        <input type="url" id="instagramUrl" value="https://instagram.com/ConnectTV">
+        <label for="twitterUrl">URL X (Twitter):</label>
+        <input type="url" id="twitterUrl" value="https://x.com/ConnectTV">
+        <label for="youtubeUrl">URL YouTube:</label>
+        <input type="url" id="youtubeUrl" value="https://www.youtube.com/user/streamwave_oficial">
+
+        <button id="applyChangesBtn">Aplicar Cambios</button>
+        <button id="closeAdminPanel" class="close-admin-panel">Cerrar Panel</button>
+    </div>
+
+    <div class="page-container">
+        <aside aria-label="Menú de navegación secundario">
+            <nav>
+                <ul>
+                    <li><a href="#home-section" class="nav-link active" data-page="home-section"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="#catalogo-section" class="nav-link" data-page="catalogo-section"><i class="fas fa-film"></i> Catálogo</a></li>
+                    <li><a href="#planes-suscripcion-section" class="nav-link" data-page="planes-suscripcion-section"><i class="fas fa-dollar-sign"></i> Nuestros Planes</a></li>
+                    <li><a href="#cuentas-completas-section" class="nav-link" data-page="cuentas-completas-section"><i class="fas fa-shopping-cart"></i> Cuentas Completas</a></li>
+                    <li><a href="#upload-proof-section" class="nav-link" data-page="upload-proof-section"><i class="fas fa-file-upload"></i> Subir Comprobante</a></li>
+                    <li><a href="#soporte-section" class="nav-link" data-page="soporte-section"><i class="fas fa-question-circle"></i> Ayuda y FAQ</a></li>
+                    <li><a href="#contacto-section" class="nav-link" data-page="contacto-section"><i class="fas fa-envelope"></i> Contacto</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main>
+            <div class="content-sections-wrapper">
+                <section id="home-section" class="content-section-page active-page" aria-labelledby="hero-title">
+                    <div class="hero-section">
+                        <h2 id="hero-title">Acceso Ilimitado al Mejor Entretenimiento.</h2>
+                        <p>Miles de películas y series en HD y 4K. Contenido exclusivo, sin anuncios y en todos tus dispositivos.</p>
+                        <div class="hero-buttons">
+                            <a href="#planes-suscripcion-section" class="btn nav-link" data-page="planes-suscripcion-section"><i class="fas fa-dollar-sign"></i> Ver Planes</a>
+                            <a href="#" class="btn"><i class="fas fa-play"></i> Probar Gratis (7 Días)</a>
+                        </div>
+                    </div>
+
+                    <section class="content-block content-section" aria-labelledby="faq-title">
+                        <h3 id="faq-title">Preguntas Frecuentes</h3>
+                        <div class="accordion">
+                            <div class="accordion-item">
+                                <div class="accordion-header">
+                                    ¿Qué es <span class="company-name-text">ConnectTV</span>?
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="accordion-content">
+                                    <p><span class="company-name-text">ConnectTV</span> es un servicio de streaming por suscripción que te ofrece un catálogo ilimitado de películas, series, documentales y contenido exclusivo original, todo en alta calidad y sin interrupciones publicitarias.</p>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <div class="accordion-header">
+                                    ¿Cómo me suscribo a <span class="company-name-text">ConnectTV</span>?
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="accordion-content">
+                                    <p>¡Es muy fácil! Simplemente elige el plan que mejor se adapte a ti en la sección "Nuestros Planes" de esta página, haz clic en "Seleccionar Plan" y sigue los pasos para completar tu registro y pago. Podrás empezar a disfrutar en minutos.</p>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <div class="accordion-header">
+                                    ¿Puedo cancelar mi suscripción en cualquier momento?
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="accordion-content">
+                                    <p>Sí, puedes cancelar tu suscripción a <span class="company-name-text">ConnectTV</span> en cualquier momento, sin penalizaciones ni contratos a largo plazo. Tu acceso continuará hasta el final de tu ciclo de facturación actual.</p>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <div class="accordion-header">
+                                    ¿En qué dispositivos puedo ver <span class="company-name-text">ConnectTV</span>?
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="accordion-content">
+                                    <p>Puedes disfrutar de <span class="company-name-text">ConnectTV</span> en una amplia variedad de dispositivos, incluyendo smartphones, tablets, smart TVs, consolas de videojuegos, reproductores de streaming y ordenadores. ¡Donde quieras, cuando quieras!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="content-block content-row" aria-labelledby="featured-content-title">
+                        <h3 id="featured-content-title">Explora Nuestro Catálogo</h3>
+                        <div class="video-grid">
+                            <a href="#" class="video-card" aria-label="Ver película: La Gran Aventura">
+                                <img src="https://via.placeholder.com/200x120/555555/FFFFFF?text=Aventura" alt="Miniatura de La Gran Aventura">
+                                <div class="video-card-info">
+                                    <h4>La Gran Aventura</h4>
+                                    <p>Película (2024)</p>
+                                </div>
+                            </a>
+                            <a href="#" class="video-card" aria-label="Ver serie: Los Guardianes del Tiempo">
+                                <img src="https://via.placeholder.com/200x120/555555/FFFFFF?text=Guardianes" alt="Miniatura de Los Guardianes del Tiempo">
+                                <div class="video-card-info">
+                                    <h4>Los Guardianes del Tiempo</h4>
+                                    <p>Serie Original SW</p>
+                                </div>
+                            </a>
+                            <a href="#" class="video-card" aria-label="Ver documental: Secretos del Océano">
+                                <img src="https://via.placeholder.com/200x120/555555/FFFFFF?text=Océano" alt="Miniatura de Secretos del Océano">
+                                <div class="video-card-info">
+                                    <h4>Secretos del Océano</h4>
+                                    <p>Documental</p>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+                </section>
+
+                <section id="planes-suscripcion-section" class="content-section-page" aria-labelledby="planes-title">
+                    <div class="content-block">
+                        <h3 id="planes-title">Elige tu Plan <span id="companyNamePlans">ConnectTV</span> Premium</h3>
+                        <p>Tenemos un plan perfecto para cada tipo de espectador. Disfruta de la mejor calidad y flexibilidad.</p>
+
+                        <div class="planes-grid">
+                            <div class="plan-card" data-plan="basico">
+                                <div>
+                                    <img src="https://via.placeholder.com/350x180/e50914/FFFFFF?text=Plan+Básico" alt="Imagen del Plan Básico" class="plan-img">
+                                    <h4>Plan Básico</h4>
+                                    <div class="price">$<span class="plan-price">7.99</span><span>/mes</span></div>
+                                    <ul>
+                                        <li><i class="fas fa-check-circle"></i> **Acceso completo** al catálogo</li>
+                                        <li><i class="fas fa-check-circle"></i> Calidad **HD** (720p)</li>
+                                        <li><i class="fas fa-check-circle"></i> **1** Pantalla simultánea</li>
+                                        <li><i class="fas fa-times-circle" style="color: #666;"></i> Calidad 4K UHD</li>
+                                        <li><i class="fas fa-times-circle" style="color: #666;"></i> Descargas offline</li>
+                                    </ul>
+                                </div>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Básico." target="_blank" class="select-plan-btn">Comenzar con Básico</a>
+                            </div>
+
+                            <div class="plan-card popular" data-plan="estandar">
+                                <div>
+                                    <img src="https://via.placeholder.com/350x180/e50914/FFFFFF?text=Plan+Estándar" alt="Imagen del Plan Estándar" class="plan-img">
+                                    <h4>Plan Estándar</h4>
+                                    <div class="price">$<span class="plan-price">12.99</span><span>/mes</span></div>
+                                    <ul>
+                                        <li><i class="fas fa-check-circle"></i> **Acceso completo** al catálogo</li>
+                                        <li><i class="fas fa-check-circle"></i> Calidad **Full HD** (1080p)</li>
+                                        <li><i class="fas fa-check-circle"></i> **2** Pantallas simultáneas</li>
+                                        <li><i class="fas fa-check-circle"></i> **Descargas offline**</li>
+                                        <li><i class="fas fa-times-circle" style="color: #666;"></i> Calidad 4K UHD</li>
+                                    </ul>
+                                </div>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Estándar." target="_blank" class="select-plan-btn">Comenzar con Estándar</a>
+                            </div>
+
+                            <div class="plan-card" data-plan="premium">
+                                <div>
+                                    <img src="https://via.placeholder.com/350x180/e50914/FFFFFF?text=Plan+Premium" alt="Imagen del Plan Premium" class="plan-img">
+                                    <h4>Plan Premium</h4>
+                                    <div class="price">$<span class="plan-price">17.99</span><span>/mes</span></div>
+                                    <ul>
+                                        <li><i class="fas fa-check-circle"></i> **Acceso completo** al catálogo</li>
+                                        <li><i class="fas fa-check-circle"></i> Calidad **4K UHD** + HDR</li>
+                                        <li><i class="fas fa-check-circle"></i> **4** Pantallas simultáneas</li>
+                                        <li><i class="fas fa-check-circle"></i> **Descargas offline**</li>
+                                        <li><i class="fas fa-check-circle"></i> Audio envolvente</li>
+                                    </ul>
+                                </div>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Premium." target="_blank" class="select-plan-btn">Comenzar con Premium</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="cuentas-completas-section" class="content-section-page" aria-labelledby="cuentas-title">
+                    <div class="content-block">
+                        <h3 id="cuentas-title">Cuentas Completas para Servicios de Streaming</h3>
+                        <p>Obtén acceso directo a tus plataformas favoritas con perfiles personales y sin complicaciones.</p>
+
+                        <div class="cuentas-grid">
+                            <div class="cuenta-card" data-cuenta="netflix">
+                                <div>
+                                    <img src="https://via.placeholder.com/180x180/E50914/FFFFFF?text=Netflix" alt="Logo de Netflix" class="cuenta-img">
+                                    <h4 class="cuenta-name">Netflix</h4>
+                                    <div class="price">$<span class="cuenta-price">5.00</span><span>/mes</span></div>
+                                    <ul class="cuenta-features">
+                                        <li><i class="fas fa-check-circle"></i> Perfil personal exclusivo</li>
+                                        <li><i class="fas fa-check-circle"></i> Calidad 4K UHD</li>
+                                        <li><i class="fas fa-check-circle"></i> Descargas ilimitadas</li>
+                                        <li><i class="fas fa-check-circle"></i> Acceso 30 días</li>
+                                    </ul>
+                                </div>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20una%20cuenta%20de%20Netflix." target="_blank" class="buy-button">Comprar Cuenta</a>
+                            </div>
+
+                            <div class="cuenta-card" data-cuenta="disneyplus">
+                                <div>
+                                    <img src="https://via.placeholder.com/180x180/0A3D62/FFFFFF?text=Disney+" alt="Logo de Disney+" class="cuenta-img">
+                                    <h4 class="cuenta-name">Disney+</h4>
+                                    <div class="price">$<span class="cuenta-price">4.00</span><span>/mes</span></div>
+                                    <ul class="cuenta-features">
+                                        <li><i class="fas fa-check-circle"></i> Perfil personal exclusivo</li>
+                                        <li><i class="fas fa-check-circle"></i> Contenido familiar ilimitado</li>
+                                        <li><i class="fas fa-check-circle"></i> Calidad Full HD</li>
+                                        <li><i class="fas fa-check-circle"></i> Acceso 30 días</li>
+                                    </ul>
+                                </div>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20una%20cuenta%20de%20Disney%2B." target="_blank" class="buy-button">Comprar Cuenta</a>
+                            </div>
+
+                            <div class="cuenta-card" data-cuenta="max">
+                                <div>
+                                    <img src="https://via.placeholder.com/180x180/7F00FF/FFFFFF?text=Max" alt="Logo de Max" class="cuenta-img">
+                                    <h4 class="cuenta-name">Max</h4>
+                                    <div class="price">$<span class="cuenta-price">4.50</span><span>/mes</span></div>
+                                    <ul class="cuenta-features">
+                                        <li><i class="fas fa-check-circle"></i> Perfil personal exclusivo</li>
+                                        <li><i class="fas fa-check-circle"></i> Series y películas HBO</li>
+                                        <li><i class="fas fa-check-circle"></i> Calidad 4K UHD</li>
+                                        <li><i class="fas fa-check-circle"></i> Acceso 30 días</li>
+                                    </ul>
+                                </div>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20una%20cuenta%20de%20Max." target="_blank" class="buy-button">Comprar Cuenta</a>
+                            </div>
+                            </div>
+                    </div>
+                </section>
+
+                <section id="upload-proof-section" class="content-section-page" aria-labelledby="upload-proof-title">
+                    <div class="upload-proof-section">
+                        <h3 id="upload-proof-title">Subir Comprobante de Pago</h3>
+                        <p>Una vez realizado tu pago, por favor, rellena este formulario y envíanos tu comprobante. Nos comunicaremos contigo a la brevedad para confirmar tu servicio.</p>
+
+                        <form id="paymentProofForm" class="upload-form">
+                            <label for="fullName">Nombre Completo:</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="Tu nombre y apellido" required>
+
+                            <label for="emailProof">Correo Electrónico:</label>
+                            <input type="email" id="emailProof" name="emailProof" placeholder="Tu correo electrónico" required>
+
+                            <label for="serviceType">Tipo de Servicio Adquirido:</label>
+                            <select id="serviceType" name="serviceType" required>
+                                <option value="">Selecciona un servicio</option>
+                                <option value="plan-basico">Plan Básico ConnectTV</option>
+                                <option value="plan-estandar">Plan Estándar ConnectTV</option>
+                                <option value="plan-premium">Plan Premium ConnectTV</option>
+                                <option value="cuenta-netflix">Cuenta Netflix</option>
+                                <option value="cuenta-disneyplus">Cuenta Disney+</option>
+                                <option value="cuenta-max">Cuenta Max</option>
+                                <option value="otro">Otro (especificar en detalles)</option>
+                            </select>
+
+                            <label for="paymentMethod">Método de Pago:</label>
+                            <input type="text" id="paymentMethod" name="paymentMethod" placeholder="Ej. Pago Móvil, Transferencia, Binance" required>
+
+                            <label for="transactionId">Número de Referencia/ID de Transacción:</label>
+                            <input type="text" id="transactionId" name="transactionId" placeholder="Ej. Referencia de tu banco o exchange" required>
+                            
+                            <label for="proofFile">Adjuntar Comprobante (Imagen o PDF):</label>
+                            <input type="file" id="proofFile" name="proofFile" accept="image/*,.pdf" required>
+
+                            <label for="additionalNotes">Notas Adicionales (Opcional):</label>
+                            <textarea id="additionalNotes" name="additionalNotes" rows="4" placeholder="Algún detalle adicional sobre tu compra o el comprobante."></textarea>
+
+                            <button type="submit" id="submitProofBtn"><i class="fab fa-whatsapp"></i> Enviar Comprobante por WhatsApp</button>
+                        </form>
+                    </div>
+                </section>
+
+
+                <section id="catalogo-section" class="content-section-page" aria-labelledby="catalogo-heading">
+                    <div class="content-block">
+                        <h3 id="catalogo-heading">Próximamente: Nuestro Catálogo Completo</h3>
+                        <p>Estamos trabajando para traerte una biblioteca aún más grande de películas y series exclusivas. ¡Mantente atento!</p>
+                        <div style="height: 300px; display: flex; align-items: center; justify-content: center; background-color: #1a1a1a; border-radius: 10px; margin-top: 30px;">
+                            <p style="font-size: 1.5em; color: #777;">Contenido en desarrollo...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="soporte-section" class="content-section-page" aria-labelledby="soporte-heading">
+                    <div class="content-block">
+                        <h3 id="soporte-heading">Centro de Soporte</h3>
+                        <p>Encuentra respuestas a tus preguntas más frecuentes o contáctanos directamente para asistencia personalizada.</p>
+                        
+                        <div class="support-options">
+                            <div class="support-option-card">
+                                <h4>Preguntas Frecuentes (FAQ)</h4>
+                                <p>Revisa nuestra sección de preguntas comunes para encontrar soluciones rápidas.</p>
+                                <a href="#home-section" class="btn nav-link" data-page="home-section"><i class="fas fa-question-circle"></i> Ver FAQ</a>
+                            </div>
+                            <div class="support-option-card">
+                                <h4>Contáctanos por WhatsApp</h4>
+                                <p>¿Necesitas ayuda inmediata o asistencia personalizada? ¡Escríbenos directamente!</p>
+                                <a href="#" class="btn whatsapp-btn" id="supportWhatsappBtn"><i class="fab fa-whatsapp"></i> Chatear por WhatsApp</a>
+                            </div>
+                            <div class="support-option-card">
+                                <h4>Enviar Comprobante de Pago</h4>
+                                <p>¿Ya pagaste tu servicio? Envíanos tu comprobante para activarlo.</p>
+                                <a href="#upload-proof-section" class="btn nav-link" data-page="upload-proof-section"><i class="fas fa-file-upload"></i> Subir Comprobante</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="contacto-section" class="content-section-page" aria-labelledby="contacto-heading">
+                    <div class="content-block">
+                        <h3 id="contacto-heading">Contáctanos</h3>
+                        <p>Estamos aquí para ayudarte. Rellena el formulario o usa nuestras redes para comunicarte.</p>
+                        <div style="height: 300px; display: flex; align-items: center; justify-content: center; background-color: #1a1a1a; border-radius: 10px; margin-top: 30px;">
+                            <p style="font-size: 1.5em; color: #777;">Formulario de contacto o detalles de contacto aquí...</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div> </main>
+    </div> <footer role="contentinfo">
+        <div class="footer-links">
+            <ul>
+                <li><a href="#">Centro de Ayuda</a></li>
+                <li><a href="#">Términos de Uso</a></li>
+                <li><a href="#">Privacidad</a></li>
+                <li><a href="#">Información Corporativa</a></li>
+                <li><a href="#">Contáctanos</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-social">
+            <a href="https://facebook.com/ConnectTV" target="_blank" aria-label="Síguenos en Facebook" id="facebookLink"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagram.com/ConnectTV" target="_blank" aria-label="Síguenos en Instagram" id="instagramLink"><i class="fab fa-instagram"></i></a>
+            <a href="https://x.com/ConnectTV" target="_blank" aria-label="Síguenos en X (Twitter)" id="twitterLink"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://www.youtube.com/user/streamwave_oficial" target="_blank" aria-label="Visita nuestro canal de YouTube" id="youtubeLink"><i class="fab fa-youtube"></i></a>
+        </div>
+
+        <div class="footer-info">
+            <p>¿Necesitas ayuda? Llama o escribe al <a href="tel:+584242357804" id="footerPhoneNumberLink"><span id="footerPhoneNumber">+58 (424) 235-7804</span></a></p>
+            <p id="companyAddress">ConnectTV S.A.S., Ocumare del Tuy, Miranda, Venezuela.</p>
+        </div>
+
+        <p class="footer-copyright">© 2025 <span class="company-name-text">ConnectTV</span>. Todos los derechos reservados.</p>
+    </footer>
+
+    <a href="https://wa.me/584242357804" class="whatsapp-button" target="_blank" aria-label="Chatea con nosotros por WhatsApp" id="whatsappButton">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <button id="backToTopBtn" title="Volver arriba">▲</button>
+
+    <div id="loginModal" class="modal" aria-modal="true" role="dialog" aria-labelledby="loginModalTitle">
+        <div class="modal-content">
+            <span class="close-button" id="closeLoginModal" aria-label="Cerrar formulario de inicio de sesión">×</span>
+            <h2 id="loginModalTitle">Iniciar Sesión</h2>
+            <form action="#" method="POST"> <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" name="email" placeholder="Introduce tu correo" required autocomplete="email">
+
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" placeholder="Introduce tu contraseña" required autocomplete="current-password">
+
+                <button type="submit">Entrar</button>
+            </form>
+            <div class="modal-footer-links">
+                <p>¿Olvidaste tu contraseña? <a href="#">Recuperar Contraseña</a></p>
+                <p>¿No tienes cuenta? <a href="#">Regístrate Aquí</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- JavaScript para el botón Volver Arriba ---
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            const mybutton = document.getElementById("backToTopBtn");
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        document.getElementById("backToTopBtn").onclick = function() {topFunction()};
+
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        // --- JavaScript para el Modal de Inicio de Sesión ---
+        const loginModal = document.getElementById('loginModal');
+        const openLoginModalBtn = document.getElementById('openLoginModal');
+        const closeLoginModalBtn = document.getElementById('closeLoginModal');
+
+        openLoginModalBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            document.body.classList.add('modal-open');
+        });
+
+        closeLoginModalBtn.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && loginModal.style.display === 'flex') {
+                loginModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            }
+        });
+
+        // --- JavaScript para el Acordeón de Preguntas Frecuentes ---
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const accordionItem = header.closest('.accordion-item');
+                const accordionContent = accordionItem.querySelector('.accordion-content');
+
+                if (accordionItem.classList.contains('active')) {
+                    accordionItem.classList.remove('active');
+                    accordionContent.style.maxHeight = 0;
+                } else {
+                    document.querySelectorAll('.accordion-item.active').forEach(item => {
+                        item.classList.remove('active');
+                        item.querySelector('.accordion-content').style.maxHeight = 0;
+                    });
+
+                    accordionItem.classList.add('active');
+                    accordionContent.style.maxHeight = accordionContent.scrollHeight + "px";
+                }
+            });
+        });
+
+        // --- JavaScript para la Navegación de "Páginas" (simulado) ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section-page');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetPageId = this.dataset.page;
+
+                // Remover 'active' de todos los enlaces y secciones
+                navLinks.forEach(l => l.classList.remove('active'));
+                contentSections.forEach(s => s.classList.remove('active-page'));
+
+                // Añadir 'active' al enlace clickeado (tanto en header como en aside)
+                document.querySelectorAll(`[data-page="${targetPageId}"]`).forEach(el => el.classList.add('active'));
+
+                // Mostrar la sección correspondiente
+                document.getElementById(targetPageId).classList.add('active-page');
+
+                // Opcional: Desplazarse al inicio de la sección
+                document.getElementById(targetPageId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+
+        // --- JavaScript para el Panel de Administración (¡Solo Frontend Demo!) ---
+        const adminPanel = document.getElementById('adminPanel');
+        const toggleAdminPanelBtn = document.getElementById('toggleAdminPanel');
+        const closeAdminPanelBtn = document.getElementById('closeAdminPanel');
+        const applyChangesBtn = document.getElementById('applyChangesBtn');
+
+        // Referencias a elementos del DOM para nombre de empresa y logo
+        const pageTitle = document.getElementById('pageTitle');
+        const companyLogo = document.getElementById('companyLogo');
+        const companyNameHeader = document.getElementById('companyNameHeader');
+        const companyNamePlans = document.getElementById('companyNamePlans');
+        const companyNameTexts = document.querySelectorAll('.company-name-text'); // Para todos los spans con el nombre de la empresa
+        const faviconLink = document.querySelector('link[rel="icon"]');
+        const footerPhoneNumber = document.getElementById('footerPhoneNumber');
+        const footerPhoneNumberLink = document.getElementById('footerPhoneNumberLink');
+        const companyAddress = document.getElementById('companyAddress');
+
+        // Referencias a los elementos del DOM de los planes que se modificarán
+        const basicoPriceElem = document.querySelector('.plan-card[data-plan="basico"] .plan-price');
+        const basicoImgElem = document.querySelector('.plan-card[data-plan="basico"] .plan-img');
+        const estandarPriceElem = document.querySelector('.plan-card[data-plan="estandar"] .plan-price');
+        const estandarImgElem = document.querySelector('.plan-card[data-plan="estandar"] .plan-img');
+        const premiumPriceElem = document.querySelector('.plan-card[data-plan="premium"] .plan-price');
+        const premiumImgElem = document.querySelector('.plan-card[data-plan="premium"] .plan-img');
+        
+        const basicoBuyBtn = document.querySelector('.plan-card[data-plan="basico"] .select-plan-btn');
+        const estandarBuyBtn = document.querySelector('.plan-card[data-plan="estandar"] .select-plan-btn');
+        const premiumBuyBtn = document.querySelector('.plan-card[data-plan="premium"] .select-plan-btn');
+
+        // Referencias a los elementos del DOM de las CUENTAS COMPLETAS
+        const cuentaCards = {
+            netflix: {
+                name: document.querySelector('.cuenta-card[data-cuenta="netflix"] .cuenta-name'),
+                price: document.querySelector('.cuenta-card[data-cuenta="netflix"] .cuenta-price'),
+                img: document.querySelector('.cuenta-card[data-cuenta="netflix"] .cuenta-img'),
+                features: document.querySelector('.cuenta-card[data-cuenta="netflix"] .cuenta-features'),
+                buyBtn: document.querySelector('.cuenta-card[data-cuenta="netflix"] .buy-button')
+            },
+            disneyplus: {
+                name: document.querySelector('.cuenta-card[data-cuenta="disneyplus"] .cuenta-name'),
+                price: document.querySelector('.cuenta-card[data-cuenta="disneyplus"] .cuenta-price'),
+                img: document.querySelector('.cuenta-card[data-cuenta="disneyplus"] .cuenta-img'),
+                features: document.querySelector('.cuenta-card[data-cuenta="disneyplus"] .cuenta-features'),
+                buyBtn: document.querySelector('.cuenta-card[data-cuenta="disneyplus"] .buy-button')
+            },
+            max: {
+                name: document.querySelector('.cuenta-card[data-cuenta="max"] .cuenta-name'),
+                price: document.querySelector('.cuenta-card[data-cuenta="max"] .cuenta-price'),
+                img: document.querySelector('.cuenta-card[data-cuenta="max"] .cuenta-img'),
+                features: document.querySelector('.cuenta-card[data-cuenta="max"] .cuenta-features'),
+                buyBtn: document.querySelector('.cuenta-card[data-cuenta="max"] .buy-button')
+            }
+        };
+
+        // Referencias a los elementos del DOM de redes sociales y WhatsApp
+        const whatsappButton = document.getElementById('whatsappButton');
+        const facebookLink = document.getElementById('facebookLink');
+        const instagramLink = document.getElementById('instagramLink');
+        const twitterLink = document.getElementById('twitterLink');
+        const youtubeLink = document.getElementById('youtubeLink');
+
+        // Botón de WhatsApp en Soporte
+        const supportWhatsappBtn = document.getElementById('supportWhatsappBtn');
+
+        // Formulario de Comprobante de Pago
+        const paymentProofForm = document.getElementById('paymentProofForm');
+        const submitProofBtn = document.getElementById('submitProofBtn');
+
+
+        // Función para cargar los valores guardados (simulados) al iniciar
+        function loadSavedValues() {
+            // Cargar datos de la empresa
+            pageTitle.textContent = localStorage.getItem('companyName') ? `${localStorage.getItem('companyName')} - Tu Plataforma de Streaming por Suscripción` : "ConnectTV - Tu Plataforma de Streaming por Suscripción";
+            companyLogo.src = localStorage.getItem('companyLogoUrl') || "https://via.placeholder.com/150x40/e50914/FFFFFF?text=ConnectTV";
+            companyNameHeader.textContent = localStorage.getItem('companyName') || "ConnectTV";
+            companyNamePlans.textContent = localStorage.getItem('companyName') || "ConnectTV";
+            companyNameTexts.forEach(span => {
+                span.textContent = localStorage.getItem('companyName') || "ConnectTV";
+            });
+            faviconLink.href = localStorage.getItem('faviconUrl') || "img/favicon.ico";
+
+            // Cargar datos de precios e imágenes de planes
+            basicoPriceElem.textContent = localStorage.getItem('basicoPrice') || "7.99";
+            basicoImgElem.src = localStorage.getItem('basicoImgUrl') || "https://via.placeholder.com/350x180/e50914/FFFFFF?text=Plan+Básico";
+            estandarPriceElem.textContent = localStorage.getItem('estandarPrice') || "12.99";
+            estandarImgElem.src = localStorage.getItem('estandarImgUrl') || "https://via.placeholder.com/350x180/e50914/FFFFFF?text=Plan+Estándar";
+            premiumPriceElem.textContent = localStorage.getItem('premiumPrice') || "17.99";
+            premiumImgElem.src = localStorage.getItem('premiumImgUrl') || "https://via.placeholder.com/350x180/e50914/FFFFFF?text=Plan+Premium";
+
+            // Cargar datos de CUENTAS COMPLETAS
+            ['netflix', 'disneyplus', 'max'].forEach(key => {
+                const name = localStorage.getItem(`cuenta${key}Name`) || cuentaCards[key].name.textContent;
+                const price = localStorage.getItem(`cuenta${key}Price`) || cuentaCards[key].price.textContent;
+                const img = localStorage.getItem(`cuenta${key}ImgUrl`) || cuentaCards[key].img.src;
+                const featuresText = localStorage.getItem(`cuenta${key}Features`) || ''; // Puede que no haya datos guardados
+
+                cuentaCards[key].name.textContent = name;
+                cuentaCards[key].price.textContent = price;
+                cuentaCards[key].img.src = img;
+                updateFeaturesList(cuentaCards[key].features, featuresText);
+            });
+
+            // Cargar URLs de redes sociales y WhatsApp
+            whatsappButton.href = localStorage.getItem('whatsappUrl') || "https://wa.me/584242357804";
+            footerPhoneNumber.textContent = localStorage.getItem('footerWhatsappNumber') || "+58 (424) 235-7804";
+            footerPhoneNumberLink.href = `tel:${localStorage.getItem('whatsappRawNumber') || '584242357804'}`;
+            facebookLink.href = localStorage.getItem('facebookUrl') || "https://facebook.com/ConnectTV";
+            instagramLink.href = localStorage.getItem('instagramUrl') || "https://instagram.com/ConnectTV";
+            twitterLink.href = localStorage.getItem('twitterUrl') || "https://x.com/ConnectTV";
+            youtubeLink.href = localStorage.getItem('youtubeUrl') || "https://www.youtube.com/user/streamwave_oficial";
+
+            // Actualizar inputs del panel con los valores actuales
+            document.getElementById('inputCompanyName').value = companyNameHeader.textContent;
+            document.getElementById('inputCompanyLogoUrl').value = companyLogo.src;
+            document.getElementById('inputFaviconUrl').value = faviconLink.href;
+
+            document.getElementById('basicoPrice').value = basicoPriceElem.textContent;
+            document.getElementById('basicoImgUrl').value = basicoImgElem.src;
+            document.getElementById('estandarPrice').value = estandarPriceElem.textContent;
+            document.getElementById('estandarImgUrl').value = estandarImgElem.src;
+            document.getElementById('premiumPrice').value = premiumPriceElem.textContent;
+            document.getElementById('premiumImgUrl').value = premiumImgElem.src;
+
+            // Inputs del panel para Cuentas Completas
+            document.getElementById('cuenta1Name').value = cuentaCards.netflix.name.textContent;
+            document.getElementById('cuenta1Price').value = cuentaCards.netflix.price.textContent;
+            document.getElementById('cuenta1ImgUrl').value = cuentaCards.netflix.img.src;
+            document.getElementById('cuenta1Features').value = Array.from(cuentaCards.netflix.features.children).map(li => li.textContent.replace('✓ ', '').trim()).join(';');
+
+            document.getElementById('cuenta2Name').value = cuentaCards.disneyplus.name.textContent;
+            document.getElementById('cuenta2Price').value = cuentaCards.disneyplus.price.textContent;
+            document.getElementById('cuenta2ImgUrl').value = cuentaCards.disneyplus.img.src;
+            document.getElementById('cuenta2Features').value = Array.from(cuentaCards.disneyplus.features.children).map(li => li.textContent.replace('✓ ', '').trim()).join(';');
+
+            document.getElementById('cuenta3Name').value = cuentaCards.max.name.textContent;
+            document.getElementById('cuenta3Price').value = cuentaCards.max.price.textContent;
+            document.getElementById('cuenta3ImgUrl').value = cuentaCards.max.img.src;
+            document.getElementById('cuenta3Features').value = Array.from(cuentaCards.max.features.children).map(li => li.textContent.replace('✓ ', '').trim()).join(';');
+
+
+            document.getElementById('whatsappNumber').value = localStorage.getItem('whatsappRawNumber') || '584242357804';
+            document.getElementById('footerWhatsappNumber').value = footerPhoneNumber.textContent;
+            document.getElementById('facebookUrl').value = facebookLink.href;
+            document.getElementById('instagramUrl').value = instagramLink.href;
+            document.getElementById('twitterUrl').value = twitterLink.href;
+            document.getElementById('youtubeUrl').value = youtubeLink.href;
+
+            // Actualizar enlaces de compra con el número de WhatsApp
+            const currentWhatsappNum = localStorage.getItem('whatsappRawNumber') || '584242357804';
+            basicoBuyBtn.href = `https://wa.me/${currentWhatsappNum}?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Básico.`;
+            estandarBuyBtn.href = `https://wa.me/${currentWhatsappNum}?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Estándar.`;
+            premiumBuyBtn.href = `https://wa.me/${currentWhatsappNum}?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Premium.`;
+            
+            // Actualizar enlaces de compra de cuentas
+            cuentaCards.netflix.buyBtn.href = `https://wa.me/${currentWhatsappNum}?text=Hola!%20Estoy%20interesado%20en%20una%20cuenta%20de%20Netflix.`;
+            cuentaCards.disneyplus.buyBtn.href = `https://wa.me/${currentWhatsappNum}?text=Hola!%20Estoy%20interesado%20en%20una%20cuenta%20de%20Disney%2B.`;
+            cuentaCards.max.buyBtn.href = `https://wa.me/${currentWhatsappNum}?text=Hola!%20Estoy%20interesado%20en%20una%20cuenta%20de%20Max.`;
+
+            // Actualizar el botón de WhatsApp en la sección de soporte
+            supportWhatsappBtn.href = `https://wa.me/${currentWhatsappNum}?text=Hola!%20Necesito%20soporte%20con%20mi%20servicio.`;
+        }
+
+        // Función auxiliar para actualizar la lista de características
+        function updateFeaturesList(ulElement, featuresString) {
+            ulElement.innerHTML = ''; // Limpiar lista existente
+            if (featuresString) {
+                const featuresArray = featuresString.split(';').map(f => f.trim()).filter(f => f !== '');
+                featuresArray.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-check-circle"></i> ${feature}`;
+                    ulElement.appendChild(li);
+                });
+            }
+        }
+
+
+        // Llamar para cargar al inicio
+        document.addEventListener('DOMContentLoaded', loadSavedValues);
+
+        // Abrir/Cerrar panel de administración
+        toggleAdminPanelBtn.addEventListener('click', () => {
+            if (adminPanel.style.display === 'block') {
+                adminPanel.style.display = 'none';
+                toggleAdminPanelBtn.classList.remove('active');
+            } else {
+                adminPanel.style.display = 'block';
+                toggleAdminPanelBtn.classList.add('active');
+                // Asegurarse de que los valores actuales estén en los inputs del panel
+                document.getElementById('cuenta1Name').value = cuentaCards.netflix.name.textContent;
+                document.getElementById('cuenta1Price').value = cuentaCards.netflix.price.textContent;
+                document.getElementById('cuenta1ImgUrl').value = cuentaCards.netflix.img.src;
+                document.getElementById('cuenta1Features').value = Array.from(cuentaCards.netflix.features.children).map(li => li.textContent.replace('✓ ', '').trim()).join(';');
+
+                document.getElementById('cuenta2Name').value = cuentaCards.disneyplus.name.textContent;
+                document.getElementById('cuenta2Price').value = cuentaCards.disneyplus.price.textContent;
+                document.getElementById('cuenta2ImgUrl').value = cuentaCards.disneyplus.img.src;
+                document.getElementById('cuenta2Features').value = Array.from(cuentaCards.disneyplus.features.children).map(li => li.textContent.replace('✓ ', '').trim()).join(';');
+
+                document.getElementById('cuenta3Name').value = cuentaCards.max.name.textContent;
+                document.getElementById('cuenta3Price').value = cuentaCards.max.price.textContent;
+                document.getElementById('cuenta3ImgUrl').value = cuentaCards.max.img.src;
+                document.getElementById('cuenta3Features').value = Array.from(cuentaCards.max.features.children).map(li => li.textContent.replace('✓ ', '').trim()).join(';');
+            }
+        });
+
+        closeAdminPanelBtn.addEventListener('click', () => {
+            adminPanel.style.display = 'none';
+            toggleAdminPanelBtn.classList.remove('active');
+        });
+
+        // Aplicar cambios desde el panel
+        applyChangesBtn.addEventListener('click', () => {
+            // Actualizar datos de la empresa
+            const newCompanyName = document.getElementById('inputCompanyName').value;
+            const newCompanyLogoUrl = document.getElementById('inputCompanyLogoUrl').value;
+            const newFaviconUrl = document.getElementById('inputFaviconUrl').value;
+
+            pageTitle.textContent = `${newCompanyName} - Tu Plataforma de Streaming por Suscripción`;
+            companyLogo.src = newCompanyLogoUrl;
+            companyNameHeader.textContent = newCompanyName;
+            companyNamePlans.textContent = newCompanyName;
+            companyNameTexts.forEach(span => {
+                span.textContent = newCompanyName;
+            });
+            faviconLink.href = newFaviconUrl;
+
+            localStorage.setItem('companyName', newCompanyName);
+            localStorage.setItem('companyLogoUrl', newCompanyLogoUrl);
+            localStorage.setItem('faviconUrl', newFaviconUrl);
+
+
+            // Actualizar precios e imágenes de planes
+            const newBasicoPrice = document.getElementById('basicoPrice').value;
+            const newBasicoImg = document.getElementById('basicoImgUrl').value;
+            const newEstandarPrice = document.getElementById('estandarPrice').value;
+            const newEstandarImg = document.getElementById('estandarImgUrl').value;
+            const newPremiumPrice = document.getElementById('premiumPrice').value;
+            const newPremiumImg = document.getElementById('premiumImgUrl').value;
+
+            basicoPriceElem.textContent = newBasicoPrice;
+            basicoImgElem.src = newBasicoImg;
+            estandarPriceElem.textContent = newEstandarPrice;
+            estandarImgElem.src = newEstandarImg;
+            premiumPriceElem.textContent = newPremiumPrice;
+            premiumImgElem.src = newPremiumImg;
+
+            // Guardar en LocalStorage (simula persistencia en el navegador)
+            localStorage.setItem('basicoPrice', newBasicoPrice);
+            localStorage.setItem('basicoImgUrl', newBasicoImg);
+            localStorage.setItem('estandarPrice', newEstandarPrice);
+            localStorage.setItem('estandarImgUrl', newEstandarImg);
+            localStorage.setItem('premiumPrice', newPremiumPrice);
+            localStorage.setItem('premiumImgUrl', newPremiumImg);
+
+            // Actualizar CUENTAS COMPLETAS
+            const currentWhatsappNum = document.getElementById('whatsappNumber').value;
+            ['netflix', 'disneyplus', 'max'].forEach((key, index) => {
+                const i = index + 1; // Para coincidir con cuenta1, cuenta2, etc.
+                const newName = document.getElementById(`cuenta${i}Name`).value;
+                const newPrice = document.getElementById(`cuenta${i}Price`).value;
+                const newImg = document.getElementById(`cuenta${i}ImgUrl`).value;
+                const newFeaturesText = document.getElementById(`cuenta${i}Features`).value;
+
+                cuentaCards[key].name.textContent = newName;
+                cuentaCards[key].price.textContent = newPrice;
+                cuentaCards[key].img.src = newImg;
+                updateFeaturesList(cuentaCards[key].features, newFeaturesText);
+                cuentaCards[key].buyBtn.href = `https://wa.me/${currentWhatsappNum}?text=Hola!%20Estoy%20interesado%20en%20una%20cuenta%20de%20${encodeURIComponent(newName)}.`;
+
+                localStorage.setItem(`cuenta${key}Name`, newName);
+                localStorage.setItem(`cuenta${key}Price`, newPrice);
+                localStorage.setItem(`cuenta${key}ImgUrl`, newImg);
+                localStorage.setItem(`cuenta${key}Features`, newFeaturesText);
+            });
+
+
+            // Actualizar URLs de redes sociales y WhatsApp
+            const newWhatsappRawNumber = document.getElementById('whatsappNumber').value;
+            const newFooterWhatsappNumber = document.getElementById('footerWhatsappNumber').value;
+            const newFacebookUrl = document.getElementById('facebookUrl').value;
+            const newInstagramUrl = document.getElementById('instagramUrl').value;
+            const newTwitterUrl = document.getElementById('twitterUrl').value;
+            const newYoutubeUrl = document.getElementById('youtubeUrl').value;
+
+            whatsappButton.href = `https://wa.me/${newWhatsappRawNumber}`;
+            footerPhoneNumber.textContent = newFooterWhatsappNumber;
+            footerPhoneNumberLink.href = `tel:${newWhatsappRawNumber}`; // Actualiza el href del enlace tel:
+            facebookLink.href = newFacebookUrl;
+            instagramLink.href = newInstagramUrl;
+            twitterLink.href = newTwitterUrl;
+            youtubeLink.href = newYoutubeUrl;
+
+            // Guardar URLs de redes sociales y WhatsApp en LocalStorage
+            localStorage.setItem('whatsappRawNumber', newWhatsappRawNumber);
+            localStorage.setItem('whatsappUrl', `https://wa.me/${newWhatsappRawNumber}`);
+            localStorage.setItem('footerWhatsappNumber', newFooterWhatsappNumber);
+            localStorage.setItem('facebookUrl', newFacebookUrl);
+            localStorage.setItem('instagramUrl', newInstagramUrl);
+            localStorage.setItem('twitterUrl', newTwitterUrl);
+            localStorage.setItem('youtubeUrl', newYoutubeUrl);
+
+            // Actualizar enlaces de compra de planes con el nuevo número de WhatsApp
+            basicoBuyBtn.href = `https://wa.me/${newWhatsappRawNumber}?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Básico.`;
+            estandarBuyBtn.href = `https://wa.me/${newWhatsappRawNumber}?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Estándar.`;
+            premiumBuyBtn.href = `https://wa.me/${newWhatsappRawNumber}?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Premium.`;
+
+            // Actualizar el botón de WhatsApp en la sección de soporte
+            supportWhatsappBtn.href = `https://wa.me/${newWhatsappRawNumber}?text=Hola!%20Necesito%20soporte%20con%20mi%20servicio.`;
+
+
+            alert('¡Cambios aplicados y guardados localmente! (Recuerda que esto es solo una demo frontend).');
+        });
+
+        // --- Manejo del Formulario de Comprobante de Pago ---
+        paymentProofForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+            const fullName = document.getElementById('fullName').value;
+            const emailProof = document.getElementById('emailProof').value;
+            const serviceType = document.getElementById('serviceType').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const transactionId = document.getElementById('transactionId').value;
+            const additionalNotes = document.getElementById('additionalNotes').value;
+            const proofFile = document.getElementById('proofFile').files[0]; // El archivo seleccionado
+
+            if (!proofFile) {
+                alert('Por favor, selecciona un comprobante de pago para adjuntar.');
+                return;
+            }
+
+            // Construir el mensaje de WhatsApp
+            let whatsappMessage = `¡Hola! He realizado un pago y quiero adjuntar mi comprobante.\n\n`;
+            whatsappMessage += `Nombre: ${fullName}\n`;
+            whatsappMessage += `Correo: ${emailProof}\n`;
+            whatsappMessage += `Servicio: ${serviceType}\n`;
+            whatsappMessage += `Método de Pago: ${paymentMethod}\n`;
+            whatsappMessage += `Referencia/ID: ${transactionId}\n`;
+            if (additionalNotes) {
+                whatsappMessage += `Notas: ${additionalNotes}\n`;
+            }
+            whatsappMessage += `\nAdjunto el comprobante en este chat.`; // Indicamos que adjuntará el archivo
+
+            const whatsappNumber = localStorage.getItem('whatsappRawNumber') || '584242357804';
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+
+            // Abrir WhatsApp
+            window.open(whatsappUrl, '_blank');
+
+            // Opcional: Limpiar el formulario después de enviar
+            paymentProofForm.reset();
+            alert('Por favor, confirma el envío del mensaje en WhatsApp y adjunta tu comprobante. ¡Gracias!');
+        });
+
+    </script>
+
+</body>
+</html>
