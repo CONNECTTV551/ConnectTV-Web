@@ -137,20 +137,6 @@
             color: #aaa;
         }
 
-        .login-button {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        .login-button:hover {
-            background-color: var(--button-hover);
-        }
-
         /* --- Main Content Layout --- */
         .page-container {
             display: flex;
@@ -195,31 +181,6 @@
         aside nav ul li a:hover, aside nav ul li a.active {
             background-color: var(--border-color);
             color: var(--primary-color);
-        }
-
-        /* Estilos para el submenú de Perfiles */
-        .sub-menu {
-            list-style: none;
-            padding: 0;
-            margin-top: 10px;
-            margin-left: 20px; /* Indentación para sub-elementos */
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .sub-menu.active {
-            max-height: 500px; /* Suficientemente grande para contener todos los elementos */
-        }
-
-        .sub-menu li a {
-            padding: 8px 10px;
-            font-size: 1em;
-            color: #ccc;
-        }
-        .sub-menu li a:hover {
-            background-color: #333;
-            color: white;
         }
 
 
@@ -772,44 +733,55 @@
             background-color: var(--whatsapp-green-dark);
         }
 
-        /* Formulario de Login/Registro en el modal */
-        .auth-form input {
+        /* Formulario de Subir Comprobante */
+        #paymentProofForm {
+            background-color: #2a2a2a;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        #paymentProofForm label {
+            display: block;
+            margin-bottom: 10px;
+            color: #f5f5f5;
+            font-weight: bold;
+        }
+        #paymentProofForm input[type="text"],
+        #paymentProofForm select,
+        #paymentProofForm textarea {
             width: calc(100% - 20px);
             padding: 12px 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             border: 1px solid var(--input-border);
             border-radius: 8px;
             background-color: var(--input-bg);
             color: var(--text-light);
             font-size: 1em;
+            outline: none;
         }
-        .auth-form button {
+        #paymentProofForm input[type="file"] {
             width: 100%;
-            padding: 12px;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+        #paymentProofForm .submit-button {
             background-color: var(--primary-color);
             color: white;
+            padding: 15px 25px;
             border: none;
             border-radius: 8px;
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            width: 100%;
         }
-        .auth-form button:hover {
+        #paymentProofForm .submit-button:hover {
             background-color: var(--button-hover);
-        }
-        .auth-form .toggle-form {
-            text-align: center;
-            margin-top: 20px;
-            color: #aaa;
-        }
-        .auth-form .toggle-form a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .auth-form .toggle-form a:hover {
-            text-decoration: underline;
         }
 
 
@@ -893,7 +865,7 @@
 <body>
     <header>
         <div class="logo">
-            <img src="img/logo-connect-tv.png" alt="ConnectTV Logo">
+            <img src="https://i.ibb.co/Vmxr169/logo-connect-tv.png" alt="ConnectTV Logo">
             <h1>ConnectTV</h1>
         </div>
         <nav>
@@ -910,4 +882,187 @@
                 <i class='bx bx-search'></i>
                 <input type="text" placeholder="Buscar contenido...">
             </div>
-            <button class="login-button" id="open
+        </div>
+    </header>
+
+    <div class="page-container">
+        <aside>
+            <div class="admin-label">
+                <i class='bx bxs-user-account'></i>
+                <span>Admin</span>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li>
+                        <a href="#" data-page="inicio" class="sidebar-button active">
+                            <i class='bx bx-home'></i>
+                            <span class="links_name">Inicio</span>
+                        </a>
+                        <span class="tooltip">Inicio</span>
+                    </li>
+                    <li>
+                        <a href="#" data-page="catalogo" class="sidebar-button">
+                            <i class='bx bx-compass'></i>
+                            <span class="links_name">Catálogo</span>
+                        </a>
+                        <span class="tooltip">Catálogo</span>
+                    </li>
+                    <li>
+                        <a href="#" data-page="planes" class="sidebar-button">
+                            <i class='bx bx-dollar-circle'></i>
+                            <span class="links_name">Nuestros Planes</span>
+                        </a>
+                        <span class="tooltip">Nuestros Planes</span>
+                    </li>
+
+
+                    <li>
+                        <a href="#" data-page="perfiles" class="sidebar-button">
+                            <i class='bx bx-user'></i>
+                            <span class="links_name">Perfiles</span>
+                        </a>
+                        <span class="tooltip">Perfiles</span>
+                    </li>
+
+                    <li>
+                        <a href="#" data-page="cuentasCompletas" class="sidebar-button">
+                            <i class='bx bx-cart'></i>
+                            <span class="links_name">Cuentas Completas</span>
+                        </a>
+                        <span class="tooltip">Cuentas Completas</span>
+                    </li>
+                    <li>
+                        <a href="#" data-page="subirComprobante" class="sidebar-button">
+                            <i class='bx bx-cloud-upload'></i>
+                            <span class="links_name">Subir Comprobante</span>
+                        </a>
+                        <span class="tooltip">Subir Comprobante</span>
+                    </li>
+                    <li>
+                        <a href="#" data-page="ayuda" class="sidebar-button">
+                            <i class='bx bx-help-circle'></i>
+                            <span class="links_name">Ayuda y FAQ</span>
+                        </a>
+                        <span class="tooltip">Ayuda y FAQ</span>
+                    </li>
+                    <li>
+                        <a href="#" data-page="soporte" class="sidebar-button">
+                            <i class='bx bx-support'></i>
+                            <span class="links_name">Soporte</span>
+                        </a>
+                        <span class="tooltip">Soporte</span>
+                    </li>
+                    <li>
+                        <a href="#" data-page="pagar" class="sidebar-button"> 
+                            <i class='bx bx-credit-card'></i>
+                            <span class="links_name">Métodos de Pago</span>
+                        </a>
+                        <span class="tooltip">Métodos de Pago</span>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main>
+
+            <section id="inicioSection" class="content-section-page active-page">
+                <div class="hero-section">
+                    <h2>ACCESO ILIMITADO AL MEJOR CONTENIDO</h2>
+                    <p>Descubre miles de películas, series y documentales en HD y 4K. Elige el plan perfecto para ti y empieza a disfrutar hoy mismo.</p>
+                    <div class="hero-buttons">
+                        <a href="#" data-page="planes" class="btn sidebar-button">Ver Planes</a>
+                        <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20los%20servicios%20de%20ConnectTV." class="btn btn-secondary" target="_blank">Contactar WhatsApp</a>
+                    </div>
+                </div>
+                <div class="content-block">
+                    <h3>¿Por qué elegir ConnectTV?</h3>
+                    <p>En ConnectTV, te ofrecemos una experiencia de entretenimiento inigualable. Con nuestra amplia selección de contenido, calidad superior y precios accesibles, tu diversión está garantizada.</p>
+                    <ul class="features-list">
+                        <li><i class='bx bx-check-circle'></i> Contenido exclusivo y actualizado constantemente.</li>
+                        <li><i class='bx bx-check-circle'></i> Calidad HD y 4K para una experiencia visual inmersiva.</li>
+                        <li><i class='bx bx-check-circle'></i> Soporte al cliente dedicado y amigable.</li>
+                        <li><i class='bx bx-check-circle'></i> Planes flexibles que se adaptan a tus necesidades.</li>
+                    </ul>
+                </div>
+            </section>
+
+
+            <section id="catalogoSection" class="content-section-page">
+                <div class="content-block">
+                    <h2>Próximamente: Nuestro Catálogo Completo</h2>
+                    <p>Estamos trabajando para traerte una biblioteca aún más grande de películas y series exclusivas. ¡Mantente atento!</p>
+                    <p>Contenido en desarrollo...</p>
+                </div>
+            </section>
+
+
+            <section id="planesSection" class="content-section-page">
+                <div class="content-block">
+                    <h2>Elige el Plan Perfecto para Ti</h2>
+                    <p>Descubre nuestros planes de suscripción diseñados para ofrecerte la mejor experiencia de entretenimiento al mejor precio.</p>
+                    <div class="plans-grid">
+                        <div class="plan-card">
+                            <div class="plan-card-content">
+                                <h3>Básico</h3>
+                                <p class="price">$9.99 <span>/ mes</span></p>
+                                <ul>
+                                    <li><i class='bx bx-check-circle'></i> Acceso a 1 plataforma</li>
+                                    <li><i class='bx bx-check-circle'></i> Calidad HD</li>
+                                    <li><i class='bx bx-check-circle'></i> 1 Pantalla simultánea</li>
+                                    <li><i class='bx bx-x-circle'></i> No incluye 4K</li>
+                                </ul>
+                                <div class="action-group">
+                                    <button class="action-btn details-btn" data-type="plan" data-name="Plan Básico" data-price="$9.99/mes" data-description="Acceso a 1 plataforma, calidad HD y 1 pantalla simultánea.">Ver Detalles</button>
+                                    <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Básico%20de%20ConnectTV%20por%20$9.99/mes.%20%C2%BFPodr%C3%ADas%20darme%20m%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="plan-card featured">
+                            <div class="plan-card-content">
+                                <h3>Premium</h3>
+                                <p class="price">$19.99 <span>/ mes</span></p>
+                                <ul>
+                                    <li><i class='bx bx-check-circle'></i> Acceso a 3 plataformas</li>
+                                    <li><i class='bx bx-check-circle'></i> Calidad HD y 4K</li>
+                                    <li><i class='bx bx-check-circle'></i> 3 Pantallas simultáneas</li>
+                                    <li><i class='bx bx-check-circle'></i> Soporte prioritario</li>
+                                </ul>
+                                <div class="action-group">
+                                    <button class="action-btn details-btn" data-type="plan" data-name="Plan Premium" data-price="$19.99/mes" data-description="Acceso a 3 plataformas, calidad HD y 4K, 3 pantallas simultáneas y soporte prioritario.">Ver Detalles</button>
+                                    <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Premium%20de%20ConnectTV%20por%20$19.99/mes.%20%C2%BFPodr%C3%ADas%20darme%20m%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="plan-card">
+                            <div class="plan-card-content">
+                                <h3>Familiar</h3>
+                                <p class="price">$29.99 <span>/ mes</span></p>
+                                <ul>
+                                    <li><i class='bx bx-check-circle'></i> Acceso a 5+ plataformas</li>
+                                    <li><i class='bx bx-check-circle'></i> Calidad HD y 4K</li>
+                                    <li><i class='bx bx-check-circle'></i> Hasta 5 pantallas simultáneas</li>
+                                    <li><i class='bx bx-check-circle'></i> Todas las funciones Premium</li>
+                                </ul>
+                                <div class="action-group">
+                                    <button class="action-btn details-btn" data-type="plan" data-name="Plan Familiar" data-price="$29.99/mes" data-description="Acceso a 5+ plataformas, calidad HD y 4K, hasta 5 pantallas simultáneas y todas las funciones Premium.">Ver Detalles</button>
+                                    <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Plan%20Familiar%20de%20ConnectTV%20por%20$29.99/mes.%20%C2%BFPodr%C3%ADas%20darme%20m%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section id="perfilesSection" class="content-section-page">
+                <div class="content-block">
+                    <h2>Nuestros Perfiles Premium</h2>
+                    <p>Accede a perfiles de alta calidad en tus plataformas de streaming favoritas. ¡Disfruta del mejor entretenimiento!</p>
+
+                    <div class="perfiles-grid">
+
+                        <div class="perfil-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix">
+                            <h4>Netflix</h4>
+                            <p class="perfil-description">Acceso a un perfil personal en Netflix con calidad Ultra HD. Disfruta de películas y series sin interrupciones.</p>
+                            <p

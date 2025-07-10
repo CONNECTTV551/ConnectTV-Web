@@ -4,57 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageTitle = document.getElementById('pageTitle');
     const whatsappNumber = '584242357804'; // Tu número de WhatsApp aquí
 
-    // Modal de Inicio de Sesión / Registro
-    const loginRegisterModal = document.getElementById('loginRegisterModal');
-    const openLoginModalBtn = document.getElementById('openLoginModal');
-    const closeLoginRegisterModalBtn = loginRegisterModal.querySelector('.modal-close-btn');
-    const loginFormContainer = document.getElementById('loginFormContainer');
-    const registerFormContainer = document.getElementById('registerFormContainer');
-    const showRegisterLink = document.getElementById('showRegister');
-    const showLoginLink = document.getElementById('showLogin');
-
-    openLoginModalBtn.addEventListener('click', () => {
-        loginRegisterModal.classList.add('active');
-        document.body.classList.add('modal-open');
-        loginFormContainer.style.display = 'block';
-        registerFormContainer.style.display = 'none';
-    });
-
-    closeLoginRegisterModalBtn.addEventListener('click', () => {
-        loginRegisterModal.classList.remove('active');
-        document.body.classList.remove('modal-open');
-    });
-
-    showRegisterLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginFormContainer.style.display = 'none';
-        registerFormContainer.style.display = 'block';
-    });
-
-    showLoginLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginFormContainer.style.display = 'block';
-        registerFormContainer.style.display = 'none';
-    });
-
-    // Simulación de envío de formularios de autenticación
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('Funcionalidad de inicio de sesión no implementada. (Simulación)');
-        loginRegisterModal.classList.remove('active');
-        document.body.classList.remove('modal-open');
-        // Aquí iría el código real para enviar datos a un servidor
-    });
-
-    document.getElementById('registerForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('Funcionalidad de registro no implementada. (Simulación)');
-        loginRegisterModal.classList.remove('active');
-        document.body.classList.remove('modal-open');
-        // Aquí iría el código real para enviar datos a un servidor
-    });
-
-
     // Modal de Detalles de Servicio
     const detailsModal = document.getElementById('detailsModal');
     const closeDetailsModalBtn = document.getElementById('closeDetailsModal');
@@ -78,11 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
             modalDetailsDescription.textContent = description;
             modalDetailsPrice.textContent = price;
 
-            if (img) {
+            if (img && img !== "undefined") { // Verifica si la URL de la imagen existe y no es "undefined"
                 modalDetailsImage.src = img;
                 modalDetailsImage.style.display = 'block';
             } else {
-                modalDetailsImage.style.display = 'none';
+                modalDetailsImage.style.display = 'none'; // Oculta la imagen si no hay URL válida
             }
 
             // Generar mensaje de WhatsApp específico
@@ -100,13 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Cerrar modales al hacer clic fuera de ellos
-    loginRegisterModal.addEventListener('click', (e) => {
-        if (e.target === loginRegisterModal) {
-            loginRegisterModal.classList.remove('active');
-            document.body.classList.remove('modal-open');
-        }
-    });
-
     detailsModal.addEventListener('click', (e) => {
         if (e.target === detailsModal) {
             detailsModal.classList.remove('active');
@@ -164,11 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const pageId = button.dataset.page;
 
             sidebarButtons.forEach(btn => btn.classList.remove('active'));
-            // Aquí, podrías necesitar un control más fino si el botón en el header y el sidebar son el mismo elemento o distintos
-            // Por ahora, si son enlaces independientes, el activo se manejará por separado para header y sidebar
-            // Si son los mismos elementos, esto funcionará bien.
             document.querySelectorAll(`[data-page="${pageId}"]`).forEach(btn => btn.classList.add('active'));
-
 
             showPage(pageId);
         });
@@ -181,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const answer = question.nextElementSibling;
             const icon = question.querySelector('i');
 
+            // Cierra otros items de FAQ si están abiertos
             faqQuestions.forEach(q => {
                 if (q !== question && q.classList.contains('active')) {
                     q.classList.remove('active');
@@ -190,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            // Abre o cierra el item actual
             if (answer.style.display === 'block') {
                 answer.style.display = 'none';
                 question.classList.remove('active');
