@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="StreamWave Team">
     <title>StreamWave - Tu Entretenimiento Ilimitado</title>
-    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    </head>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
 <body>
     <header class="streaming-header">
         <div class="header-content">
@@ -18,8 +19,14 @@
     </header>
 
     <main class="services-container">
-        <h2>Nuestros Servicios de Streaming</h2>
+        <div class="services-header-controls">
+            <h2>Nuestros Servicios de Streaming</h2>
+            <div class="search-filter-area">
+                <input type="text" id="serviceSearch" class="search-input" placeholder="Buscar servicio...">
+            </div>
+        </div>
         <div class="service-grid">
+            <p id="noResultsMessage" class="no-results-message" style="display: none;">No se encontraron servicios que coincidan con tu búsqueda.</p>
 
             <div class="service-card">
                 <div class="service-image-container">
@@ -32,8 +39,8 @@
                     <li><i class="fas fa-check-circle"></i> 4 Pantallas simultáneas</li>
                     <li><i class="fas fa-check-circle"></i> Descargas ilimitadas</li>
                 </ul>
-                <button class="btn-primary">Ver Plan</button>
-            </div>
+                <button class="btn-primary buy-button" data-service="Netflix Premium">Comprar Plan</button>
+                </div>
 
             <div class="service-card">
                 <div class="service-image-container">
@@ -46,8 +53,8 @@
                     <li><i class="fas fa-check-circle"></i> Descargas disponibles</li>
                     <li><i class="fas fa-check-circle"></i> Perfiles para toda la familia</li>
                 </ul>
-                <button class="btn-primary">Ver Plan</button>
-            </div>
+                <button class="btn-primary buy-button" data-service="Disney+ Anual">Comprar Plan</button>
+                </div>
 
             <div class="service-card">
                 <div class="service-image-container">
@@ -60,8 +67,8 @@
                     <li><i class="fas fa-check-circle"></i> Series exclusivas</li>
                     <li><i class="fas fa-check-circle"></i> Calidad HD</li>
                 </ul>
-                <button class="btn-primary">Ver Plan</button>
-            </div>
+                <button class="btn-primary buy-button" data-service="HBO Max Mensual">Comprar Plan</button>
+                </div>
 
             <div class="service-card">
                 <div class="service-image-container">
@@ -74,10 +81,10 @@
                     <li><i class="fas fa-check-circle"></i> Contenido original Prime</li>
                     <li><i class="fas fa-check-circle"></i> Incluido con Amazon Prime</li>
                 </ul>
-                <button class="btn-primary">Ver Plan</button>
-            </div>
+                <button class="btn-primary buy-button" data-service="Amazon Prime Video">Comprar Plan</button>
+                </div>
 
-            </div>
+        </div>
     </main>
 
     <footer class="streaming-footer">
@@ -88,5 +95,21 @@
             <a href="#">Contacto</a>
         </div>
     </footer>
+
+    <div id="whatsappModal" class="modal">
+        <div class="modal-content">
+            <span class="close-whatsapp-modal">&times;</span>
+            <h3>Confirmar Pedido</h3>
+            <form id="whatsappForm" class="product-form">
+                <p class="modal-service-display">Estás a punto de comprar: <span id="modalServiceName" style="color: var(--accent-red); font-weight: 600;"></span></p>
+                <div class="input-group">
+                    <label for="customerName">Tu Nombre Completo:</label>
+                    <input type="text" id="customerName" required placeholder="Ej. Juan Pérez">
+                </div>
+                <input type="hidden" id="serviceNameHidden"> <button type="submit" class="btn-primary">Ir a WhatsApp para Pagar</button>
+            </form>
+        </div>
+    </div>
+    <script src="script_streaming.js"></script>
 </body>
 </html>
