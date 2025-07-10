@@ -4,19 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ConnectTV - Tu Acceso al Entretenimiento Ilimitado</title>
-    <!-- Google Fonts: Montserrat para encabezados, Open Sans para texto -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome para iconos (asegúrate de tener conexión a internet para cargar esto) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Enlace a tu archivo de estilos CSS. Debe estar en la misma carpeta. -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar / Menú Lateral (visible en escritorio, oculto en móvil por defecto) -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <!-- LOGO: Puedes cambiar esta URL por la de tu logo real. -->
                 <img src="https://via.placeholder.com/180x60/E50914/FFFFFF?text=ConnectTV+Logo" alt="ConnectTV Logo" class="logo">
             </div>
             <nav class="sidebar-nav">
@@ -30,7 +25,6 @@
                     <li><a href="#subir-comprobante"><i class="fas fa-upload"></i> Subir Comprobante</a></li>
                     <li><a href="#faq"><i class="fas fa-question-circle"></i> Ayuda / FAQ</a></li>
                     <li><a href="#contacto"><i class="fas fa-headset"></i> Contacto</a></li>
-                    <!-- Enlaces para Iniciar Sesión/Registrarse (aparecen en sidebar en desktop, modales) -->
                     <li class="auth-links">
                         <a href="#" id="login-btn-sidebar"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
                         <a href="#" id="register-btn-sidebar"><i class="fas fa-user-plus"></i> Registrarse</a>
@@ -39,14 +33,11 @@
             </nav>
         </aside>
 
-        <!-- Contenido Principal -->
         <main class="main-content">
-            <!-- Header para móviles (se mostrará solo en pantallas pequeñas) -->
             <header class="mobile-header">
                 <div class="hamburger-menu" id="hamburger-menu">
                     <i class="fas fa-bars"></i>
                 </div>
-                <!-- LOGO MÓVIL: Puedes cambiar esta URL por la de tu logo real para móvil -->
                 <img src="https://via.placeholder.com/120x40/E50914/FFFFFF?text=ConnectTV+Logo" alt="ConnectTV Logo" class="logo-mobile">
                 <div class="mobile-auth">
                     <button class="mobile-auth-btn" id="login-btn-mobile"><i class="fas fa-sign-in-alt"></i></button>
@@ -54,7 +45,6 @@
                 </div>
             </header>
 
-            <!-- Sección Inicio (Home) -->
             <section id="home" class="section active">
                 <div class="hero">
                     <h1>Tu Acceso Ilimitado al Entretenimiento</h1>
@@ -62,12 +52,10 @@
                     <button class="btn-primary scroll-to-plans">Explorar Planes Ahora</button>
                 </div>
 
-                <!-- Carrusel de Estrenos y Destacados -->
                 <div class="section-block featured-carousel">
                     <h2>🎬 Últimos Estrenos y Contenido Destacado 🎬</h2>
                     <div class="carousel-container">
                         <div class="carousel-slide">
-                            <!-- IMÁGENES DEL CARRUSEL: Cambia estas URL por tus propias imágenes -->
                             <img src="https://via.placeholder.com/800x450/444444/FFFFFF?text=Pel%C3%ADcula+Estreno+1" alt="Película Estreno 1">
                             <img src="https://via.placeholder.com/800x450/555555/FFFFFF?text=Serie+Popular+2" alt="Serie Popular 2">
                             <img src="https://via.placeholder.com/800x450/666666/FFFFFF?text=Documental+Interesante+3" alt="Documental Interesante 3">
@@ -79,7 +67,6 @@
                     </div>
                 </div>
 
-                <!-- Seccion Por Qué Elegirnos -->
                 <div class="section-block why-choose-us">
                     <h2>¿Por Qué Elegir ConnectTV?</h2>
                     <div class="features-grid">
@@ -117,7 +104,6 @@
                 </div>
             </section>
 
-            <!-- Sección Catálogo -->
             <section id="catalogo" class="section hidden">
                 <h2>Explora Nuestro Vastísimo Catálogo de Contenido</h2>
                 <div class="content-block">
@@ -131,7 +117,6 @@
                 </div>
             </section>
 
-            <!-- Sección Planes y Precios -->
             <section id="planes-precios" class="section hidden">
                 <h2>Elige el Plan Perfecto para Ti</h2>
                 <p>Nuestros planes están diseñados para adaptarse a tus necesidades y presupuesto.</p>
@@ -140,7 +125,6 @@
                     <button id="toggle-currency" class="btn-toggle-currency">USD</button>
                 </div>
                 <div class="plans-grid">
-                    <!-- Plan Básico -->
                     <div class="plan-card">
                         <h3>Plan Básico</h3>
                         <p class="plan-price" data-usd-price="7.99" data-ves-price="0">
@@ -156,7 +140,6 @@
                         </ul>
                         <button class="btn-primary btn-plan-select" data-plan="Básico">Seleccionar Plan</button>
                     </div>
-                    <!-- Plan Estándar -->
                     <div class="plan-card featured">
                         <h3>Plan Estándar</h3>
                         <p class="plan-price" data-usd-price="12.99" data-ves-price="0">
@@ -172,7 +155,6 @@
                         </ul>
                         <button class="btn-primary btn-plan-select" data-plan="Estándar">Seleccionar Plan</button>
                     </div>
-                    <!-- Plan Premium -->
                     <div class="plan-card">
                         <h3>Plan Premium</h3>
                         <p class="plan-price" data-usd-price="19.99" data-ves-price="0">
@@ -193,50 +175,39 @@
                 <p class="small-text">Los precios en Bolívares (VES) son referenciales y se basan en la tasa de cambio del día. Tasa actual: 1 USD = <span id="current-exchange-rate"></span> VES.</p>
             </section>
 
-            <!-- Sección Perfiles Individuales -->
             <section id="perfiles" class="section hidden">
                 <h2>Perfiles Individuales: Tu Espacio Personalizado</h2>
                 <p>Disfruta de tu contenido favorito en un perfil exclusivo, solo para ti.</p>
                 <div class="profiles-grid">
-                    <!-- Perfil Netflix -->
                     <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de Netflix -->
                         <img src="https://via.placeholder.com/90x90/E50914/FFFFFF?text=Netflix" alt="Netflix Logo">
                         <h3>Netflix Perfil HD</h3>
                         <p class="profile-price">$5.50 USD</p>
                         <p class="profile-desc">Perfil exclusivo en Netflix. Calidad HD, ideal para 1 pantalla. Sin interrupciones.</p>
                         <button class="btn-secondary btn-buy-service" data-service="Netflix Perfil HD" data-price="5.50">Comprar Perfil</button>
                     </div>
-                    <!-- Perfil Disney+ -->
                     <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de Disney+ -->
                         <img src="https://via.placeholder.com/90x90/113669/FFFFFF?text=Disney+" alt="Disney+ Logo">
                         <h3>Disney+ Perfil Full HD</h3>
                         <p class="profile-price">$5.00 USD</p>
                         <p class="profile-desc">Acceso a un perfil exclusivo en Disney+. Disfruta de todo su catálogo en Full HD.</p>
                         <button class="btn-secondary btn-buy-service" data-service="Disney+ Perfil Full HD" data-price="5.00">Comprar Perfil</button>
                     </div>
-                    <!-- Perfil HBO Max -->
                     <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de HBO Max -->
                         <img src="https://via.placeholder.com/90x90/6A1B9A/FFFFFF?text=HBO+Max" alt="HBO Max Logo">
                         <h3>HBO Max Perfil 4K</h3>
                         <p class="profile-price">$6.50 USD</p>
                         <p class="profile-desc">Tu perfil personal en HBO Max con contenido en asombroso 4K Ultra HD.</p>
                         <button class="btn-secondary btn-buy-service" data-service="HBO Max Perfil 4K" data-price="6.50">Comprar Perfil</button>
                     </div>
-                    <!-- Perfil Prime Video -->
                     <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de Prime Video -->
                         <img src="https://via.placeholder.com/90x90/00A8E1/FFFFFF?text=Prime+Video" alt="Prime Video Logo">
                         <h3>Prime Video Perfil</h3>
                         <p class="profile-price">$4.50 USD</p>
                         <p class="profile-desc">Acceso a Prime Video con tu propio perfil. Miles de películas y series incluidas.</p>
                         <button class="btn-secondary btn-buy-service" data-service="Prime Video Perfil" data-price="4.50">Comprar Perfil</button>
                     </div>
-                     <!-- Perfil Crunchyroll -->
-                    <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de Crunchyroll -->
+                     <div class="service-card">
                         <img src="https://via.placeholder.com/90x90/FF7F00/FFFFFF?text=Crunchyroll" alt="Crunchyroll Logo">
                         <h3>Crunchyroll Perfil Mega Fan</h3>
                         <p class="profile-price">$6.00 USD</p>
@@ -246,14 +217,11 @@
                 </div>
             </section>
 
-            <!-- Sección Cuentas Completas -->
             <section id="cuentas-completas" class="section hidden">
                 <h2>Cuentas Completas: Control Total</h2>
                 <p>Acceso exclusivo a la cuenta completa con todos sus perfiles y beneficios.</p>
                 <div class="accounts-grid">
-                    <!-- Cuenta Netflix -->
                     <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de Netflix -->
                         <img src="https://via.placeholder.com/90x90/E50914/FFFFFF?text=Netflix" alt="Netflix Logo">
                         <h3>Netflix Premium 4K</h3>
                         <p class="account-price">$16.00 USD</p>
@@ -265,9 +233,7 @@
                         </ul>
                         <button class="btn-secondary btn-buy-service" data-service="Netflix Premium 4K Cuenta" data-price="16.00">Comprar Cuenta</button>
                     </div>
-                    <!-- Cuenta Disney+ -->
                     <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de Disney+ -->
                         <img src="https://via.placeholder.com/90x90/113669/FFFFFF?text=Disney+" alt="Disney+ Logo">
                         <h3>Disney+ Familiar</h3>
                         <p class="account-price">$12.00 USD</p>
@@ -279,9 +245,7 @@
                         </ul>
                         <button class="btn-secondary btn-buy-service" data-service="Disney+ Familiar Cuenta" data-price="12.00">Comprar Cuenta</button>
                     </div>
-                    <!-- Cuenta HBO Max -->
                     <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de HBO Max -->
                         <img src="https://via.placeholder.com/90x90/6A1B9A/FFFFFF?text=HBO+Max" alt="HBO Max Logo">
                         <h3>HBO Max Premium</h3>
                         <p class="account-price">$18.00 USD</p>
@@ -293,9 +257,7 @@
                         </ul>
                         <button class="btn-secondary btn-buy-service" data-service="HBO Max Premium Cuenta" data-price="18.00">Comprar Cuenta</button>
                     </div>
-                    <!-- Cuenta Prime Video -->
                     <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de Prime Video -->
                         <img src="https://via.placeholder.com/90x90/00A8E1/FFFFFF?text=Prime+Video" alt="Prime Video Logo">
                         <h3>Prime Video Total</h3>
                         <p class="account-price">$15.00 USD</p>
@@ -307,9 +269,7 @@
                         </ul>
                         <button class="btn-secondary btn-buy-service" data-service="Prime Video Total Cuenta" data-price="15.00">Comprar Cuenta</button>
                     </div>
-                    <!-- Cuenta Crunchyroll -->
                     <div class="service-card">
-                        <!-- IMAGEN DEL SERVICIO: Cambia esta URL por la de tu logo de Crunchyroll -->
                         <img src="https://via.placeholder.com/90x90/FF7F00/FFFFFF?text=Crunchyroll" alt="Crunchyroll Logo">
                         <h3>Crunchyroll Mega Fan</h3>
                         <p class="account-price">$10.00 USD</p>
@@ -324,29 +284,24 @@
                 </div>
             </section>
 
-            <!-- Sección Métodos de Pago -->
             <section id="metodos-pago" class="section hidden">
                 <h2>Nuestros Métodos de Pago Disponibles</h2>
                 <p>Elige la opción que más te convenga para procesar tu compra de forma rápida y segura.</p>
                 <div class="payment-methods-grid">
-                    <!-- PayPal -->
                     <div class="payment-card">
                         <img src="https://via.placeholder.com/80x80/00457C/FFFFFF?text=PayPal" alt="PayPal Logo">
                         <h3>PayPal</h3>
                         <p>Correo: <span id="paypal-email-display">gilbertogotera1998@gmail.com</span></p>
                         <button class="btn-copy" data-target="paypal-email-display">Copiar Email</button>
                     </div>
-                    <!-- Binance USDT TRC20 -->
                     <div class="payment-card">
                         <img src="https://via.placeholder.com/80x80/F0B90B/FFFFFF?text=Binance" alt="Binance Logo">
                         <h3>Binance (USDT TRC20)</h3>
-                        <!-- ¡IMPORTANTE: CAMBIA ESTOS PLACEHOLDERS CON TUS DATOS REALES! -->
                         <p>Dirección: <span id="binance-address-display">TXYZABC1234567890DEFGHJKLMNPQRSTUVW</span></p>
                         <p>ID: <span id="binance-id-display">12345678</span></p>
                         <button class="btn-copy" data-target="binance-address-display">Copiar Dirección</button>
                         <button class="btn-copy" data-target="binance-id-display">Copiar ID</button>
                     </div>
-                    <!-- Pago Móvil Venezuela (BDV) -->
                     <div class="payment-card">
                         <img src="https://via.placeholder.com/80x80/008080/FFFFFF?text=Pago+Movil+BDV" alt="Pago Móvil Banco de Venezuela Logo">
                         <h3>Pago Móvil (BDV)</h3>
@@ -356,7 +311,6 @@
                         <button class="btn-copy" data-target="pm-bdv-phone-display">Copiar Telf.</button>
                         <button class="btn-copy" data-target="pm-bdv-ci-display">Copiar C.I.</button>
                     </div>
-                    <!-- Pago Móvil Venezuela (Bancamiga) -->
                     <div class="payment-card">
                         <img src="https://via.placeholder.com/80x80/00B288/FFFFFF?text=Pago+Movil+Bancamiga" alt="Pago Móvil Bancamiga Logo">
                         <h3>Pago Móvil (Bancamiga)</h3>
@@ -364,126 +318,4 @@
                         <p>Telf: <span id="pm-bancamiga-phone-display">04123790923</span></p>
                         <p>C.I.: <span id="pm-bancamiga-ci-display">28308736</span></p>
                         <button class="btn-copy" data-target="pm-bancamiga-phone-display">Copiar Telf.</button>
-                        <button class="btn-copy" data-target="pm-bancamiga-ci-display">Copiar C.I.</button>
-                    </div>
-                    <!-- Transferencia Bancaria Bancamiga -->
-                    <div class="payment-card">
-                        <img src="https://via.placeholder.com/80x80/00B288/FFFFFF?text=Transf+Bancamiga" alt="Bancamiga Logo">
-                        <h3>Transferencia Bancamiga</h3>
-                        <!-- ¡IMPORTANTE: CAMBIA ESTOS PLACEHOLDERS CON TUS DATOS REALES! -->
-                        <p>Banco: <span id="bancamiga-bank-display">Bancamiga</span></p>
-                        <p>Tipo Cuenta: <span id="bancamiga-type-display">Corriente</span></p>
-                        <p>Nº Cuenta: <span id="bancamiga-account-display">0172XXXXXXXXXXXXXXX</span></p>
-                        <p>C.I./RIF: <span id="bancamiga-ci-display-transf">V-28308736</span></p>
-                        <p>Titular: <span id="bancamiga-holder-display">Gilbert O. Gotera R.</span></p>
-                        <button class="btn-copy" data-target="bancamiga-account-display">Copiar Cuenta</button>
-                    </div>
-                    <!-- Transferencia Bancaria Banco de Venezuela -->
-                    <div class="payment-card">
-                        <img src="https://via.placeholder.com/80x80/008080/FFFFFF?text=Transf+BDV" alt="Banco de Venezuela Logo">
-                        <h3>Transferencia Banco de Venezuela</h3>
-                        <!-- ¡IMPORTANTE: CAMBIA ESTOS PLACEHOLDERS CON TUS DATOS REALES! -->
-                        <p>Banco: <span id="bdv-bank-display">Banco de Venezuela</span></p>
-                        <p>Tipo Cuenta: <span id="bdv-type-display">Ahorros</span></p>
-                        <p>Nº Cuenta: <span id="bdv-account-display">0102XXXXXXXXXXXXXXX</span></p>
-                        <p>C.I./RIF: <span id="bdv-ci-display-transf">V-28308736</span></p>
-                        <p>Titular: <span id="bdv-holder-display">Gilbert O. Gotera R.</span></p>
-                        <button class="btn-copy" data-target="bdv-account-display">Copiar Cuenta</button>
-                    </div>
-                </div>
-                <p class="small-text">Por favor, verifica cuidadosamente todos los datos antes de realizar tu pago. Envíe su comprobante después de cada transacción para una entrega más rápida.</p>
-            </section>
-
-            <!-- Sección Subir Comprobante -->
-            <section id="subir-comprobante" class="section hidden">
-                <h2>Envíanos tu Comprobante de Pago</h2>
-                <p>Una vez que hayas realizado tu pago, por favor, completa este formulario para acelerar la verificación y la entrega de tu servicio.</p>
-                <form id="proof-form">
-                    <div class="form-group">
-                        <label for="proof-name">Tu Nombre Completo:</label>
-                        <input type="text" id="proof-name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="proof-whatsapp">Tu Número de WhatsApp:</label>
-                        <input type="tel" id="proof-whatsapp" name="whatsapp" placeholder="+58 4XX XXXXXXX" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="proof-service">Servicio Comprado:</label>
-                        <input type="text" id="proof-service" name="service" readonly required>
-                    </div>
-                    <div class="form-group">
-                        <label for="proof-method">Método de Pago Utilizado:</label>
-                        <select id="proof-method" name="method" required>
-                            <option value="">Selecciona un método</option>
-                            <option value="PayPal">PayPal</option>
-                            <option value="Binance">Binance (USDT TRC20)</option>
-                            <option value="PagoMovilBDV">Pago Móvil (Banco de Venezuela)</option>
-                            <option value="PagoMovilBancamiga">Pago Móvil (Bancamiga)</option>
-                            <option value="TransferenciaBancamiga">Transferencia Bancamiga</option>
-                            <option value="TransferenciaBDV">Transferencia Banco de Venezuela</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="proof-amount">Monto Pagado:</label>
-                        <input type="text" id="proof-amount" name="amount" readonly required>
-                    </div>
-                    <div class="form-group">
-                        <label for="proof-reference">Número de Referencia/Transacción:</label>
-                        <input type="text" id="proof-reference" name="reference" placeholder="Ej: 1234567890" required>
-                        <p class="small-text">Este número es crucial para la verificación de tu pago.</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="proof-screenshot">Adjuntar Comprobante (Captura de pantalla):</label>
-                        <input type="file" id="proof-screenshot" name="screenshot" accept="image/*" required>
-                        <p class="small-text">Importante: Adjuntar la imagen aquí es una indicación. Para una verificación más rápida, **envía también esta imagen y los detalles de tu pago directamente a nuestro WhatsApp de soporte.**</p>
-                    </div>
-                    <button type="submit" class="btn-primary">Enviar Comprobante</button>
-                    <p id="form-message" class="form-message"></p>
-                </form>
-            </section>
-
-            <!-- Sección Ayuda / FAQ -->
-            <section id="faq" class="section hidden">
-                <h2>Preguntas Frecuentes (FAQ)</h2>
-                <p>Encuentra respuestas a tus dudas más comunes.</p>
-                <div class="faq-container">
-                    <div class="faq-item">
-                        <h3 class="faq-question">¿Cómo funciona el proceso de compra de un servicio?</h3>
-                        <div class="faq-answer">
-                            <p>El proceso es simple: 1. Elige el plan, perfil o cuenta que deseas. 2. Realiza el pago utilizando cualquiera de nuestros métodos disponibles. 3. Sube tu comprobante de pago en nuestra sección "Subir Comprobante". 4. Una vez verificado, te enviaremos los datos de acceso a tu WhatsApp en pocos minutos.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <h3 class="faq-question">¿Cuánto tiempo tardan en entregar la cuenta/perfil?</h3>
-                        <div class="faq-answer">
-                            <p>Nuestra entrega es una de las más rápidas del mercado. Una vez que tu pago ha sido verificado (generalmente toma entre 5 y 15 minutos), recibirás los datos de acceso directamente en tu número de WhatsApp.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <h3 class="faq-question">¿Qué garantía ofrecen en sus servicios?</h3>
-                        <div class="faq-answer">
-                            <p>En ConnectTV, la satisfacción del cliente es nuestra prioridad. Ofrecemos una garantía de 30 días para todos nuestros servicios. Si experimentas algún inconveniente durante este período, contacta a nuestro soporte y lo resolveremos de inmediato.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <h3 class="faq-question">¿Qué debo hacer si mi cuenta presenta problemas?</h3>
-                        <div class="faq-answer">
-                            <p>Si tu servicio presenta alguna falla o necesitas asistencia, por favor, comunícate inmediatamente con nuestro equipo de soporte técnico a través de WhatsApp o Telegram. Estamos disponibles 24/7 para brindarte una solución rápida y efectiva.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <h3 class="faq-question">¿Puedo cambiar de plan o servicio después de la compra?</h3>
-                        <div class="faq-answer">
-                            <p>Sí, en la mayoría de los casos es posible. Si deseas cambiar a un plan superior o a un servicio diferente, por favor, contacta a nuestro equipo de soporte para que puedan asesorarte sobre las opciones disponibles y los posibles ajustes de precio.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Sección Contacto -->
-            <section id="contacto" class="section hidden">
-                <h2>¡Contáctanos! Estamos Aquí para Ayudarte</h2>
-                <p>¿Tienes alguna pregunta, necesitas soporte o quieres una consulta personalizada? No dudes en contactarnos a través de los siguientes canales:</p>
-                <div class="contact-info">
-                    <p><i class="fab fa-whatsapp"></i> **WhatsApp Soporte:** <a href="https://wa.me/584242357804" target="_blank">+58 424 235 7804</a></p>
-                    <p><i class="fab fa-telegram-plane">
+                        <button class="btn-copy" data-target="pm-bancamiga-ci-display">Copiar C.I.</

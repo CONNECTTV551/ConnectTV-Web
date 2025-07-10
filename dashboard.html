@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Tienda - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="https://via.placeholder.com/150x50/000000/FFFFFF?text=MI+TIENDA+LOGO" alt="Mi Tienda Logo" class="sidebar-logo">
+                <h3>MI TIENDA</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#" data-section="clientes"><i class="fas fa-users"></i> Clientes</a></li>
+                    <li><a href="#" data-section="mis-cuentas"><i class="fas fa-wallet"></i> Mis cuentas</a></li>
+                    <li><a href="#" data-section="movimientos"><i class="fas fa-exchange-alt"></i> Movimientos</a></li>
+                    <li><a href="#" data-section="respuesta-fallos"><i class="fas fa-exclamation-triangle"></i> Respuesta de fallos</a></li>
+                    <li><a href="#" data-section="reportar-consignacion"><i class="fas fa-file-invoice-dollar"></i> Reportar consignación</a></li>
+                    <li><a href="#" data-section="reportar-follo-pin"><i class="fas fa-thumbtack"></i> Reportar follo pin</a></li>
+                    <li><a href="#" data-section="descargas"><i class="fas fa-download"></i> Descargas</a></li>
+                    <li><a href="#" data-section="capacitaciones"><i class="fas fa-graduation-cap"></i> Capacitaciones</a></li>
+                    <li><a href="#" data-section="ayuda"><i class="fas fa-question-circle"></i> ¿Ayuda?</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="navbar">
+                <div class="navbar-left">
+                    <img src="https://via.placeholder.com/180x40/000000/FF0000?text=MI+ENTRETENIMIENTO" alt="Mi Entretenimiento Logo" class="navbar-logo">
+                </div>
+                <div class="navbar-right">
+                    <button class="btn-saldo">Cargar saldo</button>
+                    <div class="saldo-info">
+                        <span>Saldo productos</span>
+                        <span class="amount">$22,727.98</span>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-id">CONNECTTV-COM (ID: 21190)</span>
+                        <i class="fas fa-user-circle user-icon"></i>
+                        <i class="fas fa-bell notification-icon"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="alert-banner">
+                    <span><strong>Atención!</strong> Ahora puedes calificar las respuestas a las garantías, ayúdanos calificando y así ofrecerte un mejor servicio.</span>
+                    <button class="close-alert"><i class="fas fa-times"></i></button>
+                </div>
+
+                <div class="secondary-nav">
+                    <button class="btn-secondary active">Vender</button>
+                    <button class="btn-secondary">Órdenes</button>
+                </div>
+
+                <section id="clientes" class="dashboard-section active">
+                    <div class="main-banner">
+                        <img src="https://via.placeholder.com/800x300/FF0000/FFFFFF?text=YA+NOS+SIGUES+EN+NUESTRAS+REDES+SOCIALES%3F" alt="Redes Sociales Banner">
+                        <div class="banner-text">
+                            <p>ALLÍ ENCONTRARÁS CONTENIDO EXCLUSIVO, TIPS ÚTILES, PROMOCIONES ESPECIALES Y TODOS LOS BENEFICIOS POR SER PARTE DE NUESTRO EQUIPO</p>
+                            <div class="social-icons">
+                                <img src="https://via.placeholder.com/100x100/000000/FFFFFF?text=QR+IG" alt="QR Instagram">
+                                <img src="https://via.placeholder.com/100x100/000000/FFFFFF?text=QR+FB" alt="QR Facebook">
+                            </div>
+                            <p>@MIENTRETENIMIENTO_COL</p>
+                            <p>@MIENTRETENIMIENTO_COL</p>
+                        </div>
+                    </div>
+
+                    <div class="category-grid">
+                        <div class="category-card">
+                            <span>Audio y Sonido</span>
+                            <span class="category-count">69</span>
+                        </div>
+                        <div class="category-card">
+                            <span>Tecnología y Accesorios</span>
+                            <span class="category-count">69</span>
+                        </div>
+                        <div class="category-card">
+                            <span>Salud y Belleza</span>
+                            <span class="category-count">1</span>
+                        </div>
+                        <div class="category-card">
+                            <span>Herramientas y Ferretería</span>
+                            <span class="category-count">4</span>
+                        </div>
+                        <div class="category-card">
+                            <span>Streaming</span>
+                            <span class="category-count">20</span>
+                        </div>
+                        <div class="category-card">
+                            <span>Papelería</span>
+                            <span class="category-count">20</span>
+                        </div>
+                        <div class="category-card">
+                            <span>Juguetería</span>
+                            <span class="category-count">72</span>
+                        </div>
+                        <div class="category-card">
+                            <span>Hogar y Electrodomésticos</span>
+                            <span class="category-count">14</span>
+                        </div>
+                        <div class="category-card">
+                            <span>Variedades</span>
+                            <span class="category-count">9</span>
+                        </div>
+                        <div class="category-card">
+                            <span>Automotriz</span>
+                            <span class="category-count">4</span>
+                        </div>
+                        <div class="category-card full-width">
+                            <span>Cuentas digitales CLF</span>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title">CUENTAS DIGITALES</h3>
+                    <div class="placeholder-content">
+                        <p>Contenido detallado de cuentas digitales...</p>
+                    </div>
+
+                    <h3 class="section-title">COMBOS</h3>
+                    <div class="placeholder-content">
+                        <p>Contenido detallado de combos...</p>
+                    </div>
+                </section>
+
+                <section id="mis-cuentas" class="dashboard-section">
+                    <h2>Mis Cuentas</h2>
+                    <p>Aquí puedes gestionar tus cuentas.</p>
+                </section>
+                <section id="movimientos" class="dashboard-section">
+                    <h2>Movimientos</h2>
+                    <p>Consulta tus transacciones recientes.</p>
+                </section>
+                <section id="respuesta-fallos" class="dashboard-section">
+                    <h2>Respuesta de Fallos</h2>
+                    <p>Información sobre fallos y soluciones.</p>
+                </section>
+                <section id="reportar-consignacion" class="dashboard-section">
+                    <h2>Reportar Consignación</h2>
+                    <p>Formulario para reportar una nueva consignación.</p>
+                </section>
+                <section id="reportar-follo-pin" class="dashboard-section">
+                    <h2>Reportar Follo Pin</h2>
+                    <p>Formulario para reportar un follo pin.</p>
+                </section>
+                <section id="descargas" class="dashboard-section">
+                    <h2>Descargas</h2>
+                    <p>Aquí encontrarás archivos y recursos para descargar.</p>
+                </section>
+                <section id="capacitaciones" class="dashboard-section">
+                    <h2>Capacitaciones</h2>
+                    <p>Material y enlaces a capacitaciones.</p>
+                </section>
+                <section id="ayuda" class="dashboard-section">
+                    <h2>¿Ayuda?</h2>
+                    <p>Preguntas frecuentes y soporte.</p>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
