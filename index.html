@@ -11,6 +11,7 @@
     <link rel="icon" type="image/x-icon" href="img/favicon.ico"> 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <style>
@@ -319,22 +320,25 @@
         }
 
         /* --- Section: Cuentas Completas (Example) --- */
-        .accounts-grid {
+        .accounts-grid, .plans-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
             margin-top: 30px;
         }
 
-        .account-card {
+        .account-card, .plan-card {
             background-color: var(--card-background);
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 6px 15px rgba(0,0,0,0.6);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .account-card:hover {
+        .account-card:hover, .plan-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.8);
         }
@@ -345,11 +349,49 @@
             object-fit: cover;
             border-bottom: 1px solid var(--border-color);
         }
-
-        .account-card-content {
-            padding: 20px;
+        .plan-card h3 {
+            font-size: 1.8em;
+            color: white;
+            margin-bottom: 10px;
+        }
+        .plan-card .price {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        .plan-card .price span {
+            font-size: 0.6em;
+            font-weight: normal;
+            color: #aaa;
+        }
+        .plan-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            flex-grow: 1; /* Para que la lista ocupe el espacio disponible */
+        }
+        .plan-card ul li {
+            color: #ccc;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .plan-card ul li i.bx-check-circle {
+            color: var(--whatsapp-green);
+            margin-right: 8px;
+        }
+        .plan-card ul li i.bx-x-circle {
+            color: var(--primary-color);
+            margin-right: 8px;
         }
 
+
+        .account-card-content, .plan-card-content {
+            padding: 20px;
+            flex-grow: 1; /* Para que el contenido ocupe el espacio disponible */
+            display: flex;
+            flex-direction: column;
+        }
         .account-card-content h4 {
             font-size: 1.5em;
             color: white;
@@ -370,7 +412,13 @@
             margin-bottom: 15px;
         }
 
-        .account-card-content .action-btn {
+        .action-group {
+            display: flex;
+            gap: 10px;
+            margin-top: auto; /* Empuja los botones hacia abajo */
+        }
+
+        .action-btn {
             background-color: var(--whatsapp-green); /* Default to WhatsApp green */
             color: white;
             padding: 10px 15px;
@@ -381,9 +429,17 @@
             align-items: center;
             gap: 8px;
             transition: background-color 0.3s ease;
+            flex: 1; /* Para que ocupen el mismo ancho */
+            justify-content: center;
+        }
+        .action-btn.details-btn {
+            background-color: #555;
+        }
+        .action-btn.details-btn:hover {
+            background-color: #777;
         }
 
-        .account-card-content .action-btn:hover {
+        .action-btn:hover {
             background-color: var(--whatsapp-green-dark);
         }
 
@@ -523,30 +579,6 @@
             color: #aaa;
         }
 
-        .perfil-card .action-btn {
-            background-color: var(--whatsapp-green); /* Default to WhatsApp green */
-            color: white;
-            padding: 18px 25px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .perfil-card .action-btn:hover {
-            background-color: var(--whatsapp-green-dark);
-            transform: translateY(-3px);
-        }
 
         /* Estilos para la sección de Métodos de Pago */
         .payment-methods-grid {
@@ -582,10 +614,18 @@
             margin-bottom: 15px;
         }
 
+        /* Colores de iconos específicos o imágenes */
         .payment-card .paypal-icon { color: var(--paypal-blue); }
         .payment-card .binance-icon { color: var(--binance-yellow); }
         .payment-card .bank-icon { color: #00A3DA; /* Color Banco Venezuela */ }
         .payment-card .bancamiga-icon { color: #8A2BE2; /* Color Bancamiga */ }
+
+        .payment-card .payment-logo {
+            height: 80px; /* Tamaño del logo */
+            margin-bottom: 15px;
+            object-fit: contain;
+        }
+
 
         .payment-card p {
             font-size: 1em;
@@ -625,6 +665,153 @@
         .payment-card .copy-btn:hover {
             background-color: #777;
         }
+
+        /* --- MODAL Styles (Ventana Emergente) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--modal-content-bg);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            position: relative;
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-content h3 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-align: center;
+        }
+        .modal-content p {
+            color: #ccc;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+        .modal-content ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        .modal-content ul li {
+            margin-bottom: 8px;
+            color: #ddd;
+        }
+        .modal-content ul li i {
+            margin-right: 10px;
+            color: var(--whatsapp-green);
+        }
+        .modal-content .modal-price {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .modal-content .whatsapp-modal-btn {
+            display: block;
+            width: 80%;
+            margin: 0 auto;
+            background-color: var(--whatsapp-green);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        .modal-content .whatsapp-modal-btn:hover {
+            background-color: var(--whatsapp-green-dark);
+        }
+
+        /* Formulario de Login/Registro en el modal */
+        .auth-form input {
+            width: calc(100% - 20px);
+            padding: 12px 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-light);
+            font-size: 1em;
+        }
+        .auth-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .auth-form button:hover {
+            background-color: var(--button-hover);
+        }
+        .auth-form .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            color: #aaa;
+        }
+        .auth-form .toggle-form a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .auth-form .toggle-form a:hover {
+            text-decoration: underline;
+        }
+
 
         /* Responsive Adjustments */
         @media (max-width: 768px) {
@@ -685,11 +872,20 @@
                 padding: 12px 20px;
                 font-size: 1em;
             }
-            .perfiles-grid, .accounts-grid, .payment-methods-grid {
+            .perfiles-grid, .accounts-grid, .payment-methods-grid, .plans-grid {
                 grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
             }
-            .perfil-card, .account-card, .payment-card {
+            .perfil-card, .account-card, .payment-card, .plan-card {
                 min-height: auto;
+            }
+            .modal-content {
+                padding: 20px;
+            }
+            .modal-content h3 {
+                font-size: 1.8em;
+            }
+            .modal-content .whatsapp-modal-btn {
+                width: 90%;
             }
         }
     </style>
@@ -705,7 +901,8 @@
                 <li><a href="#" data-page="inicio" class="sidebar-button active">Inicio</a></li>
                 <li><a href="#" data-page="catalogo" class="sidebar-button">Catálogo</a></li>
                 <li><a href="#" data-page="planes" class="sidebar-button">Planes</a></li>
-                <li><a href="#" data-page="pagar" class="sidebar-button">Pagar</a></li> <li><a href="#" data-page="soporte" class="sidebar-button">Soporte</a></li>
+                <li><a href="#" data-page="pagar" class="sidebar-button">Pagar</a></li> 
+                <li><a href="#" data-page="soporte" class="sidebar-button">Soporte</a></li>
             </ul>
         </nav>
         <div class="header-actions">
@@ -713,303 +910,4 @@
                 <i class='bx bx-search'></i>
                 <input type="text" placeholder="Buscar contenido...">
             </div>
-            <button class="login-button">Iniciar Sesión</button>
-        </div>
-    </header>
-
-    <div class="page-container">
-        <aside>
-            <div class="admin-label">
-                <i class='bx bxs-user-account'></i>
-                <span>Admin</span>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li>
-                        <a href="#" data-page="inicio" class="sidebar-button active">
-                            <i class='bx bx-home'></i>
-                            <span class="links_name">Inicio</span>
-                        </a>
-                        <span class="tooltip">Inicio</span>
-                    </li>
-                    <li>
-                        <a href="#" data-page="catalogo" class="sidebar-button">
-                            <i class='bx bx-compass'></i>
-                            <span class="links_name">Catálogo</span>
-                        </a>
-                        <span class="tooltip">Catálogo</span>
-                    </li>
-                    <li>
-                        <a href="#" data-page="planes" class="sidebar-button">
-                            <i class='bx bx-dollar-circle'></i>
-                            <span class="links_name">Nuestros Planes</span>
-                        </a>
-                        <span class="tooltip">Nuestros Planes</span>
-                    </li>
-
-                    <li>
-                        <a href="#" data-page="perfiles" class="sidebar-button">
-                            <i class='bx bx-user'></i>
-                            <span class="links_name">Perfiles</span>
-                        </a>
-                        <span class="tooltip">Perfiles</span>
-                    </li>
-                    <li>
-                        <a href="#" data-page="cuentasCompletas" class="sidebar-button">
-                            <i class='bx bx-cart'></i>
-                            <span class="links_name">Cuentas Completas</span>
-                        </a>
-                        <span class="tooltip">Cuentas Completas</span>
-                    </li>
-                    <li>
-                        <a href="#" data-page="subirComprobante" class="sidebar-button">
-                            <i class='bx bx-cloud-upload'></i>
-                            <span class="links_name">Subir Comprobante</span>
-                        </a>
-                        <span class="tooltip">Subir Comprobante</span>
-                    </li>
-                    <li>
-                        <a href="#" data-page="ayuda" class="sidebar-button">
-                            <i class='bx bx-help-circle'></i>
-                            <span class="links_name">Ayuda y FAQ</span>
-                        </a>
-                        <span class="tooltip">Ayuda y FAQ</span>
-                    </li>
-                    <li>
-                        <a href="#" data-page="soporte" class="sidebar-button">
-                            <i class='bx bx-support'></i>
-                            <span class="links_name">Soporte</span>
-                        </a>
-                        <span class="tooltip">Soporte</span>
-                    </li>
-                    <li>
-                        <a href="#" data-page="pagar" class="sidebar-button"> <i class='bx bx-credit-card'></i>
-                            <span class="links_name">Métodos de Pago</span>
-                        </a>
-                        <span class="tooltip">Métodos de Pago</span>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <main>
-            <section id="inicioSection" class="content-section-page active-page">
-                <div class="hero-section">
-                    <h2>ACCESO ILIMITADO AL MEJOR CONTENIDO</h2>
-                    <p>Descubre miles de películas, series y documentales en HD y 4K. Elige el plan perfecto para ti y empieza a disfrutar hoy mismo.</p>
-                    <div class="hero-buttons">
-                        <a href="#" data-page="planes" class="btn sidebar-button">Ver Planes</a>
-                        <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20los%20servicios%20de%20ConnectTV." class="btn btn-secondary" target="_blank">Contactar WhatsApp</a>
-                    </div>
-                </div>
-                <div class="content-block">
-                    <h3>¿Por qué elegir ConnectTV?</h3>
-                    <p>En ConnectTV, te ofrecemos una experiencia de entretenimiento inigualable. Con nuestra amplia selección de contenido, calidad superior y precios accesibles, tu diversión está garantizada.</p>
-                    <ul class="features-list">
-                        <li><i class='bx bx-check-circle'></i> Contenido exclusivo y actualizado constantemente.</li>
-                        <li><i class='bx bx-check-circle'></i> Calidad HD y 4K para una experiencia visual inmersiva.</li>
-                        <li><i class='bx bx-check-circle'></i> Soporte al cliente dedicado y amigable.</li>
-                        <li><i class='bx bx-check-circle'></i> Planes flexibles que se adaptan a tus necesidades.</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section id="catalogoSection" class="content-section-page">
-                <div class="content-block">
-                    <h2>Próximamente: Nuestro Catálogo Completo</h2>
-                    <p>Estamos trabajando para traerte una biblioteca aún más grande de películas y series exclusivas. ¡Mantente atento!</p>
-                    <p>Contenido en desarrollo...</p>
-                </div>
-            </section>
-
-            <section id="planesSection" class="content-section-page">
-                <div class="content-block">
-                    <h2>Elige el Plan Perfecto para Ti</h2>
-                    <p>Descubre nuestros planes de suscripción diseñados para ofrecerte la mejor experiencia de entretenimiento al mejor precio.</p>
-                    <div class="plans-grid">
-                        <div class="plan-card">
-                            <h3>Básico</h3>
-                            <p class="price">$9.99 <span>/ mes</span></p>
-                            <ul>
-                                <li><i class='bx bx-check-circle'></i> Acceso a 1 plataforma</li>
-                                <li><i class='bx bx-check-circle'></i> Calidad HD</li>
-                                <li><i class='bx bx-check-circle'></i> 1 Pantalla simultánea</li>
-                                <li><i class='bx bx-x-circle'></i> No incluye 4K</li>
-                            </ul>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Contratar</a>
-                        </div>
-                        <div class="plan-card featured">
-                            <h3>Premium</h3>
-                            <p class="price">$19.99 <span>/ mes</span></p>
-                            <ul>
-                                <li><i class='bx bx-check-circle'></i> Acceso a 3 plataformas</li>
-                                <li><i class='bx bx-check-circle'></i> Calidad HD y 4K</li>
-                                <li><i class='bx bx-check-circle'></i> 3 Pantallas simultáneas</li>
-                                <li><i class='bx bx-check-circle'></i> Soporte prioritario</li>
-                            </ul>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Contratar</a>
-                        </div>
-                        <div class="plan-card">
-                            <h3>Familiar</h3>
-                            <p class="price">$29.99 <span>/ mes</span></p>
-                            <ul>
-                                <li><i class='bx bx-check-circle'></i> Acceso a 5+ plataformas</li>
-                                <li><i class='bx bx-check-circle'></i> Calidad HD y 4K</li>
-                                <li><i class='bx bx-check-circle'></i> Hasta 5 pantallas simultáneas</li>
-                                <li><i class='bx bx-check-circle'></i> Todas las funciones Premium</li>
-                            </ul>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Contratar</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="perfilesSection" class="content-section-page">
-                <div class="content-block">
-                    <h2>Nuestros Perfiles Premium</h2>
-                    <p>Accede a perfiles de alta calidad en tus plataformas de streaming favoritas. ¡Disfruta del mejor entretenimiento!</p>
-
-                    <div class="perfiles-grid">
-                        <div class="perfil-card">
-                            <img src="img/netflix.png" alt="Netflix">
-                            <h4>Netflix</h4>
-                            <p class="perfil-description">Acceso a un perfil personal en Netflix con calidad Ultra HD. Disfruta de películas y series sin interrupciones.</p>
-                            <p class="perfil-price">$5.00 <span>/ mes</span></p>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Comprar Perfil</a>
-                        </div>
-
-                        <div class="perfil-card">
-                            <img src="img/disney.png" alt="Disney+">
-                            <h4>Disney+</h4>
-                            <p class="perfil-description">Disfruta de Disney, Pixar, Marvel, Star Wars y National Geographic en calidad premium.</p>
-                            <p class="perfil-price">$4.50 <span>/ mes</span></p>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Comprar Perfil</a>
-                        </div>
-
-                        <div class="perfil-card">
-                            <img src="img/max.png" alt="Max">
-                            <h4>Max</h4>
-                            <p class="perfil-description">Lo mejor de HBO, Warner Bros., DC, Max Originals y más. Contenido exclusivo.</p>
-                            <p class="perfil-price">$4.80 <span>/ mes</span></p>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Comprar Perfil</a>
-                        </div>
-
-                        <div class="perfil-card">
-                            <img src="img/primevideo.png" alt="Prime Video">
-                            <h4>Prime Video</h4>
-                            <p class="perfil-description">Miles de películas y series, incluyendo Prime Originals. Acceso rápido y sencillo.</p>
-                            <p class="perfil-price">$3.50 <span>/ mes</span></p>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Comprar Perfil</a>
-                        </div>
-
-                        <div class="perfil-card">
-                            <img src="img/paramount.png" alt="Paramount+">
-                            <h4>Paramount+</h4>
-                            <p class="perfil-description">Gran variedad de películas, series originales, deportes en vivo y programas de Showtime.</p>
-                            <p class="perfil-price">$3.00 <span>/ mes</span></p>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Comprar Perfil</a>
-                        </div>
-
-                        <div class="perfil-card">
-                            <img src="img/telelatino.png" alt="Tele Latino">
-                            <h4>Tele Latino</h4>
-                            <p class="perfil-description">Acceso a canales de TV en vivo, películas y series latinoamericanas e internacionales.</p>
-                            <p class="perfil-price">$4.00 <span>/ mes</span></p>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Comprar Perfil</a>
-                        </div>
-
-                        <div class="perfil-card">
-                            <img src="img/bits.png" alt="Bits">
-                            <h4>Bits</h4>
-                            <p class="perfil-description">Plataforma con contenido variado, desde documentales hasta entretenimiento exclusivo.</p>
-                            <p class="perfil-price">$2.50 <span>/ mes</span></p>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Comprar Perfil</a>
-                        </div>
-
-                        <div class="perfil-card">
-                            <img src="img/flujotv.png" alt="Flujo TV">
-                            <h4>Flujo TV</h4>
-                            <p class="perfil-description">Disfruta de televisión en vivo y un amplio catálogo de series y películas con Flujo TV.</p>
-                            <p class="perfil-price">$3.80 <span>/ mes</span></p>
-                            <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Comprar Perfil</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section id="cuentasCompletasSection" class="content-section-page">
-                <div class="content-block">
-                    <h2>Cuentas Completas a tu Disposición</h2>
-                    <p>Obtén acceso total a cuentas de streaming exclusivas. ¡No compartas, ten tu propio espacio!</p>
-                    <div class="accounts-grid">
-                        <div class="account-card">
-                            <img src="https://via.placeholder.com/400x250?text=Cuenta+Netflix" alt="Cuenta Netflix">
-                            <div class="account-card-content">
-                                <h4>Netflix</h4>
-                                <p>Acceso completo a una cuenta Netflix con perfiles disponibles.</p>
-                                <p class="price">$12.00 <span>/ mes</span></p>
-                                <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Preguntar</a>
-                            </div>
-                        </div>
-                        <div class="account-card">
-                            <img src="https://via.placeholder.com/400x250?text=Cuenta+Max" alt="Cuenta Max">
-                            <div class="account-card-content">
-                                <h4>Max</h4>
-                                <p>Disfruta de todo el contenido de Max sin restricciones.</p>
-                                <p class="price">$10.00 <span>/ mes</span></p>
-                                <a href="#" data-page="pagar" class="action-btn sidebar-button"><i class='bx bx-credit-card'></i> Preguntar</a>
-                            </div>
-                        </div>
-                        </div>
-                </div>
-            </section>
-
-            <section id="pagarSection" class="content-section-page">
-                <div class="content-block">
-                    <h2>Elige tu Método de Pago</h2>
-                    <p>Para procesar tu solicitud, puedes realizar el pago a través de las siguientes opciones. Una vez realizado, sube tu comprobante en la sección "Subir Comprobante".</p>
-
-                    <div class="payment-methods-grid">
-                        <div class="payment-card">
-                            <i class='fab fa-paypal icon paypal-icon'></i>
-                            <h3>PayPal</h3>
-                            <p>Paga de forma segura con tu cuenta PayPal.</p>
-                            <div class="details">
-                                <p><strong>Correo PayPal:</strong> <span id="paypalEmail">tu.correo@ejemplo.com</span></p>
-                                <p><strong>Link PayPal.Me:</strong> <a href="https://paypal.me/tuusuario" target="_blank">paypal.me/tuusuario</a></p>
-                            </div>
-                            <button class="copy-btn" onclick="copyToClipboard('tu.correo@ejemplo.com')">Copiar Correo</button>
-                            <a href="https://paypal.me/tuusuario" target="_blank" class="action-btn" style="background-color: var(--paypal-blue); margin-top: 15px;"><i class='fab fa-paypal'></i> Pagar con PayPal</a>
-                            <p style="font-size: 0.85em; color: #aaa; margin-top: 10px;">*Asegúrate de cubrir las comisiones de PayPal si aplica.</p>
-                        </div>
-
-                        <div class="payment-card">
-                            <i class='bx bxs-coin icon binance-icon'></i>
-                            <h3>Binance (USDT TRC20)</h3>
-                            <p>Envía USDT a nuestra billetera de Binance.</p>
-                            <div class="details">
-                                <p><strong>Red:</strong> TRC20</p>
-                                <p><strong>Dirección USDT:</strong> <span id="binanceAddress">[TU_DIRECCION_BINANCE_USDT_TRC20_AQUI]</span></p>
-                            </div>
-                            <button class="copy-btn" onclick="copyToClipboard('[TU_DIRECCION_BINANCE_USDT_TRC20_AQUI]')">Copiar Dirección</button>
-                        </div>
-
-                        <div class="payment-card">
-                            <i class='bx bxs-bank icon bank-icon'></i>
-                            <h3>Pago Móvil (Banco de Venezuela)</h3>
-                            <p>Realiza tu pago móvil al Banco de Venezuela.</p>
-                            <div class="details">
-                                <p><strong>Banco:</strong> 0102 - Banco de Venezuela</p>
-                                <p><strong>Cédula/RIF:</strong> <span id="pagoMovilCI">[TU_CEDULA_RIF_PAGOMOVIL_AQUI]</span></p>
-                                <p><strong>Teléfono:</strong> <span id="pagoMovilPhone">584242357804</span></p>
-                            </div>
-                            <button class="copy-btn" onclick="copyToClipboard('584242357804')">Copiar Teléfono</button>
-                        </div>
-
-                        <div class="payment-card">
-                            <i class='bx bxs-bank icon bancamiga-icon'></i>
-                            <h3>Transferencia Bancamiga</h3>
-                            <p>Realiza una transferencia bancaria a nuestra cuenta Bancamiga.</p>
-                            <div class="details">
-                                <p><strong>Banco:</strong> 0172 - Bancamiga</p>
-                                <p><strong>Tipo de Cuenta:</strong> Corriente / Ahorro</p>
-                                <p><strong>Número de Cuenta:</strong> <span id="bancamigaAccount">[TU_NUMERO_DE
+            <button class="login-button" id="open
