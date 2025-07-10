@@ -3,319 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConnectTV - Tu Acceso al Entretenimiento Ilimitado</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>ConnectTV - Acceso al Entretenimiento</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <img src="https://via.placeholder.com/180x60/E50914/FFFFFF?text=ConnectTV+Logo" alt="ConnectTV Logo" class="logo">
-            </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#home"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="#catalogo"><i class="fas fa-film"></i> Catálogo</a></li>
-                    <li><a href="#planes-precios"><i class="fas fa-tags"></i> Planes y Precios</a></li>
-                    <li><a href="#perfiles"><i class="fas fa-user-friends"></i> Perfiles Individuales</a></li>
-                    <li><a href="#cuentas-completas"><i class="fas fa-lock"></i> Cuentas Completas</a></li>
-                    <li><a href="#metodos-pago"><i class="fas fa-wallet"></i> Métodos de Pago</a></li>
-                    <li><a href="#subir-comprobante"><i class="fas fa-upload"></i> Subir Comprobante</a></li>
-                    <li><a href="#faq"><i class="fas fa-question-circle"></i> Ayuda / FAQ</a></li>
-                    <li><a href="#contacto"><i class="fas fa-headset"></i> Contacto</a></li>
-                    <li class="auth-links">
-                        <a href="#" id="login-btn-sidebar"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
-                        <a href="#" id="register-btn-sidebar"><i class="fas fa-user-plus"></i> Registrarse</a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+    <div class="login-container">
+        <div class="login-header">
+<img src="img/connecttv-logo.png" alt="ConnectTV Logo" class="login-logo">            <h1>Tu Acceso Ilimitado al Entretenimiento</h1>
+            <p>Disfruta de tus películas y series favoritas con la mejor calidad y al mejor precio.</p>
+        </div>
 
-        <main class="main-content">
-            <header class="mobile-header">
-                <div class="hamburger-menu" id="hamburger-menu">
-                    <i class="fas fa-bars"></i>
+        <div class="form-container">
+            <form id="loginForm" class="auth-form active">
+                <h2>Iniciar Sesión</h2>
+                <div class="input-group">
+                    <label for="login-username">Usuario</label>
+                    <input type="text" id="login-username" placeholder="Tu nombre de usuario" required>
                 </div>
-                <img src="https://via.placeholder.com/120x40/E50914/FFFFFF?text=ConnectTV+Logo" alt="ConnectTV Logo" class="logo-mobile">
-                <div class="mobile-auth">
-                    <button class="mobile-auth-btn" id="login-btn-mobile"><i class="fas fa-sign-in-alt"></i></button>
-                    <button class="mobile-auth-btn" id="register-btn-mobile"><i class="fas fa-user-plus"></i></button>
+                <div class="input-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" placeholder="Tu contraseña" required>
                 </div>
-            </header>
+                <button type="submit" class="btn-primary">Ingresar</button>
+                <a href="#" class="forgot-password">Olvidé mi contraseña</a>
+                <p>¿No tienes una cuenta? <a href="#" id="toggleToRegister">Regístrate aquí</a></p>
+            </form>
 
-            <section id="home" class="section active">
-                <div class="hero">
-                    <h1>Tu Acceso Ilimitado al Entretenimiento</h1>
-                    <p>Disfruta de tus películas y series favoritas con la mejor calidad y al mejor precio, directo en tu pantalla.</p>
-                    <button class="btn-primary scroll-to-plans">Explorar Planes Ahora</button>
+            <form id="registerForm" class="auth-form">
+                <h2>Registrarse</h2>
+                <div class="input-group">
+                    <label for="register-username">Usuario</label>
+                    <input type="text" id="register-username" placeholder="Elige un nombre de usuario" required>
                 </div>
+                <div class="input-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Tu correo electrónico" required>
+                </div>
+                <div class="input-group">
+                    <label for="register-password">Contraseña</label>
+                    <input type="password" id="register-password" placeholder="Crea una contraseña" required>
+                </div>
+                <div class="input-group">
+                    <label for="register-confirm-password">Confirmar Contraseña</label>
+                    <input type="password" id="register-confirm-password" placeholder="Confirma tu contraseña" required>
+                </div>
+                <button type="submit" class="btn-primary">Registrarme</button>
+                <p>¿Ya tienes una cuenta? <a href="#" id="toggleToLogin">Inicia Sesión</a></p>
+            </form>
+        </div>
+    </div>
 
-                <div class="section-block featured-carousel">
-                    <h2>🎬 Últimos Estrenos y Contenido Destacado 🎬</h2>
-                    <div class="carousel-container">
-                        <div class="carousel-slide">
-                            <img src="https://via.placeholder.com/800x450/444444/FFFFFF?text=Pel%C3%ADcula+Estreno+1" alt="Película Estreno 1">
-                            <img src="https://via.placeholder.com/800x450/555555/FFFFFF?text=Serie+Popular+2" alt="Serie Popular 2">
-                            <img src="https://via.placeholder.com/800x450/666666/FFFFFF?text=Documental+Interesante+3" alt="Documental Interesante 3">
-                            <img src="https://via.placeholder.com/800x450/777777/FFFFFF?text=Anime+Novedad+4" alt="Anime Novedad 4">
-                        </div>
-                        <button class="carousel-prev"><i class="fas fa-chevron-left"></i></button>
-                        <button class="carousel-next"><i class="fas fa-chevron-right"></i></button>
-                        <div class="carousel-dots"></div>
-                    </div>
-                </div>
-
-                <div class="section-block why-choose-us">
-                    <h2>¿Por Qué Elegir ConnectTV?</h2>
-                    <div class="features-grid">
-                        <div class="feature-item">
-                            <i class="fas fa-dollar-sign"></i>
-                            <h3>Precios Insuperables</h3>
-                            <p>Accede a tus plataformas favoritas con los planes más económicos del mercado.</p>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-shield-alt"></i>
-                            <h3>Cuentas 100% Seguras</h3>
-                            <p>Garantía de funcionamiento y seguridad en cada cuenta o perfil que adquieras.</p>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-headset"></i>
-                            <h3>Soporte 24/7</h3>
-                            <p>Nuestro equipo está siempre disponible para asistirte con cualquier duda o problema.</p>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-bolt"></i>
-                            <h3>Entrega Instantánea</h3>
-                            <p>Recibe tus datos de acceso en minutos tras la confirmación de tu pago.</p>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-users"></i>
-                            <h3>Variedad de Perfiles</h3>
-                            <p>Opciones de perfiles individuales o cuentas completas para toda la familia.</p>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-globe"></i>
-                            <h3>Cobertura Internacional</h3>
-                            <p>Disfruta de nuestro servicio desde cualquier lugar, sin restricciones geográficas.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="catalogo" class="section hidden">
-                <h2>Explora Nuestro Vastísimo Catálogo de Contenido</h2>
-                <div class="content-block">
-                    <p>En ConnectTV te abrimos las puertas a un universo ilimitado de entretenimiento. Accede a las plataformas más reconocidas a nivel mundial, cargadas con miles de películas, series, documentales, anime y contenido exclusivo para cada gusto.</p>
-                    <p>Aunque aquí no listamos cada título, nuestro servicio te conecta con los gigantes del streaming, asegurando que siempre tengas algo nuevo y emocionante para ver. ¡Prepara las palomitas y a disfrutar!</p>
-                    <div class="placeholder-content">
-                        <i class="fas fa-tv"></i>
-                        <h3>¡Tu próxima obsesión te espera!</h3>
-                        <p>Siempre actualizando nuestras ofertas para brindarte lo mejor del mundo del streaming.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="planes-precios" class="section hidden">
-                <h2>Elige el Plan Perfecto para Ti</h2>
-                <p>Nuestros planes están diseñados para adaptarse a tus necesidades y presupuesto.</p>
-                <div class="currency-toggle-container">
-                    <span class="currency-label">Moneda:</span>
-                    <button id="toggle-currency" class="btn-toggle-currency">USD</button>
-                </div>
-                <div class="plans-grid">
-                    <div class="plan-card">
-                        <h3>Plan Básico</h3>
-                        <p class="plan-price" data-usd-price="7.99" data-ves-price="0">
-                            <span class="price-usd">$7.99 <small>USD</small></span>
-                            <span class="price-ves" style="display: none;"></span>
-                        </p>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Calidad HD</li>
-                            <li><i class="fas fa-check-circle"></i> 1 Pantalla Simultánea</li>
-                            <li><i class="fas fa-check-circle"></i> Acceso a 2 Plataformas principales*</li>
-                            <li><i class="fas fa-check-circle"></i> Soporte Básico por WhatsApp</li>
-                            <li><i class="fas fa-times-circle" style="color: var(--text-dark);"></i> Sin Anuncios (según plataforma)</li>
-                        </ul>
-                        <button class="btn-primary btn-plan-select" data-plan="Básico">Seleccionar Plan</button>
-                    </div>
-                    <div class="plan-card featured">
-                        <h3>Plan Estándar</h3>
-                        <p class="plan-price" data-usd-price="12.99" data-ves-price="0">
-                            <span class="price-usd">$12.99 <small>USD</small></span>
-                            <span class="price-ves" style="display: none;"></span>
-                        </p>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Calidad Full HD</li>
-                            <li><i class="fas fa-check-circle"></i> 2 Pantallas Simultáneas</li>
-                            <li><i class="fas fa-check-circle"></i> Acceso a 4 Plataformas principales*</li>
-                            <li><i class="fas fa-check-circle"></i> Soporte Prioritario por WhatsApp</li>
-                            <li><i class="fas fa-check-circle"></i> Experiencia sin anuncios</li>
-                        </ul>
-                        <button class="btn-primary btn-plan-select" data-plan="Estándar">Seleccionar Plan</button>
-                    </div>
-                    <div class="plan-card">
-                        <h3>Plan Premium</h3>
-                        <p class="plan-price" data-usd-price="19.99" data-ves-price="0">
-                            <span class="price-usd">$19.99 <small>USD</small></span>
-                            <span class="price-ves" style="display: none;"></span>
-                        </p>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Calidad 4K Ultra HD</li>
-                            <li><i class="fas fa-check-circle"></i> Hasta 4 Pantallas Simultáneas</li>
-                            <li><i class="fas fa-check-circle"></i> Acceso a TODAS las Plataformas*</li>
-                            <li><i class="fas fa-check-circle"></i> Soporte VIP 24/7</li>
-                            <li><i class="fas fa-check-circle"></i> Contenido Exclusivo y Actualizaciones</li>
-                        </ul>
-                        <button class="btn-primary btn-plan-select" data-plan="Premium">Seleccionar Plan</button>
-                    </div>
-                </div>
-                <p class="small-text">*Las plataformas incluidas varían según el plan. Consulta con nuestro soporte para más detalles.</p>
-                <p class="small-text">Los precios en Bolívares (VES) son referenciales y se basan en la tasa de cambio del día. Tasa actual: 1 USD = <span id="current-exchange-rate"></span> VES.</p>
-            </section>
-
-            <section id="perfiles" class="section hidden">
-                <h2>Perfiles Individuales: Tu Espacio Personalizado</h2>
-                <p>Disfruta de tu contenido favorito en un perfil exclusivo, solo para ti.</p>
-                <div class="profiles-grid">
-                    <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/E50914/FFFFFF?text=Netflix" alt="Netflix Logo">
-                        <h3>Netflix Perfil HD</h3>
-                        <p class="profile-price">$5.50 USD</p>
-                        <p class="profile-desc">Perfil exclusivo en Netflix. Calidad HD, ideal para 1 pantalla. Sin interrupciones.</p>
-                        <button class="btn-secondary btn-buy-service" data-service="Netflix Perfil HD" data-price="5.50">Comprar Perfil</button>
-                    </div>
-                    <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/113669/FFFFFF?text=Disney+" alt="Disney+ Logo">
-                        <h3>Disney+ Perfil Full HD</h3>
-                        <p class="profile-price">$5.00 USD</p>
-                        <p class="profile-desc">Acceso a un perfil exclusivo en Disney+. Disfruta de todo su catálogo en Full HD.</p>
-                        <button class="btn-secondary btn-buy-service" data-service="Disney+ Perfil Full HD" data-price="5.00">Comprar Perfil</button>
-                    </div>
-                    <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/6A1B9A/FFFFFF?text=HBO+Max" alt="HBO Max Logo">
-                        <h3>HBO Max Perfil 4K</h3>
-                        <p class="profile-price">$6.50 USD</p>
-                        <p class="profile-desc">Tu perfil personal en HBO Max con contenido en asombroso 4K Ultra HD.</p>
-                        <button class="btn-secondary btn-buy-service" data-service="HBO Max Perfil 4K" data-price="6.50">Comprar Perfil</button>
-                    </div>
-                    <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/00A8E1/FFFFFF?text=Prime+Video" alt="Prime Video Logo">
-                        <h3>Prime Video Perfil</h3>
-                        <p class="profile-price">$4.50 USD</p>
-                        <p class="profile-desc">Acceso a Prime Video con tu propio perfil. Miles de películas y series incluidas.</p>
-                        <button class="btn-secondary btn-buy-service" data-service="Prime Video Perfil" data-price="4.50">Comprar Perfil</button>
-                    </div>
-                     <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/FF7F00/FFFFFF?text=Crunchyroll" alt="Crunchyroll Logo">
-                        <h3>Crunchyroll Perfil Mega Fan</h3>
-                        <p class="profile-price">$6.00 USD</p>
-                        <p class="profile-desc">Disfruta del mejor anime sin anuncios y con acceso anticipado a episodios.</p>
-                        <button class="btn-secondary btn-buy-service" data-service="Crunchyroll Perfil Mega Fan" data-price="6.00">Comprar Perfil</button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="cuentas-completas" class="section hidden">
-                <h2>Cuentas Completas: Control Total</h2>
-                <p>Acceso exclusivo a la cuenta completa con todos sus perfiles y beneficios.</p>
-                <div class="accounts-grid">
-                    <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/E50914/FFFFFF?text=Netflix" alt="Netflix Logo">
-                        <h3>Netflix Premium 4K</h3>
-                        <p class="account-price">$16.00 USD</p>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Cuenta completa y exclusiva</li>
-                            <li><i class="fas fa-check-circle"></i> Calidad 4K Ultra HD</li>
-                            <li><i class="fas fa-check-circle"></i> Hasta 4 pantallas simultáneas</li>
-                            <li><i class="fas fa-check-circle"></i> Todos los perfiles disponibles</li>
-                        </ul>
-                        <button class="btn-secondary btn-buy-service" data-service="Netflix Premium 4K Cuenta" data-price="16.00">Comprar Cuenta</button>
-                    </div>
-                    <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/113669/FFFFFF?text=Disney+" alt="Disney+ Logo">
-                        <h3>Disney+ Familiar</h3>
-                        <p class="account-price">$12.00 USD</p>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Acceso total a la cuenta</li>
-                            <li><i class="fas fa-check-circle"></i> Hasta 7 perfiles personalizables</li>
-                            <li><i class="fas fa-check-circle"></i> 4 Pantallas Simultáneas</li>
-                            <li><i class="fas fa-check-circle"></i> Contenido exclusivo Disney, Pixar, Marvel, Star Wars, NatGeo</li>
-                        </ul>
-                        <button class="btn-secondary btn-buy-service" data-service="Disney+ Familiar Cuenta" data-price="12.00">Comprar Cuenta</button>
-                    </div>
-                    <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/6A1B9A/FFFFFF?text=HBO+Max" alt="HBO Max Logo">
-                        <h3>HBO Max Premium</h3>
-                        <p class="account-price">$18.00 USD</p>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Cuenta exclusiva para ti</li>
-                            <li><i class="fas fa-check-circle"></i> Calidad 4K Ultra HD</li>
-                            <li><i class="fas fa-check-circle"></i> 3 Pantallas Simultáneas</li>
-                            <li><i class="fas fa-check-circle"></i> Acceso completo al catálogo HBO, Warner Bros, DC, etc.</li>
-                        </ul>
-                        <button class="btn-secondary btn-buy-service" data-service="HBO Max Premium Cuenta" data-price="18.00">Comprar Cuenta</button>
-                    </div>
-                    <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/00A8E1/FFFFFF?text=Prime+Video" alt="Prime Video Logo">
-                        <h3>Prime Video Total</h3>
-                        <p class="account-price">$15.00 USD</p>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Tu propia cuenta Prime Video</li>
-                            <li><i class="fas fa-check-circle"></i> Múltiples pantallas</li>
-                            <li><i class="fas fa-check-circle"></i> Incluye beneficios Prime (envíos, música, etc.)*</li>
-                            <li><i class="fas fa-check-circle"></i> Amplia variedad de películas y series</li>
-                        </ul>
-                        <button class="btn-secondary btn-buy-service" data-service="Prime Video Total Cuenta" data-price="15.00">Comprar Cuenta</button>
-                    </div>
-                    <div class="service-card">
-                        <img src="https://via.placeholder.com/90x90/FF7F00/FFFFFF?text=Crunchyroll" alt="Crunchyroll Logo">
-                        <h3>Crunchyroll Mega Fan</h3>
-                        <p class="account-price">$10.00 USD</p>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Cuenta propia Mega Fan</li>
-                            <li><i class="fas fa-check-circle"></i> Disfruta de todo el anime sin anuncios</li>
-                            <li><i class="fas fa-check-circle"></i> Acceso a nuevos episodios una hora después de Japón</li>
-                            <li><i class="fas fa-check-circle"></i> Visualización offline</li>
-                        </ul>
-                        <button class="btn-secondary btn-buy-service" data-service="Crunchyroll Mega Fan Cuenta" data-price="10.00">Comprar Cuenta</button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="metodos-pago" class="section hidden">
-                <h2>Nuestros Métodos de Pago Disponibles</h2>
-                <p>Elige la opción que más te convenga para procesar tu compra de forma rápida y segura.</p>
-                <div class="payment-methods-grid">
-                    <div class="payment-card">
-                        <img src="https://via.placeholder.com/80x80/00457C/FFFFFF?text=PayPal" alt="PayPal Logo">
-                        <h3>PayPal</h3>
-                        <p>Correo: <span id="paypal-email-display">gilbertogotera1998@gmail.com</span></p>
-                        <button class="btn-copy" data-target="paypal-email-display">Copiar Email</button>
-                    </div>
-                    <div class="payment-card">
-                        <img src="https://via.placeholder.com/80x80/F0B90B/FFFFFF?text=Binance" alt="Binance Logo">
-                        <h3>Binance (USDT TRC20)</h3>
-                        <p>Dirección: <span id="binance-address-display">TXYZABC1234567890DEFGHJKLMNPQRSTUVW</span></p>
-                        <p>ID: <span id="binance-id-display">12345678</span></p>
-                        <button class="btn-copy" data-target="binance-address-display">Copiar Dirección</button>
-                        <button class="btn-copy" data-target="binance-id-display">Copiar ID</button>
-                    </div>
-                    <div class="payment-card">
-                        <img src="https://via.placeholder.com/80x80/008080/FFFFFF?text=Pago+Movil+BDV" alt="Pago Móvil Banco de Venezuela Logo">
-                        <h3>Pago Móvil (BDV)</h3>
-                        <p>Banco: <span id="pm-bdv-bank-display">0102 - Banco de Venezuela</span></p>
-                        <p>Telf: <span id="pm-bdv-phone-display">04123790923</span></p>
-                        <p>C.I.: <span id="pm-bdv-ci-display">28308736</span></p>
-                        <button class="btn-copy" data-target="pm-bdv-phone-display">Copiar Telf.</button>
-                        <button class="btn-copy" data-target="pm-bdv-ci-display">Copiar C.I.</button>
-                    </div>
-                    <div class="payment-card">
-                        <img src="https://via.placeholder.com/80x80/00B288/FFFFFF?text=Pago+Movil+Bancamiga" alt="Pago Móvil Bancamiga Logo">
-                        <h3>Pago Móvil (Bancamiga)</h3>
-                        <p>Banco: <span id="pm-bancamiga-bank-display">0172 - Bancamiga</span></p>
-                        <p>Telf: <span id="pm-bancamiga-phone-display">04123790923</span></p>
-                        <p>C.I.: <span id="pm-bancamiga-ci-display">28308736</span></p>
-                        <button class="btn-copy" data-target="pm-bancamiga-phone-display">Copiar Telf.</button>
-                        <button class="btn-copy" data-target="pm-bancamiga-ci-display">Copiar C.I.</
+    <script src="script.js"></script>
+</body>
+</html>

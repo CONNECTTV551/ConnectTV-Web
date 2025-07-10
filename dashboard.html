@@ -3,46 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Tienda - Dashboard</title>
+    <title>ConnectTV - Panel de Ventas de Streaming</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <img src="https://via.placeholder.com/150x50/000000/FFFFFF?text=MI+TIENDA+LOGO" alt="Mi Tienda Logo" class="sidebar-logo">
-                <h3>MI TIENDA</h3>
+                <img src="img/connecttv-logo.png" alt="ConnectTV Logo" class="sidebar-logo">
+                <h3>CONNECTTV PRO</h3>
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li class="active"><a href="#" data-section="clientes"><i class="fas fa-users"></i> Clientes</a></li>
-                    <li><a href="#" data-section="mis-cuentas"><i class="fas fa-wallet"></i> Mis cuentas</a></li>
-                    <li><a href="#" data-section="movimientos"><i class="fas fa-exchange-alt"></i> Movimientos</a></li>
-                    <li><a href="#" data-section="respuesta-fallos"><i class="fas fa-exclamation-triangle"></i> Respuesta de fallos</a></li>
-                    <li><a href="#" data-section="reportar-consignacion"><i class="fas fa-file-invoice-dollar"></i> Reportar consignación</a></li>
-                    <li><a href="#" data-section="reportar-follo-pin"><i class="fas fa-thumbtack"></i> Reportar follo pin</a></li>
-                    <li><a href="#" data-section="descargas"><i class="fas fa-download"></i> Descargas</a></li>
-                    <li><a href="#" data-section="capacitaciones"><i class="fas fa-graduation-cap"></i> Capacitaciones</a></li>
-                    <li><a href="#" data-section="ayuda"><i class="fas fa-question-circle"></i> ¿Ayuda?</a></li>
+                    <li class="active"><a href="#" data-section="overview"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" data-section="products"><i class="fas fa-film"></i> Productos Streaming</a></li>
+                    <li><a href="#" data-section="clients"><i class="fas fa-users"></i> Clientes</a></li>
+                    <li><a href="#" data-section="sales"><i class="fas fa-dollar-sign"></i> Ventas y Reportes</a></li>
+                    <li><a href="#" data-section="support"><i class="fas fa-headset"></i> Soporte y Fallos</a></li>
+                    <li><a href="#" data-section="config"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="streaming_landing.html" target="_blank"><i class="fas fa-play-circle"></i> Ver Página StreamWave</a></li>
                 </ul>
             </nav>
+            <div class="sidebar-footer">
+                <button id="logoutButton" class="btn-secondary logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+            </div>
         </aside>
 
         <main class="main-content">
             <header class="navbar">
                 <div class="navbar-left">
-                    <img src="https://via.placeholder.com/180x40/000000/FF0000?text=MI+ENTRETENIMIENTO" alt="Mi Entretenimiento Logo" class="navbar-logo">
+                    <img src="img/connecttv-logo.png" alt="ConnectTV Logo" class="navbar-logo">
                 </div>
                 <div class="navbar-right">
-                    <button class="btn-saldo">Cargar saldo</button>
+                    <button class="btn-primary btn-saldo"><i class="fas fa-plus-circle"></i> Cargar Saldo</button>
                     <div class="saldo-info">
-                        <span>Saldo productos</span>
-                        <span class="amount">$22,727.98</span>
+                        <span>Saldo Disponible</span>
+                        <span class="amount">Bs. 22.727,98</span>
                     </div>
                     <div class="user-info">
-                        <span class="user-id">CONNECTTV-COM (ID: 21190)</span>
+                        <span class="user-id">ADMIN (ID: 21190)</span>
                         <i class="fas fa-user-circle user-icon"></i>
                         <i class="fas fa-bell notification-icon"></i>
                     </div>
@@ -51,117 +52,278 @@
 
             <div class="content-area">
                 <div class="alert-banner">
-                    <span><strong>Atención!</strong> Ahora puedes calificar las respuestas a las garantías, ayúdanos calificando y así ofrecerte un mejor servicio.</span>
+                    <span><strong>¡Bienvenido!</strong> Gestiona tus ventas de streaming de forma eficiente.</span>
                     <button class="close-alert"><i class="fas fa-times"></i></button>
                 </div>
 
-                <div class="secondary-nav">
-                    <button class="btn-secondary active">Vender</button>
-                    <button class="btn-secondary">Órdenes</button>
-                </div>
-
-                <section id="clientes" class="dashboard-section active">
-                    <div class="main-banner">
-                        <img src="https://via.placeholder.com/800x300/FF0000/FFFFFF?text=YA+NOS+SIGUES+EN+NUESTRAS+REDES+SOCIALES%3F" alt="Redes Sociales Banner">
-                        <div class="banner-text">
-                            <p>ALLÍ ENCONTRARÁS CONTENIDO EXCLUSIVO, TIPS ÚTILES, PROMOCIONES ESPECIALES Y TODOS LOS BENEFICIOS POR SER PARTE DE NUESTRO EQUIPO</p>
-                            <div class="social-icons">
-                                <img src="https://via.placeholder.com/100x100/000000/FFFFFF?text=QR+IG" alt="QR Instagram">
-                                <img src="https://via.placeholder.com/100x100/000000/FFFFFF?text=QR+FB" alt="QR Facebook">
+                <section id="overview" class="dashboard-section active">
+                    <div class="panel-card">
+                        <h2>Resumen General</h2>
+                        <div class="overview-grid">
+                            <div class="overview-card">
+                                <i class="fas fa-chart-line icon"></i>
+                                <div class="value">Bs. 5.120</div>
+                                <div class="label">Ventas Hoy</div>
                             </div>
-                            <p>@MIENTRETENIMIENTO_COL</p>
-                            <p>@MIENTRETENIMIENTO_COL</p>
+                            <div class="overview-card">
+                                <i class="fas fa-users icon"></i>
+                                <div class="value">150</div>
+                                <div class="label">Clientes Activos</div>
+                            </div>
+                            <div class="overview-card">
+                                <i class="fas fa-film icon"></i>
+                                <div class="value">25</div>
+                                <div class="label">Productos Activos</div>
+                            </div>
+                            <div class="overview-card">
+                                <i class="fas fa-plus-circle icon"></i>
+                                <div class="value">5</div>
+                                <div class="label">Nuevas Suscripciones</div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="category-grid">
-                        <div class="category-card">
-                            <span>Audio y Sonido</span>
-                            <span class="category-count">69</span>
+                    <div class="panel-card">
+                        <h2>Acciones Rápidas</h2>
+                        <div class="action-grid overview-grid">
+                            <button class="btn-secondary"><i class="fas fa-cart-plus"></i> Nueva Venta</button>
+                            <button class="btn-secondary"><i class="fas fa-user-plus"></i> Añadir Cliente</button>
+                            <button class="btn-secondary"><i class="fas fa-plus-square"></i> Añadir Producto</button>
+                            <button class="btn-secondary"><i class="fas fa-file-invoice-dollar"></i> Ver Historial</button>
                         </div>
-                        <div class="category-card">
-                            <span>Tecnología y Accesorios</span>
-                            <span class="category-count">69</span>
-                        </div>
-                        <div class="category-card">
-                            <span>Salud y Belleza</span>
-                            <span class="category-count">1</span>
-                        </div>
-                        <div class="category-card">
-                            <span>Herramientas y Ferretería</span>
-                            <span class="category-count">4</span>
-                        </div>
-                        <div class="category-card">
-                            <span>Streaming</span>
-                            <span class="category-count">20</span>
-                        </div>
-                        <div class="category-card">
-                            <span>Papelería</span>
-                            <span class="category-count">20</span>
-                        </div>
-                        <div class="category-card">
-                            <span>Juguetería</span>
-                            <span class="category-count">72</span>
-                        </div>
-                        <div class="category-card">
-                            <span>Hogar y Electrodomésticos</span>
-                            <span class="category-count">14</span>
-                        </div>
-                        <div class="category-card">
-                            <span>Variedades</span>
-                            <span class="category-count">9</span>
-                        </div>
-                        <div class="category-card">
-                            <span>Automotriz</span>
-                            <span class="category-count">4</span>
-                        </div>
-                        <div class="category-card full-width">
-                            <span>Cuentas digitales CLF</span>
-                        </div>
-                    </div>
-
-                    <h3 class="section-title">CUENTAS DIGITALES</h3>
-                    <div class="placeholder-content">
-                        <p>Contenido detallado de cuentas digitales...</p>
-                    </div>
-
-                    <h3 class="section-title">COMBOS</h3>
-                    <div class="placeholder-content">
-                        <p>Contenido detallado de combos...</p>
                     </div>
                 </section>
 
-                <section id="mis-cuentas" class="dashboard-section">
-                    <h2>Mis Cuentas</h2>
-                    <p>Aquí puedes gestionar tus cuentas.</p>
+                <section id="products" class="dashboard-section">
+                    <div class="panel-card">
+                        <h2>Gestión de Productos Streaming</h2>
+                        <div class="search-add-bar">
+                            <input type="text" placeholder="Buscar producto...">
+                            <button class="btn-primary" id="addProductBtn"><i class="fas fa-plus"></i> Añadir Nuevo Producto</button>
+                        </div>
+                        <div class="product-table-container">
+                            <table class="product-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Producto</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Netflix Premium (1 mes)</td>
+                                        <td>Bs. 100</td>
+                                        <td>50</td>
+                                        <td><span class="status-active">Activo</span></td>
+                                        <td class="actions">
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                            <button title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Disney+ (3 meses)</td>
+                                        <td>Bs. 250</td>
+                                        <td>30</td>
+                                        <td><span class="status-active">Activo</span></td>
+                                        <td class="actions">
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                            <button title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>HBO Max (1 año)</td>
+                                        <td>Bs. 800</td>
+                                        <td>15</td>
+                                        <td><span class="status-active">Activo</span></td>
+                                        <td class="actions">
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                            <button title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Amazon Prime Video (6 meses)</td>
+                                        <td>Bs. 450</td>
+                                        <td>20</td>
+                                        <td><span class="status-active">Activo</span></td>
+                                        <td class="actions">
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                            <button title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Spotify Premium (Individual, 1 mes)</td>
+                                        <td>Bs. 50</td>
+                                        <td>100</td>
+                                        <td><span class="status-active">Activo</span></td>
+                                        <td class="actions">
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                            <button title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>YouTube Premium (Familiar, 1 mes)</td>
+                                        <td>Bs. 75</td>
+                                        <td>40</td>
+                                        <td><span class="status-active">Activo</span></td>
+                                        <td class="actions">
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                            <button title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td>Apple Music (Estudiante, 1 mes)</td>
+                                        <td>Bs. 30</td>
+                                        <td>60</td>
+                                        <td><span class="status-inactive">Inactivo</span></td>
+                                        <td class="actions">
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                            <button title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="productModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h3 id="modalTitle">Añadir Nuevo Producto Streaming</h3>
+                                <form id="productForm" class="product-form">
+                                    <div class="input-group">
+                                        <label for="product-name">Nombre del Producto</label>
+                                        <input type="text" id="product-name" placeholder="Ej. Netflix Premium (1 mes)" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="product-price">Precio (Bs.)</label>
+                                        <input type="number" id="product-price" placeholder="Ej. 100" step="0.01" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="product-stock">Stock Disponible</label>
+                                        <input type="number" id="product-stock" placeholder="Ej. 50" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="product-status">Estado</label>
+                                        <select id="product-status" required>
+                                            <option value="active">Activo</option>
+                                            <option value="inactive">Inactivo</option>
+                                            <option value="pending">Pendiente</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="product-description">Descripción (Opcional)</label>
+                                        <textarea id="product-description" rows="3" placeholder="Breve descripción del servicio..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn-primary" id="saveProductBtn">Guardar Producto</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </section>
-                <section id="movimientos" class="dashboard-section">
-                    <h2>Movimientos</h2>
-                    <p>Consulta tus transacciones recientes.</p>
+
+                <section id="clients" class="dashboard-section">
+                    <div class="panel-card">
+                        <h2>Gestión de Clientes</h2>
+                        <div class="search-add-bar">
+                            <input type="text" placeholder="Buscar cliente...">
+                            <button class="btn-primary"><i class="fas fa-user-plus"></i> Añadir Nuevo Cliente</button>
+                        </div>
+                        <div class="product-table-container">
+                            <table class="product-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Suscripciones</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>101</td>
+                                        <td>Ana García</td>
+                                        <td>ana.g@example.com</td>
+                                        <td>+584123456789</td>
+                                        <td>Netflix, Disney+</td>
+                                        <td><span class="status-active">Activo</span></td>
+                                        <td class="actions">
+                                            <button title="Ver Detalles"><i class="fas fa-eye"></i></button>
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>102</td>
+                                        <td>Luis Martínez</td>
+                                        <td>luis.m@example.com</td>
+                                        <td>+584249876543</td>
+                                        <td>HBO Max</td>
+                                        <td><span class="status-active">Activo</span></td>
+                                        <td class="actions">
+                                            <button title="Ver Detalles"><i class="fas fa-eye"></i></button>
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>103</td>
+                                        <td>Sofía Rojas</td>
+                                        <td>sofia.r@example.com</td>
+                                        <td>+584161234567</td>
+                                        <td>Amazon Prime</td>
+                                        <td><span class="status-inactive">Inactivo</span></td>
+                                        <td class="actions">
+                                            <button title="Ver Detalles"><i class="fas fa-eye"></i></button>
+                                            <button title="Editar"><i class="fas fa-edit"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </section>
-                <section id="respuesta-fallos" class="dashboard-section">
-                    <h2>Respuesta de Fallos</h2>
-                    <p>Información sobre fallos y soluciones.</p>
+
+                <section id="sales" class="dashboard-section">
+                    <div class="panel-card">
+                        <h2>Ventas y Reportes</h2>
+                        <p>Gestión de todas las ventas, generación de reportes y análisis de datos.</p>
+                        <div class="placeholder-content">
+                            <i class="fas fa-chart-bar" style="font-size: 3em; margin-bottom: 15px;"></i>
+                            <p>Gráficos y tablas de ventas irán aquí.</p>
+                        </div>
+                    </div>
                 </section>
-                <section id="reportar-consignacion" class="dashboard-section">
-                    <h2>Reportar Consignación</h2>
-                    <p>Formulario para reportar una nueva consignación.</p>
+
+                <section id="support" class="dashboard-section">
+                    <div class="panel-card">
+                        <h2>Soporte y Fallos</h2>
+                        <p>Gestión de tickets de soporte y reportes de fallos.</p>
+                        <div class="placeholder-content">
+                            <i class="fas fa-ticket-alt" style="font-size: 3em; margin-bottom: 15px;"></i>
+                            <p>Sistema de tickets y monitoreo de fallos.</p>
+                        </div>
+                    </div>
                 </section>
-                <section id="reportar-follo-pin" class="dashboard-section">
-                    <h2>Reportar Follo Pin</h2>
-                    <p>Formulario para reportar un follo pin.</p>
-                </section>
-                <section id="descargas" class="dashboard-section">
-                    <h2>Descargas</h2>
-                    <p>Aquí encontrarás archivos y recursos para descargar.</p>
-                </section>
-                <section id="capacitaciones" class="dashboard-section">
-                    <h2>Capacitaciones</h2>
-                    <p>Material y enlaces a capacitaciones.</p>
-                </section>
-                <section id="ayuda" class="dashboard-section">
-                    <h2>¿Ayuda?</h2>
-                    <p>Preguntas frecuentes y soporte.</p>
+
+                <section id="config" class="dashboard-section">
+                    <div class="panel-card">
+                        <h2>Configuración de la Plataforma</h2>
+                        <p>Ajustes generales, perfiles de usuario, etc.</p>
+                        <div class="placeholder-content">
+                            <i class="fas fa-cogs" style="font-size: 3em; margin-bottom: 15px;"></i>
+                            <p>Opciones de configuración.</p>
+                        </div>
+                    </div>
                 </section>
 
             </div>
