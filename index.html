@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">ConnectTV - Tu Plataforma de Streaming por Suscripción</title>
     <meta name="description" content="Suscríbete a ConnectTV para acceso ilimitado a películas, series y documentales en HD y 4K. Elige el plan perfecto para ti.">
-    <meta name="keywords" content="streaming, suscripción, planes, películas, series, 4K, HD, online, entretenimiento, premium, vender servicio, whatsapp, redes sociales, ConnectTV, cuentas completas, comprobante de pago, perfiles, paypal, binance, pago movil, bancamiga, banco de venezuela">
+    <meta name="keywords" content="streaming, suscripción, planes, películas, series, 4K, HD, online, entretenimiento, premium, vender servicio, whatsapp, redes sociales, ConnectTV, cuentas completas, comprobante de pago, perfiles, paypal, binance, pago movil, bancamiga, banco de venezuela, iniciar sesion, registrarse">
     <meta name="author" content="ConnectTV Team">
 
     <link rel="icon" type="image/x-icon" href="img/favicon.ico"> 
-
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <style>
@@ -135,6 +135,27 @@
             position: absolute;
             left: 10px;
             color: #aaa;
+        }
+        .auth-buttons .btn {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .auth-buttons .btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .auth-buttons .btn.filled {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .auth-buttons .btn.filled:hover {
+            background-color: var(--button-hover);
         }
 
         /* --- Main Content Layout --- */
@@ -626,7 +647,7 @@
         .payment-card .copy-btn:hover {
             background-color: #777;
         }
-
+        
         /* --- MODAL Styles (Ventana Emergente) --- */
         .modal-overlay {
             position: fixed;
@@ -734,7 +755,7 @@
         }
 
         /* Formulario de Subir Comprobante */
-        #paymentProofForm {
+        #paymentProofForm, #loginForm, #registerForm {
             background-color: #2a2a2a;
             padding: 30px;
             border-radius: 15px;
@@ -744,7 +765,7 @@
             margin-right: auto;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-        #paymentProofForm label {
+        #paymentProofForm label, #loginForm label, #registerForm label {
             display: block;
             margin-bottom: 10px;
             color: #f5f5f5;
@@ -752,7 +773,12 @@
         }
         #paymentProofForm input[type="text"],
         #paymentProofForm select,
-        #paymentProofForm textarea {
+        #paymentProofForm textarea,
+        #loginForm input[type="email"],
+        #loginForm input[type="password"],
+        #registerForm input[type="text"],
+        #registerForm input[type="email"],
+        #registerForm input[type="password"] {
             width: calc(100% - 20px);
             padding: 12px 10px;
             margin-bottom: 20px;
@@ -768,7 +794,7 @@
             margin-bottom: 20px;
             color: var(--text-light);
         }
-        #paymentProofForm .submit-button {
+        #paymentProofForm .submit-button, #loginForm .submit-button, #registerForm .submit-button {
             background-color: var(--primary-color);
             color: white;
             padding: 15px 25px;
@@ -780,7 +806,7 @@
             transition: background-color 0.3s ease;
             width: 100%;
         }
-        #paymentProofForm .submit-button:hover {
+        #paymentProofForm .submit-button:hover, #loginForm .submit-button:hover, #registerForm .submit-button:hover {
             background-color: var(--button-hover);
         }
 
@@ -882,6 +908,10 @@
                 <i class='bx bx-search'></i>
                 <input type="text" placeholder="Buscar contenido...">
             </div>
+            <div class="auth-buttons">
+                <button class="btn" id="loginBtn">Iniciar Sesión</button>
+                <button class="btn filled" id="registerBtn">Registrarse</button>
+            </div>
         </div>
     </header>
 
@@ -914,8 +944,8 @@
                         </a>
                         <span class="tooltip">Nuestros Planes</span>
                     </li>
-
-
+                    
+                    
                     <li>
                         <a href="#" data-page="perfiles" class="sidebar-button">
                             <i class='bx bx-user'></i>
@@ -923,7 +953,7 @@
                         </a>
                         <span class="tooltip">Perfiles</span>
                     </li>
-
+                    
                     <li>
                         <a href="#" data-page="cuentasCompletas" class="sidebar-button">
                             <i class='bx bx-cart'></i>
@@ -943,8 +973,8 @@
                             <i class='bx bx-help-circle'></i>
                             <span class="links_name">Ayuda y FAQ</span>
                         </a>
-                        <span class="tooltip">Ayuda y FAQ</span>
-                    </li>
+                            <span class="tooltip">Ayuda y FAQ</span>
+                        </li>
                     <li>
                         <a href="#" data-page="soporte" class="sidebar-button">
                             <i class='bx bx-support'></i>
@@ -964,7 +994,7 @@
         </aside>
 
         <main>
-
+            
             <section id="inicioSection" class="content-section-page active-page">
                 <div class="hero-section">
                     <h2>ACCESO ILIMITADO AL MEJOR CONTENIDO</h2>
@@ -986,7 +1016,7 @@
                 </div>
             </section>
 
-
+            
             <section id="catalogoSection" class="content-section-page">
                 <div class="content-block">
                     <h2>Próximamente: Nuestro Catálogo Completo</h2>
@@ -995,7 +1025,7 @@
                 </div>
             </section>
 
-
+            
             <section id="planesSection" class="content-section-page">
                 <div class="content-block">
                     <h2>Elige el Plan Perfecto para Ti</h2>
@@ -1052,17 +1082,357 @@
                     </div>
                 </div>
             </section>
-
-
+            
+            
             <section id="perfilesSection" class="content-section-page">
                 <div class="content-block">
                     <h2>Nuestros Perfiles Premium</h2>
                     <p>Accede a perfiles de alta calidad en tus plataformas de streaming favoritas. ¡Disfruta del mejor entretenimiento!</p>
 
                     <div class="perfiles-grid">
-
+                        
                         <div class="perfil-card">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix">
                             <h4>Netflix</h4>
                             <p class="perfil-description">Acceso a un perfil personal en Netflix con calidad Ultra HD. Disfruta de películas y series sin interrupciones.</p>
-                            <p
+                            <p class="perfil-price">$5.00 <span>/ mes</span></p>
+                            <div class="action-group">
+                                <button class="action-btn details-btn" data-type="perfil" data-name="Perfil Netflix" data-price="$5.00/mes" data-description="Acceso a un perfil personal en Netflix con calidad Ultra HD. Disfruta de películas y series sin interrupciones." data-img="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">Ver Detalles</button>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Perfil%20Netflix%20por%20$5.00/mes.%20%C2%BFPodr%C3%ADas%20darme%20m%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                            </div>
+                        </div>
+
+                        
+                        <div class="perfil-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" alt="Disney+">
+                            <h4>Disney+</h4>
+                            <p class="perfil-description">Disfruta de Disney, Pixar, Marvel, Star Wars y National Geographic en calidad premium.</p>
+                            <p class="perfil-price">$4.50 <span>/ mes</span></p>
+                            <div class="action-group">
+                                <button class="action-btn details-btn" data-type="perfil" data-name="Perfil Disney+" data-price="$4.50/mes" data-description="Disfruta de Disney, Pixar, Marvel, Star Wars y National Geographic en calidad premium." data-img="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">Ver Detalles</button>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Perfil%20Disney%2B%20por%20$4.50/mes.%20%C2%BFPodr%C3%ADas%20darme%20m%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                            </div>
+                        </div>
+
+                        
+                        <div class="perfil-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/Max_%28streaming_service%29_logo.svg" alt="Max">
+                            <h4>Max</h4>
+                            <p class="perfil-description">Lo mejor de HBO, Warner Bros., DC, Max Originals y más. Contenido exclusivo.</p>
+                            <p class="perfil-price">$4.80 <span>/ mes</span></p>
+                            <div class="action-group">
+                                <button class="action-btn details-btn" data-type="perfil" data-name="Perfil Max" data-price="$4.80/mes" data-description="Lo mejor de HBO, Warner Bros., DC, Max Originals y más. Contenido exclusivo." data-img="https://upload.wikimedia.org/wikipedia/commons/6/65/Max_%28streaming_service%29_logo.svg">Ver Detalles</button>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Perfil%20Max%20por%20$4.80/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                            </div>
+                        </div>
+
+                        
+                        <div class="perfil-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Prime_Video_Logo.png" alt="Prime Video">
+                            <h4>Prime Video</h4>
+                            <p class="perfil-description">Miles de películas y series, incluyendo Prime Originals. Acceso rápido y sencillo.</p>
+                            <p class="perfil-price">$3.50 <span>/ mes</span></p>
+                            <div class="action-group">
+                                <button class="action-btn details-btn" data-type="perfil" data-name="Perfil Prime Video" data-price="$3.50/mes" data-description="Miles de películas y series, incluyendo Prime Originals. Acceso rápido y sencillo." data-img="https://upload.wikimedia.org/wikipedia/commons/f/f3/Prime_Video_Logo.png">Ver Detalles</button>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Perfil%20Prime%20Video%20por%20$3.50/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                            </div>
+                        </div>
+
+                        
+                        <div class="perfil-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Paramount%2B_logo.svg" alt="Paramount+">
+                            <h4>Paramount+</h4>
+                            <p class="perfil-description">Gran variedad de películas, series originales, deportes en vivo y programas de Showtime.</p>
+                            <p class="perfil-price">$3.00 <span>/ mes</span></p>
+                            <div class="action-group">
+                                <button class="action-btn details-btn" data-type="perfil" data-name="Perfil Paramount+" data-price="$3.00/mes" data-description="Gran variedad de películas, series originales, deportes en vivo y programas de Showtime." data-img="https://upload.wikimedia.org/wikipedia/commons/d/d5/Paramount%2B_logo.svg">Ver Detalles</button>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Perfil%20Paramount%2B%20por%20$3.00/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                            </div>
+                        </div>
+
+                        <div class="perfil-card">
+                            <img src="https://i.ibb.co/L6Vb07d/telelatino.png" alt="Tele Latino">
+                            <h4>Tele Latino</h4>
+                            <p class="perfil-description">Acceso a canales de TV en vivo, películas y series latinoamericanas e internacionales.</p>
+                            <p class="perfil-price">$4.00 <span>/ mes</span></p>
+                            <div class="action-group">
+                                <button class="action-btn details-btn" data-type="perfil" data-name="Perfil Tele Latino" data-price="$4.00/mes" data-description="Acceso a canales de TV en vivo, películas y series latinoamericanas e internacionales." data-img="https://i.ibb.co/L6Vb07d/telelatino.png">Ver Detalles</button>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Perfil%20Tele%20Latino%20por%20$4.00/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                            </div>
+                        </div>
+
+                        
+                        <div class="perfil-card">
+                            <img src="https://i.ibb.co/Q8Q8S9Q/bits.png" alt="Bits">
+                            <h4>Bits</h4>
+                            <p class="perfil-description">Plataforma con contenido variado, desde documentales hasta entretenimiento exclusivo.</p>
+                            <p class="perfil-price">$2.50 <span>/ mes</span></p>
+                            <div class="action-group">
+                                <button class="action-btn details-btn" data-type="perfil" data-name="Perfil Bits" data-price="$2.50/mes" data-description="Plataforma con contenido variado, desde documentales hasta entretenimiento exclusivo." data-img="https://i.ibb.co/Q8Q8S9Q/bits.png">Ver Detalles</button>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Perfil%20Bits%20por%20$2.50/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                            </div>
+                        </div>
+
+                        
+                        <div class="perfil-card">
+                            <img src="https://i.ibb.co/ZJp5fC0/flujotv.png" alt="Flujo TV">
+                            <h4>Flujo TV</h4>
+                            <p class="perfil-description">Disfruta de televisión en vivo y un amplio catálogo de series y películas con Flujo TV.</p>
+                            <p class="perfil-price">$3.80 <span>/ mes</span></p>
+                            <div class="action-group">
+                                <button class="action-btn details-btn" data-type="perfil" data-name="Perfil Flujo TV" data-price="$3.80/mes" data-description="Disfruta de televisión en vivo y un amplio catálogo de series y películas con Flujo TV." data-img="https://i.ibb.co/ZJp5fC0/flujotv.png">Ver Detalles</button>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Perfil%20Flujo%20TV%20por%20$3.80/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                            </div>
+                        </div>
+                        
+                        <div class="perfil-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Crunchyroll_Logo.svg/lang-es-2000px-Crunchyroll_Logo.svg.png" alt="Crunchyroll">
+                            <h4>Crunchyroll</h4>
+                            <p class="perfil-description">Acceso premium al anime más grande del mundo. Mira tus series favoritas al día siguiente de Japón.</p>
+                            <p class="perfil-price">$6.00 <span>/ mes</span></p>
+                            <div class="action-group">
+                                <button class="action-btn details-btn" data-type="perfil" data-name="Perfil Crunchyroll" data-price="$6.00/mes" data-description="Acceso premium al anime más grande del mundo. Mira tus series favoritas al día siguiente de Japón." data-img="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Crunchyroll_Logo.svg/lang-es-2000px-Crunchyroll_Logo.svg.png">Ver Detalles</button>
+                                <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20el%20Perfil%20Crunchyroll%20por%20$6.00/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            
+            <section id="cuentasCompletasSection" class="content-section-page">
+                <div class="content-block">
+                    <h2>Cuentas Completas a tu Disposición</h2>
+                    <p>Obtén acceso total a cuentas de streaming exclusivas. ¡No compartas, ten tu propio espacio!</p>
+                    <div class="accounts-grid">
+                        <div class="account-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Cuenta Netflix">
+                            <div class="account-card-content">
+                                <h4>Cuenta Netflix</h4>
+                                <p>Acceso completo a una cuenta Netflix con perfiles disponibles.</p>
+                                <p class="price">$12.00 <span>/ mes</span></p>
+                                <div class="action-group">
+                                    <button class="action-btn details-btn" data-type="cuenta" data-name="Cuenta Completa Netflix" data-price="$12.00/mes" data-description="Acceso completo a una cuenta Netflix con perfiles disponibles. Puedes usarla en múltiples dispositivos." data-img="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">Ver Detalles</button>
+                                    <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20la%20Cuenta%20Completa%20Netflix%20por%20$12.00/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="account-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/Max_%28streaming_service%29_logo.svg" alt="Cuenta Max">
+                            <div class="account-card-content">
+                                <h4>Cuenta Max</h4>
+                                <p>Disfruta de todo el contenido de Max sin restricciones.</p>
+                                <p class="price">$10.00 <span>/ mes</span></p>
+                                <div class="action-group">
+                                    <button class="action-btn details-btn" data-type="cuenta" data-name="Cuenta Completa Max" data-price="$10.00/mes" data-description="Disfruta de todo el contenido de Max sin restricciones. Acceso exclusivo." data-img="https://upload.wikimedia.org/wikipedia/commons/6/65/Max_%28streaming_service%29_logo.svg">Ver Detalles</button>
+                                    <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20la%20Cuenta%20Completa%20Max%20por%20$10.00/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="account-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" alt="Cuenta Disney+">
+                            <div class="account-card-content">
+                                <h4>Cuenta Disney+</h4>
+                                <p>Acceso ilimitado a todo el universo Disney, Pixar, Marvel, Star Wars y National Geographic.</p>
+                                <p class="price">$9.00 <span>/ mes</span></p>
+                                <div class="action-group">
+                                    <button class="action-btn details-btn" data-type="cuenta" data-name="Cuenta Completa Disney+" data-price="$9.00/mes" data-description="Acceso ilimitado a todo el universo Disney, Pixar, Marvel, Star Wars y National Geographic. Tu propia cuenta." data-img="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">Ver Detalles</button>
+                                    <a href="https://wa.me/584242357804?text=Hola!%20Estoy%20interesado%20en%20la%20Cuenta%20Completa%20Disney%2B%20por%20$9.00/mes.%20%C2%BFPodr%C3%ADas%20darme%C3%A1s%20informaci%C3%B3n%3F" class="action-btn" target="_blank"><i class='bx bxl-whatsapp'></i> Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="pagarSection" class="content-section-page">
+                <div class="content-block">
+                    <h2>Elige tu Método de Pago</h2>
+                    <p>Para procesar tu solicitud, puedes realizar el pago a través de las siguientes opciones. Una vez realizado, sube tu comprobante en la sección "Subir Comprobante".</p>
+
+                    <div class="payment-methods-grid">
+                        
+                        <div class="payment-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal Logo" class="payment-logo">
+                            <h3>PayPal</h3>
+                            <p>Paga de forma segura con tu cuenta PayPal.</p>
+                            <div class="details">
+                                <p><strong>Correo PayPal:</strong> <span id="paypalEmail">tu.correo@ejemplo.com</span></p>
+                                <p><strong>Link PayPal.Me:</strong> <a href="https://paypal.me/tuusuario" target="_blank">paypal.me/tuusuario</a></p>
+                            </div>
+                            <button class="copy-btn" onclick="copyToClipboard('tu.correo@ejemplo.com')">Copiar Correo</button>
+                            <a href="https://paypal.me/tuusuario" target="_blank" class="action-btn" style="background-color: var(--paypal-blue); margin-top: 15px;"><i class='fab fa-paypal'></i> Ir a PayPal</a>
+                            <p style="font-size: 0.85em; color: #aaa; margin-top: 10px;">*Asegúrate de cubrir las comisiones de PayPal si aplica.</p>
+                        </div>
+
+                        
+                        <div class="payment-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Binance_logo.svg" alt="Binance Logo" class="payment-logo">
+                            <h3>Binance (USDT TRC20)</h3>
+                            <p>Envía USDT a nuestra billetera de Binance.</p>
+                            <div class="details">
+                                <p><strong>Red:</strong> TRC20</p>
+                                <p><strong>Dirección USDT:</strong> <span id="binanceAddress">[TU_DIRECCION_BINANCE_USDT_TRC20_AQUI]</span></p>
+                            </div>
+                            <button class="copy-btn" onclick="copyToClipboard('[TU_DIRECCION_BINANCE_USDT_TRC20_AQUI]')">Copiar Dirección</button>
+                        </div>
+
+                        
+                        <div class="payment-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Banco_de_Venezuela_logo.svg/langes-2000px-Banco_de_Venezuela_logo.svg.png" alt="Banco de Venezuela Logo" class="payment-logo">
+                            <h3>Pago Móvil (Banco de Venezuela)</h3>
+                            <p>Realiza tu pago móvil al Banco de Venezuela.</p>
+                            <div class="details">
+                                <p><strong>Banco:</strong> 0102 - Banco de Venezuela</p>
+                                <p><strong>Cédula/RIF:</strong> <span id="pagoMovilCI">[TU_CEDULA_RIF_PAGOMOVIL_AQUI]</span></p>
+                                <p><strong>Teléfono:</strong> <span id="pagoMovilPhone">584242357804</span></p>
+                            </div>
+                            <button class="copy-btn" onclick="copyToClipboard('584242357804')">Copiar Teléfono</button>
+                        </div>
+
+                        
+                        <div class="payment-card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Logotipo_Bancamiga_azul_y_blanco.png/640px-Logotipo_Bancamiga_azul_y_blanco.png" alt="Bancamiga Logo" class="payment-logo">
+                            <h3>Transferencia Bancamiga</h3>
+                            <p>Realiza una transferencia bancaria a nuestra cuenta Bancamiga.</p>
+                            <div class="details">
+                                <p><strong>Banco:</strong> 0172 - Bancamiga</p>
+                                <p><strong>Tipo de Cuenta:</strong> Corriente / Ahorro</p>
+                                <p><strong>Número de Cuenta:</strong> <span id="bancamigaAccount">[TU_NUMERO_DE_CUENTA_BANCAMIGA_AQUI]</span></p>
+                                <p><strong>RIF/Cédula:</strong> <span id="bancamigaRIF">[TU_RIF_CEDULA_BANCAMIGA_AQUI]</span></p>
+                                <p><strong>Nombre:</strong> [TU_NOMBRE_COMPLETO_AQUI]</p>
+                            </div>
+                            <button class="copy-btn" onclick="copyToClipboard('[TU_NUMERO_DE_CUENTA_BANCAMIGA_AQUI]')">Copiar Cuenta</button>
+                        </div>
+                    </div>
+                    <p style="margin-top: 40px; text-align: center;">Una vez realizado el pago, por favor, procede a la sección <a href="#" data-page="subirComprobante" class="sidebar-button" style="color: var(--primary-color); text-decoration: underline;">Subir Comprobante</a> para confirmar tu transacción.</p>
+                </div>
+            </section>
+            
+            <section id="subirComprobanteSection" class="content-section-page">
+                <div class="content-block">
+                    <h2>Envía tu Comprobante de Pago</h2>
+                    <p>Una vez realizado tu pago, por favor, sube aquí el comprobante para agilizar la activación de tu servicio.</p>
+                    <form id="paymentProofForm">
+                        <label for="paymentMethod">Método de Pago:</label>
+                        <select id="paymentMethod" name="paymentMethod" required>
+                            <option value="">Selecciona un método</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="binance">Binance (USDT)</option>
+                            <option value="pago_movil">Pago Móvil Banco de Venezuela</option>
+                            <option value="transferencia_bancamiga">Transferencia Bancamiga</option>
+                        </select>
+
+                        <label for="transactionId">Número de Referencia/ID de Transacción:</label>
+                        <input type="text" id="transactionId" name="transactionId" placeholder="Escribe aquí el número de referencia" required>
+
+                        <label for="proofFile">Sube tu Comprobante (Imagen):</label>
+                        <input type="file" id="proofFile" name="proofFile" accept="image/*" required>
+
+                        <label for="notes">Notas Adicionales (Opcional):</label>
+                        <textarea id="notes" name="notes" rows="4" placeholder="Algún comentario o detalle adicional de tu pago..."></textarea>
+
+                        <button type="submit" class="submit-button">Enviar Comprobante</button>
+                    </form>
+                    <p id="formMessage" style="margin-top: 20px; text-align: center; font-weight: bold;"></p>
+                </div>
+            </section>
+
+            
+            <section id="ayudaSection" class="content-section-page">
+                <div class="content-block">
+                    <h2>Preguntas Frecuentes (FAQ)</h2>
+                    <p>Encuentra respuestas a las preguntas más comunes sobre nuestros servicios.</p>
+                    <div class="faq-container">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                ¿Cómo funciona ConnectTV? <i class='bx bx-chevron-down'></i>
+                            </div>
+                            <div class="faq-answer">
+                                ConnectTV te ofrece perfiles y cuentas completas de diversas plataformas de streaming a precios accesibles. Simplemente elige tu plan o perfil, realiza el pago y te daremos acceso para que disfrutes del contenido.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                ¿Qué métodos de pago aceptan? <i class='bx bx-chevron-down'></i>
+                            </div>
+                            <div class="faq-answer">
+                                Aceptamos PayPal, Binance (USDT), Pago Móvil y Transferencias Bancarias (Bancamiga). Puedes ver los detalles en la sección "Métodos de Pago".
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                ¿Cuánto tiempo tarda la activación del servicio? <i class='bx bx-chevron-down'></i>
+                            </div>
+                            <div class="faq-answer">
+                                Una vez que recibimos y verificamos tu comprobante de pago, la activación suele ser inmediata o en un plazo máximo de 1 a 2 horas. Te notificaremos por WhatsApp.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                ¿Puedo compartir mi perfil? <i class='bx bx-chevron-down'></i>
+                            </div>
+                            <div class="faq-answer">
+                                Nuestros perfiles premium son para uso personal. Si deseas compartir, te recomendamos adquirir planes con múltiples pantallas o nuestras cuentas completas.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="soporteSection" class="content-section-page">
+                <div class="content-block">
+                    <h2>Contacto y Soporte</h2>
+                    <p>¿Necesitas ayuda? Ponte en contacto con nosotros.</p>
+                    <div class="contact-info">
+                        <p><i class='bx bxl-whatsapp'></i> WhatsApp: <a href="https://wa.me/584242357804?text=Hola!%20Necesito%20ayuda%20con%20mi%20servicio%20de%20ConnectTV." target="_blank">Escríbenos aquí</a></p>
+                        <p><i class='bx bx-envelope'></i> Email: <a href="mailto:soporte@connecttv.com">soporte@connecttv.com</a></p>
+                        <p><i class='bx bx-time'></i> Horario de Atención: Lunes a Viernes, 9 AM - 6 PM (Hora de Venezuela)</p>
+                    </div>
+                    <p>También puedes seguirnos en nuestras redes sociales:</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/ConnectTV" target="_blank" class="social-icon"><i class='bx bxl-facebook'></i></a>
+                        <a href="https://instagram.com/ConnectTV" target="_blank" class="social-icon"><i class='bx bxl-instagram'></i></a>
+                        <a href="https://t.me/ConnectTV" target="_blank" class="social-icon"><i class='bx bxl-telegram'></i></a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    
+    <a href="https://wa.me/584242357804?text=Hola!%20Necesito%20ayuda%20con%20mi%20servicio%20de%20ConnectTV." class="whatsapp-float" target="_blank">
+        <i class='bx bxl-whatsapp'></i>
+    </a>
+
+    <div id="detailsModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeDetailsModal">&times;</button>
+            <h3 id="modalDetailsTitle"></h3>
+            <img id="modalDetailsImage" src="" alt="Imagen del servicio" style="max-width: 150px; display: block; margin: 15px auto; border-radius: 8px;">
+            <p id="modalDetailsDescription"></p>
+            <p class="modal-price" id="modalDetailsPrice"></p>
+            <a id="modalDetailsWhatsappBtn" href="" target="_blank" class="whatsapp-modal-btn">
+                <i class='bx bxl-whatsapp'></i> Preguntar por WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeLoginModal">&times;</button>
+            <h3>Iniciar Sesión</h3>
+            <form id="loginForm">
+                <label for="loginEmail">Correo Electrónico:</label>
+                <input type="email" id="loginEmail" name="loginEmail" placeholder="tu@correo.com" required>
+
+                <label for="loginPassword">Contraseña:</label>
+                <input type="password" id="loginPassword" name="loginPassword" placeholder="********" required>
+
+                <button type="submit" class="submit-button">Acceder</button>
+                <p style="text-align: center; margin-top: 15px; color: #aaa;">¿No tienes cuenta? <a href="#" id="switchToRegister" style="color: var(--primary-color); text-decoration: none;">Regístrate aquí</a></p>
+            </form>
+            <p id="loginMessage" style="margin-top: 20px; text-align: center; font-weight: bold;"></
