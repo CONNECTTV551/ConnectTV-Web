@@ -11,164 +11,99 @@
     <script type="module">
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global variables for Firebase config and app ID (provided by Canvas environment)
-        // Usamos un fallback muy claro para appId si no se proporciona.
-        const appId = typeof __app_id !== 'undefined' && __app_id !== null && __app_id.trim() !== '' ? __app_id : 'CANVAS_APP_ID_MISSING';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // **************************************************************************************************
+        // *** TU CONFIGURACIÓN DE FIREBASE REAL Y COMPLETA (PEGADA DIRECTAMENTE DE TU CONSOLA DE FIREBASE) ***
+        // *** ESTA ES LA CONFIGURACIÓN QUE ME PROPORCIONASTE Y ES LA CORRECTA.                             ***
+        // **************************************************************************************************
+        const firebaseConfig = {
+            apiKey: "AIzaSyBPAASk4M0gCUv3kxRDrRPztLuEdU8lP80",
+            authDomain: "miplataformaconnecttv.firebaseapp.com",
+            projectId: "miplataformaconnecttv",
+            storageBucket: "miplataformaconnecttv.firebasestorage.app",
+            messagingSenderId: "10232906249",
+            appId: "1:10232906249:web:34141fc9c383e4fb06aed8",
+            measurementId: "G-V3YG3TVT1Y"
+        };
+        // **************************************************************************************************
 
-        let firebaseConfig = {};
-        const rawFirebaseConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
-
-        try {
-            if (rawFirebaseConfig && typeof rawFirebaseConfig === 'string' && rawFirebaseConfig.trim() !== '') {
-                const parsedConfig = JSON.parse(rawFirebaseConfig);
-                if (typeof parsedConfig === 'object' && parsedConfig !== null) {
-                    firebaseConfig = parsedConfig;
-                } else {
-                    console.warn("Parsed __firebase_config is not a valid object, using empty config.");
-                }
-            } else {
-                console.warn("__firebase_config is null, empty, or not a string. Proceeding to use __app_id for projectId.");
-            }
-        } catch (e) {
-            console.error("Error parsing __firebase_config, falling back to empty object:", e);
-        }
-
-        // Asegurarse de que projectId siempre esté definido
-        if (!firebaseConfig.projectId) {
-            if (appId !== 'CANVAS_APP_ID_MISSING') {
-                firebaseConfig.projectId = appId;
-                console.log("projectId set from __app_id:", firebaseConfig.projectId);
-            } else {
-                console.error("CRITICAL: Firebase projectId could not be determined. __app_id is also missing or invalid. Please ensure your Firebase project is linked correctly in Canvas.");
-            }
-        } else {
-            console.log("projectId found in firebaseConfig (from __firebase_config):", firebaseConfig.projectId);
-        }
-
-        // *** IMPORTANTE PARA DEPURACIÓN ***
-        // Log del objeto firebaseConfig final antes de la inicialización
-        console.log("Final firebaseConfig object before initializeApp:", firebaseConfig);
+        // Usamos el projectId de la configuración como appId para las rutas de Firestore
+        const localAppId = firebaseConfig.projectId; // Ahora siempre estará definido
 
         // Initialize Firebase app, Firestore, and Auth services
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        let currentUserId = null; // Variable to store the authenticated user's ID
-        let currentUserRole = null; // Variable to store the authenticated user's role
+        let currentUserId = null; // Variable para almacenar el ID del usuario autenticado
+        let currentUserRole = null; // Variable para almacenar el rol del usuario autenticado
 
-        // Listen for authentication state changes
+        // Escuchar cambios en el estado de autenticación
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // User is signed in
+                // El usuario ha iniciado sesión
                 currentUserId = user.uid;
-                console.log("Firebase authenticated as:", currentUserId);
+                console.log("Firebase autenticado como:", currentUserId);
 
-                // Fetch user's role from Firestore
-                const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
+                // Obtener el rol del usuario desde Firestore
+                const userDocRef = doc(db, `artifacts/${localAppId}/users`, currentUserId);
                 const userDocSnap = await getDoc(userDocRef);
 
                 if (userDocSnap.exists()) {
                     currentUserRole = userDocSnap.data().role;
-                    console.log("User role:", currentUserRole);
+                    console.log("Rol del usuario:", currentUserRole);
                 } else {
-                    // If user document doesn't exist, assign a default role (e.g., 'client')
+                    // Si el documento del usuario no existe, asignar un rol predeterminado ('cliente')
                     currentUserRole = 'client';
                     await setDoc(userDocRef, { role: currentUserRole, username: user.email || 'N/A' }, { merge: true });
-                    console.log("Default role 'client' assigned to new user and saved to Firestore.");
+                    console.log("Rol predeterminado 'cliente' asignado al nuevo usuario y guardado en Firestore.");
                 }
 
-                // Expose the role globally
+                // Exponer el rol globalmente
                 window.currentUserRole = currentUserRole;
 
-                // Call setupClientsRealtimeListener only if the user is an admin
+                // Llamar a setupClientsRealtimeListener solo si el usuario es un administrador
                 if (currentUserRole === 'admin') {
                     if (window.setupClientsRealtimeListener) {
                         window.setupClientsRealtimeListener();
                     } else {
-                        console.warn("setupClientsRealtimeListener function not yet available.");
+                        console.warn("La función setupClientsRealtimeListener aún no está disponible.");
                     }
                 }
                 
-                // Trigger the UI update after authentication and role check
+                // Activar la actualización de la UI después de la autenticación y la verificación de roles
                 if (window.handleAuthSuccess) {
                     window.handleAuthSuccess(currentUserRole);
                 }
 
             } else {
-                // User is signed out. Attempt to sign in anonymously or with custom token.
+                // El usuario ha cerrado sesión. Intentar iniciar sesión de forma anónima.
                 currentUserId = null;
                 currentUserRole = null;
-                window.currentUserRole = null; // Clear global role
+                window.currentUserRole = null; // Limpiar el rol global
 
-                // Solo intentar signInWithCustomToken si el token es una cadena no vacía
-                if (initialAuthToken && typeof initialAuthToken === 'string' && initialAuthToken.trim() !== '') {
-                    try {
-                        console.log("Attempting to sign in with custom token...");
-                        const customUserCredential = await signInWithCustomToken(auth, initialAuthToken);
-                        currentUserId = customUserCredential.user.uid;
-                        // Fetch role for custom token users
-                        const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
-                        const userDocSnap = await getDoc(userDocRef);
-                        if (userDocSnap.exists()) {
-                            currentUserRole = userDocSnap.data().role;
-                        } else {
-                            currentUserRole = 'client'; // Default if no role found
-                            await setDoc(userDocRef, { role: currentUserRole, username: customUserCredential.user.email || 'N/A' }, { merge: true });
-                        }
-                        window.currentUserRole = currentUserRole;
-                        console.log("Firebase authenticated with custom token as:", currentUserId);
-                        if (currentUserRole === 'admin') {
-                            if (window.setupClientsRealtimeListener) {
-                                window.setupClientsRealtimeListener();
-                            }
-                        }
-                        if (window.handleAuthSuccess) {
-                            window.handleAuthSuccess(currentUserRole);
-                        }
-                    } catch (error) {
-                        console.error("Error signing in with custom token:", error);
-                        // Si el custom token falla, intenta iniciar sesión anónimamente como fallback
-                        console.log("Custom token failed, falling back to anonymous sign-in...");
-                        try {
-                            const anonUserCredential = await signInAnonymously(auth);
-                            currentUserId = anonUserCredential.user.uid;
-                            currentUserRole = 'client'; // Default for anonymous
-                            window.currentUserRole = currentUserRole;
-                            console.log("Firebase authenticated anonymously as (fallback):", currentUserId);
-                            if (window.handleAuthSuccess) {
-                                window.handleAuthSuccess(currentUserRole);
-                            }
-                        } catch (anonError) {
-                            console.error("Error signing in anonymously (fallback):", anonError);
-                        }
+                // Siempre intentar iniciar sesión anónimamente si no hay usuario logueado
+                try {
+                    const anonUserCredential = await signInAnonymously(auth);
+                    currentUserId = anonUserCredential.user.uid;
+                    currentUserRole = 'client'; // Predeterminado para anónimo
+                    window.currentUserRole = currentUserRole;
+                    console.log("Firebase autenticado anónimamente como:", currentUserId);
+                    if (window.handleAuthSuccess) {
+                        window.handleAuthSuccess(currentUserRole);
                     }
-                } else {
-                    // Si no hay custom token válido, simplemente inicia sesión anónimamente
-                    console.log("No valid initialAuthToken, attempting anonymous sign-in directly...");
-                    try {
-                        const anonUserCredential = await signInAnonymously(auth);
-                        currentUserId = anonUserCredential.user.uid;
-                        currentUserRole = 'client'; // Default for anonymous
-                        window.currentUserRole = currentUserRole;
-                        console.log("Firebase authenticated anonymously as:", currentUserId);
-                        if (window.handleAuthSuccess) {
-                            window.handleAuthSuccess(currentUserRole);
-                        }
-                    } catch (error) {
-                        console.error("Error signing in anonymously:", error);
-                    }
+                } catch (error) {
+                    console.error("Error al iniciar sesión anónimamente:", error);
                 }
             }
         });
 
-        // Function to set up a real-time listener for client data from Firestore
+        // Función para configurar un listener en tiempo real para los datos del cliente desde Firestore
         function setupClientsRealtimeListener() {
-            const clientsCollectionRef = collection(db, `artifacts/${appId}/public/data/registered_clients`);
+            // Usar localAppId para la ruta de Firestore
+            const clientsCollectionRef = collection(db, `artifacts/${localAppId}/public/data/registered_clients`);
             const q = query(clientsCollectionRef, orderBy('registrationDate', 'desc'));
 
             onSnapshot(q, (snapshot) => {
@@ -179,14 +114,14 @@
                 if (window.renderClients) {
                     window.renderClients(clientsFromDb); 
                 } else {
-                    console.warn("renderClients function not yet available. Data will be rendered once script.js loads.");
+                    console.warn("La función renderClients aún no está disponible. Los datos se renderizarán una vez que se cargue script.js.");
                 }
             }, (error) => {
-                console.error("Error fetching client data:", error);
+                console.error("Error al obtener datos del cliente:", error);
             });
         }
 
-        // Expose Firebase objects and helper functions globally so script.js can access them
+        // Exponer objetos y funciones auxiliares de Firebase globalmente para que script.js pueda acceder a ellos
         window.firebaseApp = app;
         window.firebaseDb = db;
         window.firebaseAuth = auth;
@@ -209,7 +144,7 @@
     </script>
 </head>
 <body>
-    <!-- HEADER: Initially hidden until user logs in -->
+    <!-- HEADER: Inicialmente oculto hasta que el usuario inicie sesión -->
     <header class="header hidden-on-auth">
         <div class="container">
             <div class="logo">
@@ -220,9 +155,9 @@
                     <li><a href="#" class="active" data-section="home">Inicio</a></li>
                     <li><a href="#" data-section="full-accounts">Cuentas Completas</a></li>
                     <li><a href="#" data-section="shared-profiles">Perfiles</a></li>
-                    <!-- Clients panel link, initially hidden for non-admin users -->
+                    <!-- Enlace del panel de clientes, inicialmente oculto para usuarios no administradores -->
                     <li><a href="#" data-section="clients-panel" id="clients-panel-nav-link" class="hidden-on-auth">Clientes</a></li> 
-                    <!-- Logout button -->
+                    <!-- Botón de cerrar sesión -->
                     <li><a href="#" id="logout-link">Cerrar Sesión</a></li>
                 </ul>
             </nav>
@@ -236,14 +171,14 @@
     </header>
 
     <main>
-        <!-- AUTHENTICATION SECTION: Active by default on page load -->
+        <!-- SECCIÓN DE AUTENTICACIÓN: Activa por defecto al cargar la página -->
         <section class="auth-section active-section" id="auth-section">
             <div class="auth-header-content">
                 <h1>Tu Acceso Ilimitado al <br> Panel de Administración</h1>
                 <p>Gestiona usuarios, productos y ventas con facilidad.</p>
             </div>
             <div class="auth-container">
-                <!-- Login/Register forms will be displayed here dynamically -->
+                <!-- Los formularios de inicio de sesión/registro se mostrarán aquí dinámicamente -->
                 <div id="login-form-container">
                     <h2>Iniciar Sesión</h2>
                     <form id="login-form">
@@ -285,7 +220,7 @@
             </div>
         </section>
 
-        <!-- MAIN SECTIONS (Initially hidden) -->
+        <!-- SECCIONES PRINCIPALES (Inicialmente ocultas) -->
         <section class="hero-section hero-market hidden-section" id="home-section">
             <div class="hero-content container">
                 <h1>Tu Acceso a Todo el Entretenimiento Premium</h1>
@@ -360,10 +295,9 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </section>
+            </section>
 
-    </main>
+        </main>
 
     <!-- FOOTER: Initially hidden until user logs in -->
     <footer class="footer hidden-on-auth">

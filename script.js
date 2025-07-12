@@ -710,7 +710,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("User logged in:", user.uid);
 
             // Fetch user role from Firestore
-            const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
+            // Usa window.firebaseApp.options.projectId para obtener el projectId de la configuración de Firebase
+            // o usa el localAppId si prefieres una cadena fija.
+            const currentAppId = window.firebaseApp.options.projectId || 'connecttv-local-app-fallback';
+            const userDocRef = window.doc(window.firebaseDb, `artifacts/${currentAppId}/users`, user.uid);
             const userDocSnap = await window.getDoc(userDocRef);
 
             let role = 'client'; // Default role
@@ -780,9 +783,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = userCredential.user;
             console.log("User successfully registered in Firebase Auth:", user.uid);
 
+            // Usa window.firebaseApp.options.projectId para obtener el projectId de la configuración de Firebase
+            // o usa el localAppId si prefieres una cadena fija.
+            const currentAppId = window.firebaseApp.options.projectId || 'connecttv-local-app-fallback';
+
             console.log("Attempting to save user role and metadata to Firestore 'users' collection...");
             // 2. Guardar detalles del usuario (incluyendo el rol 'client') en Firestore
-            const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
+            const userDocRef = window.doc(window.firebaseDb, `artifacts/${currentAppId}/users`, user.uid);
             await window.setDoc(userDocRef, {
                 email: email,
                 role: 'client', // Por defecto, todos los nuevos registros son 'cliente'
@@ -792,7 +799,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log("Attempting to save user details to 'registered_clients' collection for admin panel...");
             // 3. Guardar una entrada en la colección 'registered_clients' para el panel de admin
-            await window.addDoc(window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`), {
+            await window.addDoc(window.collection(window.firebaseDb, `artifacts/${currentAppId}/public/data/registered_clients`), {
                 uid: user.uid, // Guardar el UID para referencia
                 email: email,
                 password: password, // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
@@ -871,22 +878,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // Si quieres que la contraseña de Firebase Authentication se actualice, necesitarías
             // una función de backend (Cloud Function) que use el Admin SDK de Firebase.
             //
-            // Para que el cliente pueda iniciar sesión con esta "nueva" contraseña,
-            // la aplicación debería usar la contraseña de este documento de Firestore
-            // en lugar de la de Firebase Authentication para el login (lo cual no es lo que hace ahora).
-            //
             // Dado que el objetivo es que el admin "restablezca" para su control, y las contraseñas
             // se guardan en texto plano en `registered_clients` (¡repito, INSEGURO para producción!),
             // esta actualización solo afecta esa entrada.
 
             // Primero, busca el documento del cliente en `registered_clients` por su UID
-            const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
+            const currentAppId = window.firebaseApp.options.projectId || 'connecttv-local-app-fallback';
+            const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${currentAppId}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('uid', '==', clientUid));
             const querySnapshot = await window.getDocs(q);
 
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
-                await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
+                await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${currentAppId}/public/data/registered_clients`, clientDoc.id), {
                     password: newPassword // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
                 });
 
