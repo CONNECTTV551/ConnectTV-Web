@@ -1,4 +1,4 @@
-// Version: 1.9.0 - Implementa registro con Nombre, Apellido, Correo, Contraseña, WhatsApp (con código de país) y visibilidad de contraseña en panel admin.
+// Version: 1.9.1 - Asegura que el botón de registro se habilite después de que Firebase Auth se inicialice.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -462,8 +462,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Firebase Readiness Check y Inicialización ---
     const registerSubmitBtn = document.getElementById('register-submit-btn');
-    if (registerSubmitBtn && !registerSubmitBtn.disabled) {
+    // Deshabilita el botón de registro inicialmente para evitar interacciones antes de que Firebase esté listo.
+    if (registerSubmitBtn) {
         registerSubmitBtn.disabled = true; 
+        console.log("UI: Botón de registro inicialmente deshabilitado.");
     }
 
     // --- Cierre de Modales ---
@@ -1265,5 +1267,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cancelDeleteBtn.addEventListener('click', () => {
         closeAllModals();
+    });
+
+    // Lógica de autenticación inicial al cargar la página
+    // Mueve esta sección al final del DOMContentLoaded para asegurar que todos los elementos estén cargados
+    // y las funciones como showSection y handleAuthSuccess estén definidas.
+    window.onAuthStateChanged(window.firebaseAuth, async (user) => {
+        console.log("Auth: onAuthStateChanged disparado.");
+        // Habilita el botón de registro tan pronto como el estado de autenticación de Firebase sea determinado.
+        if (registerSubmitBtn) {
+            registerSubmitBtn.disabled = false;
+            console.log("UI: Botón de registro habilitado (Firebase Auth listo).");
+        }
+
+        if (user) {
+            console.log("Auth: Usuario autenticado:", user.uid);
+            const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
+            const userDocSnap = await window.getDoc(userDocRef);
+
+            let role = 'client';
+            if (userDocSnap.exists()) {
+                role = userDocSnap.data().role;
+                console.log("Auth: Rol del usuario desde Firestore:", role);
+            } else {
+                await window.setDoc(userDocRef, { role: 'client', email: user.email }, { merge: true });
+                console.log("Auth: Documento de usuario creado con rol 'client'.");
+            }
+            window.currentUserRole = role;
+
+            if (window.handleAuthSuccess) {
+                window.handleAuthSuccess(role, user.uid);
+            } else {
+                console.warn("Auth: window.handleAuthSuccess aún no está disponible. Reintentando...");
+                setTimeout(() => {
+                    if (window.handleAuthSuccess) {
+                        window.handleAuthSuccess(role, user.uid);
+                    }
+                }, 200);
+            }
+        } else {
+            console.log("Auth: Usuario no autenticado (o sesión cerrada).");
+            window.currentUserRole = null;
+            if (window.showSection) {
+                window.showSection('auth-section');
+            } else {
+                console.warn("Auth: window.showSection aún no está disponible. Reintentando...");
+                setTimeout(() => {
+                    if (window.showSection) {
+                        window.showSection('auth-section');
+                    }
+                }, 200);
+            }
+            if (window.unsubscribeClientsListener) {
+                window.unsubscribeClientsListener();
+                window.unsubscribeClientsListener = null;
+                console.log("Firestore: Listener de clientes desuscrito (usuario no autenticado).");
+            }
+        }
     });
 });
