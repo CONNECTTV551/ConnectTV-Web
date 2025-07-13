@@ -66,7 +66,8 @@
 
                 // Fetch user's role from Firestore
                 const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
-                const userDocSnap = await getDoc(userDocRef);
+                // Force getDoc to fetch from server to ensure latest role
+                const userDocSnap = await getDoc(userDocRef, { source: 'server' }); 
 
                 if (userDocSnap.exists()) {
                     currentUserRole = userDocSnap.data().role;
@@ -130,7 +131,8 @@
                         currentUserId = customUserCredential.user.uid;
                         // Fetch role for custom token users
                         const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
-                        const userDocSnap = await getDoc(userDocRef);
+                        // Force getDoc to fetch from server to ensure latest role
+                        const userDocSnap = await getDoc(userDocRef, { source: 'server' }); 
                         if (userDocSnap.exists()) {
                             currentUserRole = userDocSnap.data().role;
                         } else {
