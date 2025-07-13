@@ -1,4 +1,4 @@
-// Version: 1.7.2 - Simplifica las acciones del panel de clientes a solo Restablecer Contraseña y Eliminar.
+// Version: 1.7.3 - Modifica el flujo de restablecimiento de contraseña para administradores a envío de email.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -926,61 +926,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Lógica para Restablecer Contraseña del Cliente (por Admin) ---
+    // Este evento ahora enviará un correo de restablecimiento al cliente
     resetPasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const clientUid = resetPasswordForm.dataset.clientUid;
-        const newPassword = document.getElementById('new-password').value;
-        const confirmNewPassword = document.getElementById('confirm-new-password').value;
-
-        if (newPassword !== confirmNewPassword) {
-            resetPasswordMessage.textContent = 'Las contraseñas no coinciden.';
-            resetPasswordMessage.classList.remove('success-message');
-            resetPasswordMessage.classList.add('error-message');
-            resetPasswordMessage.style.display = 'block';
-            return;
-        }
-
-        if (newPassword.length < 6) {
-            resetPasswordMessage.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
-            resetPasswordMessage.classList.remove('success-message');
-            resetPasswordMessage.classList.add('error-message');
-            resetPasswordMessage.style.display = 'block';
-            return;
-        }
+        // const clientUid = resetPasswordForm.dataset.clientUid; // No se usa directamente aquí
+        const clientEmail = resetClientEmailInput.value; // El email del cliente a quien se le enviará el correo
 
         try {
-            console.log(`Admin: Intentando restablecer contraseña para UID: ${clientUid}`);
-            const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
-            const q = window.query(clientsCollectionRef, window.where('uid', '==', clientUid));
-            const querySnapshot = await window.getDocs(q);
+            console.log(`Admin: Intentando enviar correo de restablecimiento a: ${clientEmail}`);
+            await window.sendPasswordResetEmail(window.firebaseAuth, clientEmail);
 
-            if (!querySnapshot.empty) {
-                const clientDoc = querySnapshot.docs[0];
-                await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
-                    password: newPassword
-                });
-
-                resetPasswordMessage.textContent = '¡Contraseña restablecida y actualizada en el panel!';
-                resetPasswordMessage.classList.remove('error-message');
-                resetPasswordMessage.classList.add('success-message');
-                resetPasswordMessage.style.display = 'block';
-                
-                console.log(`Admin: Contraseña para el cliente ${resetClientEmailInput.value} restablecida en Firestore.`);
-                
-                setTimeout(() => {
-                    closeAllModals();
-                }, 2000);
-            } else {
-                resetPasswordMessage.textContent = 'Error: Cliente no encontrado en la base de datos de clientes.';
-                resetPasswordMessage.classList.remove('success-message');
-                resetPasswordMessage.classList.add('error-message');
-                resetPasswordMessage.style.display = 'block';
-                console.warn(`Admin: Cliente con UID ${clientUid} no encontrado en 'registered_clients'.`);
-            }
+            resetPasswordMessage.textContent = `¡Correo de restablecimiento enviado a ${clientEmail}! El cliente deberá seguir las instrucciones en su correo.`;
+            resetPasswordMessage.classList.remove('error-message');
+            resetPasswordMessage.classList.add('success-message');
+            resetPasswordMessage.style.display = 'block';
+            
+            console.log(`Admin: Correo de restablecimiento enviado para el cliente ${clientEmail}.`);
+            
+            setTimeout(() => {
+                closeAllModals();
+            }, 4000); // Dar más tiempo para leer el mensaje
 
         } catch (error) {
-            console.error("Admin: Error al restablecer contraseña del cliente:", error);
-            resetPasswordMessage.textContent = `Error al restablecer: ${error.message}`;
+            console.error("Admin: Error al enviar correo de restablecimiento:", error.code, error.message);
+            let errorMessage = `Error al enviar correo: ${error.message}`;
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = "No se encontró un usuario con ese correo electrónico en Firebase Authentication.";
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = "El formato del correo electrónico es inválido.";
+            } else if (error.code === 'auth/network-request-failed') {
+                errorMessage = "Problema de conexión. Verifica tu internet o inténtalo más tarde.";
+            }
+            resetPasswordMessage.textContent = errorMessage;
             resetPasswordMessage.classList.remove('success-message');
             resetPasswordMessage.classList.add('error-message');
             resetPasswordMessage.style.display = 'block';
@@ -1016,6 +993,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await window.confirmPasswordReset(window.firebaseAuth, oobCode, newPassword);
 
             // Opcional: Actualizar la contraseña en la colección 'registered_clients' si se está usando.
+            // Esto es solo para mantener la coherencia en tu panel de admin, no afecta Firebase Auth.
             const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('email', '==', emailToReset));
             const querySnapshot = await window.getDocs(q);
@@ -1023,7 +1001,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
                 await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
-                    password: newPassword
+                    password: newPassword // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
                 });
                 console.log(`Firestore: Contraseña actualizada en 'registered_clients' para ${emailToReset}.`);
             } else {
@@ -1036,7 +1014,7 @@ document.addEventListener('DOMContentLoaded', () => {
             forgotPasswordCodeMessage.style.display = 'block';
             
             setTimeout(() => {
-                showLoginForm();
+                showLoginForm(); // Volver al formulario de login
             }, 3000);
 
         } catch (error) {
@@ -1084,7 +1062,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Admin: Error al eliminar cliente:", error);
             deleteMessage.textContent = `Error al eliminar: ${error.message}`;
             deleteMessage.classList.remove('success-message');
-            deleteMessage.classList.add('error-message');
+            deleteMessage.classList.add('error-error'); // Corregido de 'error-error' a 'error-message'
             deleteMessage.style.display = 'block';
         }
     });

@@ -96,6 +96,7 @@
                         console.warn("Firestore: La función renderClients aún no está disponible.");
                     }
                 }, (error) => {
+                    // Manejo de errores en caso de que la lectura de datos falle.
                     console.error("Firestore: Error al obtener los datos del cliente:", error);
                 });
             } else {
@@ -552,17 +553,22 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h3>Restablecer Contraseña del Cliente</h3>
+            <p class="instruction-message">
+                Se enviará un correo de restablecimiento de contraseña al cliente.
+                El cliente deberá seguir las instrucciones en su correo para establecer una nueva contraseña.
+            </p>
             <form id="reset-password-form">
                 <label for="reset-client-email">Correo del Cliente:</label>
                 <input type="email" id="reset-client-email" readonly>
                 
-                <label for="new-password">Nueva Contraseña:</label>
+                <!-- Campos de nueva contraseña ELIMINADOS, ya que el admin no la establece directamente -->
+                <!-- <label for="new-password">Nueva Contraseña:</label>
                 <input type="password" id="new-password" required placeholder="Ingresa la nueva contraseña">
                 
                 <label for="confirm-new-password">Confirmar Nueva Contraseña:</label>
-                <input type="password" id="confirm-new-password" required placeholder="Repite la nueva contraseña">
+                <input type="password" id="confirm-new-password" required placeholder="Repite la nueva contraseña"> -->
                 
-                <button type="submit" class="btn primary-btn">Restablecer Contraseña</button>
+                <button type="submit" class="btn primary-btn">Enviar Correo de Restablecimiento</button>
             </form>
             <p id="reset-password-message" class="message" style="display: none;"></p>
         </div>
