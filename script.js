@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav ul li a');
     const sections = document.querySelectorAll('main section');
     const headerElement = document.querySelector('.header');
-    const footerElement = document.querySelector('.footer'); // Corregido: usar querySelector para la clase
+    const footerElement = document.querySelector('.footer');
     const pricingPanelElement = document.getElementById('pricing-panel');
     const authSection = document.getElementById('auth-section');
     const logoutLink = document.getElementById('logout-link');
@@ -76,8 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const targetSectionElement = document.getElementById(sectionId);
-        targetSectionElement.classList.remove('hidden-section');
-        targetSectionElement.classList.add('active-section');
+        if (targetSectionElement) { // Ensure the element exists
+            targetSectionElement.classList.remove('hidden-section');
+            targetSectionElement.classList.add('active-section');
+        } else {
+            console.error(`Section with ID ${sectionId} not found.`);
+            return; // Exit if section not found
+        }
 
         // Lógica de visibilidad de elementos globales (header, footer, pricing panel)
         if (sectionId === 'auth-section') {
@@ -108,7 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearTimeout(slideTimer);
             }
         }
-    } // Cierre de showSection
+
+        navLinks.forEach(link => link.classList.remove('active'));
+        const activeNavLink = document.querySelector(`.nav ul li a[data-section="${sectionId.replace('-section', '')}"]`);
+        if (activeNavLink) {
+            activeNavLink.classList.add('active');
+        }
+    }
 
     // Manejar el éxito de autenticación para actualizar la UI
     window.handleAuthSuccess = (role) => {
@@ -120,7 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Al cargar la página, mostrar solo la sección de autenticación
-    showSection('auth-section');
+    // Ensure this runs after all sections are defined in HTML and script is parsed
+    // Added a small delay to ensure DOM is fully ready and showSection is properly defined
+    setTimeout(() => {
+        showSection('auth-section');
+    }, 0); // Execute as soon as possible after current script execution
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -279,7 +294,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         clientsData.forEach(client => {
             const row = document.createElement('tr');
-            const registrationDate = client.registrationDate ? new Date(client.registrationDate.toDate()).toLocaleDateString() : 'N/A';
+            // Ensure registrationDate is a valid Firestore Timestamp before calling toDate()
+            const registrationDate = client.registrationDate && typeof client.registrationDate.toDate === 'function' 
+                                     ? new Date(client.registrationDate.toDate()).toLocaleDateString() 
+                                     : 'N/A';
             row.innerHTML = `
                 <td>${client.email}</td>
                 <td>${client.password ? '********' : 'N/A'}</td>
@@ -332,34 +350,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Firebase Readiness Check y Inicialización ---
     const registerSubmitBtn = document.getElementById('register-submit-btn');
-    registerSubmitBtn.disabled = true; // Deshabilitar inicialmente
-    registerSubmitBtn.textContent = 'Cargando...'; // Mensaje inicial
+    // Disable initially only if it's not already disabled (to avoid re-disabling if HTML sets it)
+    if (registerSubmitBtn && !registerSubmitBtn.disabled) {
+        registerSubmitBtn.disabled = true; 
+    }
 
     function checkFirebaseReady() {
-        // Verifica si las funciones de autenticación y Firestore de Firebase están disponibles
-        if (typeof window.createUserWithEmailAndPassword === 'function' &&
-            typeof window.signInWithEmailAndPassword === 'function' &&
-            typeof window.signOut === 'function' && // Asegura que signOut también esté disponible
-            window.firebaseAuth && // Asegura que el objeto de autenticación de Firebase esté disponible
-            window.firebaseDb && // Asegura que el objeto de Firestore esté disponible
-            typeof window.addDoc === 'function' &&
-            typeof window.collection === 'function' &&
-            typeof window.doc === 'function' &&
-            typeof window.setDoc === 'function' &&
-            typeof window.getDoc === 'function' && // Asegura getDoc
-            typeof window.updateDoc === 'function' && // Asegura updateDoc
-            typeof window.query === 'function' && // Asegura query
-            typeof window.where === 'function' // Asegura where para la búsqueda de UID
-        ) {
-            console.log("Firebase Auth and Firestore functions are ready in script.js. Enabling registration.");
-            registerSubmitBtn.disabled = false; // Habilitar el botón de registro
-            registerSubmitBtn.textContent = 'Registrarse'; // Restaurar texto del botón
+        // Check for all necessary Firebase globals to be available
+        if (window.firebaseAuth && window.firebaseDb && window.addDoc && window.collection && 
+            window.createUserWithEmailAndPassword && window.signInWithEmailAndPassword && 
+            window.signOut && window.doc && window.getDoc && window.setDoc && window.updateDoc &&
+            window.where && window.getDocs) {
+            console.log("Firebase globals are ready in script.js.");
+            if (registerSubmitBtn) {
+                registerSubmitBtn.disabled = false; // Habilitar el botón de registro
+            }
+            // The onAuthStateChanged listener in index.html will handle initial UI state after auth
         } else {
-            // Si no están listos, intenta de nuevo después de un breve retraso
+            // If not ready, retry after a short delay
             setTimeout(checkFirebaseReady, 100);
         }
     }
-    checkFirebaseReady(); // Inicia la verificación de Firebase
+    checkFirebaseReady(); // Start checking for Firebase readiness
 
     // --- Cierre de Modales ---
     function closeAllModals() {
@@ -710,10 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("User logged in:", user.uid);
 
             // Fetch user role from Firestore
-            // Usa window.firebaseApp.options.projectId para obtener el projectId de la configuración de Firebase
-            // o usa el localAppId si prefieres una cadena fija.
-            const currentAppId = window.firebaseApp.options.projectId || 'connecttv-local-app-fallback';
-            const userDocRef = window.doc(window.firebaseDb, `artifacts/${currentAppId}/users`, user.uid);
+            const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
             const userDocSnap = await window.getDoc(userDocRef);
 
             let role = 'client'; // Default role
@@ -721,7 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 role = userDocSnap.data().role;
             } else {
                 // If user doc doesn't exist (e.g., old anonymous user), create it with default client role
-                await window.setDoc(userDocRef, { role: 'client', username: email }, { merge: true });
+                await window.setDoc(userDocRef, { role: 'client', email: email }, { merge: true });
             }
             window.currentUserRole = role; // Update global role
 
@@ -755,13 +764,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Manejar el envío del formulario de Registro
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        console.log("Register form submitted!"); // Log to confirm event listener is firing
-
-        // Show loading state
-        registerSubmitBtn.disabled = true;
-        registerSubmitBtn.textContent = 'Registrando...';
-        registerMessage.style.display = 'none'; // Clear previous messages
-
         const email = registerEmailInput.value;
         const password = registerPasswordInput.value;
         const confirmPassword = confirmPasswordInput.value;
@@ -771,41 +773,37 @@ document.addEventListener('DOMContentLoaded', () => {
             registerMessage.classList.remove('success-message');
             registerMessage.classList.add('error-message');
             registerMessage.style.display = 'block';
-            registerSubmitBtn.disabled = false; // Re-enable button
-            registerSubmitBtn.textContent = 'Registrarse';
             return;
         }
 
         try {
-            console.log("Attempting to create user in Firebase Auth...");
             // 1. Crear usuario en Firebase Authentication
             const userCredential = await window.createUserWithEmailAndPassword(window.firebaseAuth, email, password);
             const user = userCredential.user;
-            console.log("User successfully registered in Firebase Auth:", user.uid);
+            console.log("User registered in Firebase Auth:", user.uid);
 
-            // Usa window.firebaseApp.options.projectId para obtener el projectId de la configuración de Firebase
-            // o usa el localAppId si prefieres una cadena fija.
-            const currentAppId = window.firebaseApp.options.projectId || 'connecttv-local-app-fallback';
-
-            console.log("Attempting to save user role and metadata to Firestore 'users' collection...");
             // 2. Guardar detalles del usuario (incluyendo el rol 'client') en Firestore
-            const userDocRef = window.doc(window.firebaseDb, `artifacts/${currentAppId}/users`, user.uid);
+            // Usamos la colección 'users' para metadatos del usuario como el rol
+            const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
             await window.setDoc(userDocRef, {
                 email: email,
                 role: 'client', // Por defecto, todos los nuevos registros son 'cliente'
                 registrationDate: new Date(),
             });
-            console.log("User role and metadata successfully saved to Firestore 'users' collection.");
+            console.log("User role and metadata saved to Firestore.");
 
-            console.log("Attempting to save user details to 'registered_clients' collection for admin panel...");
             // 3. Guardar una entrada en la colección 'registered_clients' para el panel de admin
-            await window.addDoc(window.collection(window.firebaseDb, `artifacts/${currentAppId}/public/data/registered_clients`), {
+            // Aquí se guarda la contraseña en texto plano para la funcionalidad de "restablecer" del admin.
+            // EN UN ENTORNO DE PRODUCCIÓN REAL: NUNCA HAGAS ESTO. Las contraseñas NUNCA deben guardarse en texto plano.
+            // La funcionalidad de restablecimiento de contraseña por el admin debería ser a través de un correo electrónico
+            // de restablecimiento enviado por Firebase Admin SDK (requiere un backend).
+            await window.addDoc(window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`), {
                 uid: user.uid, // Guardar el UID para referencia
                 email: email,
                 password: password, // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
                 registrationDate: new Date(),
             });
-            console.log("User details successfully saved to 'registered_clients' collection.");
+            console.log("User details saved to registered_clients collection for admin panel.");
 
             registerMessage.textContent = '¡Registro exitoso! Ahora puedes iniciar sesión.';
             registerMessage.classList.remove('error-message');
@@ -815,12 +813,10 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 showLoginForm();
                 registerMessage.style.display = 'none';
-                registerSubmitBtn.disabled = false; // Re-enable button
-                registerSubmitBtn.textContent = 'Registrarse';
             }, 2000);
 
         } catch (error) {
-            console.error("Error during user registration process:", error);
+            console.error("Error al registrar usuario:", error);
             let errorMessage = "Error al registrar. Inténtalo de nuevo.";
             if (error.code === 'auth/email-already-in-use') {
                 errorMessage = "El correo electrónico ya está en uso.";
@@ -828,15 +824,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorMessage = "La contraseña es demasiado débil (mínimo 6 caracteres).";
             } else if (error.code === 'auth/invalid-email') {
                 errorMessage = "Formato de correo electrónico inválido.";
-            } else if (error.code === 'permission-denied') { // Specific check for Firestore permission errors
-                errorMessage = "Error de permisos. Asegúrate de que las reglas de seguridad de Firestore permitan el registro.";
             }
             registerMessage.textContent = errorMessage;
             registerMessage.classList.remove('success-message');
             registerMessage.classList.add('error-message');
             registerMessage.style.display = 'block';
-            registerSubmitBtn.disabled = false; // Re-enable button
-            registerSubmitBtn.textContent = 'Registrarse';
         }
     });
 
@@ -883,14 +875,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // esta actualización solo afecta esa entrada.
 
             // Primero, busca el documento del cliente en `registered_clients` por su UID
-            const currentAppId = window.firebaseApp.options.projectId || 'connecttv-local-app-fallback';
-            const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${currentAppId}/public/data/registered_clients`);
+            const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('uid', '==', clientUid));
             const querySnapshot = await window.getDocs(q);
 
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
-                await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${currentAppId}/public/data/registered_clients`, clientDoc.id), {
+                await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
                     password: newPassword // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
                 });
 

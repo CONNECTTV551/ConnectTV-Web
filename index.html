@@ -11,140 +11,207 @@
     <script type="module">
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // **************************************************************************************************
-        // *** TU CONFIGURACIÓN DE FIREBASE REAL Y COMPLETA (PEGADA DIRECTAMENTE DE TU CONSOLA DE FIREBASE) ***
-        // *** ESTA ES LA CONFIGURACIÓN QUE ME PROPORCIONASTE Y ES LA CORRECTA.                             ***
-        // **************************************************************************************************
-        const firebaseConfig = {
-            apiKey: "AIzaSyBPAASk4M0gCUv3kxRDrRPztLuEdU8lP80",
-            authDomain: "miplataformaconnecttv.firebaseapp.com",
-            projectId: "miplataformaconnecttv",
-            storageBucket: "miplataformaconnecttv.firebasestorage.app",
-            messagingSenderId: "10232906249",
-            appId: "1:10232906249:web:34141fc9c383e4fb06aed8",
-            measurementId: "G-V3YG3TVT1Y"
-        };
-        // **************************************************************************************************
+        // Global variables for Firebase config and app ID (provided by Canvas environment)
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        // If __firebase_config is empty, use the user-provided config
+        if (Object.keys(firebaseConfig).length === 0) {
+            Object.assign(firebaseConfig, {
+                apiKey: "AIzaSyBPAASk4M0gCUv3kxRDrRPztLuEdU8lP80",
+                authDomain: "miplataformaconnecttv.firebaseapp.com",
+                projectId: "miplataformaconnecttv",
+                storageBucket: "miplataformaconnecttv.firebasestorage.app",
+                messagingSenderId: "10232906249",
+                appId: "1:10232906249:web:34141fc9c383e4fb06aed8",
+                measurementId: "G-V3YG3TVT1Y"
+            });
+        }
 
-        // Usamos el projectId de la configuración como appId para las rutas de Firestore
-        const localAppId = firebaseConfig.projectId; // Ahora siempre estará definido
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         // Initialize Firebase app, Firestore, and Auth services
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        let currentUserId = null; // Variable para almacenar el ID del usuario autenticado
-        let currentUserRole = null; // Variable para almacenar el rol del usuario autenticado
+        let currentUserId = null; // Variable to store the authenticated user's ID
+        let currentUserRole = null; // Variable to store the authenticated user's role
 
-        // Escuchar cambios en el estado de autenticación
+        // Listen for authentication state changes
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // El usuario ha iniciado sesión
-                currentUserId = user.uid;
-                console.log("Firebase autenticado como:", currentUserId);
+            // Ensure handleAuthSuccess and showSection are available before calling
+            // This waits for script.js to load and expose the functions
+            const waitForScriptFunctions = () => {
+                return new Promise(resolve => {
+                    const check = () => {
+                        if (window.handleAuthSuccess && window.showSection) {
+                            resolve();
+                        } else {
+                            setTimeout(check, 50); // Check again after 50ms
+                        }
+                    };
+                    check();
+                });
+            };
+            await waitForScriptFunctions();
 
-                // Obtener el rol del usuario desde Firestore
-                const userDocRef = doc(db, `artifacts/${localAppId}/users`, currentUserId);
+
+            if (user) {
+                // User is signed in
+                currentUserId = user.uid;
+                console.log("Firebase authenticated as:", currentUserId);
+
+                // Fetch user's role from Firestore
+                const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
                 const userDocSnap = await getDoc(userDocRef);
 
                 if (userDocSnap.exists()) {
                     currentUserRole = userDocSnap.data().role;
-                    console.log("Rol del usuario:", currentUserRole);
+                    console.log("User role:", currentUserRole);
                 } else {
-                    // Si el documento del usuario no existe, asignar un rol predeterminado ('cliente')
+                    // If user document doesn't exist, assign a default role (e.g., 'client')
                     currentUserRole = 'client';
-                    await setDoc(userDocRef, { role: currentUserRole, username: user.email || 'N/A' }, { merge: true });
-                    console.log("Rol predeterminado 'cliente' asignado al nuevo usuario y guardado en Firestore.");
+                    await setDoc(userDocRef, { role: currentUserRole, email: user.email || 'N/A' }, { merge: true });
+                    console.log("Default role 'client' assigned to new user and saved to Firestore.");
                 }
 
-                // Exponer el rol globalmente
+                // Expose the role globally
                 window.currentUserRole = currentUserRole;
 
-                // Llamar a setupClientsRealtimeListener solo si el usuario es un administrador
+                // Call setupClientsRealtimeListener only if the user is an admin
                 if (currentUserRole === 'admin') {
                     if (window.setupClientsRealtimeListener) {
                         window.setupClientsRealtimeListener();
                     } else {
-                        console.warn("La función setupClientsRealtimeListener aún no está disponible.");
+                        console.warn("setupClientsRealtimeListener function not yet available. Will retry.");
+                        const checkSetupListener = setInterval(() => {
+                            if (window.setupClientsRealtimeListener) {
+                                window.setupClientsRealtimeListener();
+                                clearInterval(checkSetupListener);
+                            }
+                        }, 100);
                     }
                 }
                 
-                // Activar la actualización de la UI después de la autenticación y la verificación de roles
-                if (window.handleAuthSuccess) {
-                    window.handleAuthSuccess(currentUserRole);
-                }
+                // Trigger the UI update after authentication and role check
+                window.handleAuthSuccess(currentUserRole);
 
             } else {
-                // El usuario ha cerrado sesión. Intentar iniciar sesión de forma anónima.
+                // User is signed out. Attempt to sign in anonymously or with custom token.
                 currentUserId = null;
                 currentUserRole = null;
-                window.currentUserRole = null; // Limpiar el rol global
+                window.currentUserRole = null; // Clear global role
 
-                // Siempre intentar iniciar sesión anónimamente si no hay usuario logueado
-                try {
-                    const anonUserCredential = await signInAnonymously(auth);
-                    currentUserId = anonUserCredential.user.uid;
-                    currentUserRole = 'client'; // Predeterminado para anónimo
-                    window.currentUserRole = currentUserRole;
-                    console.log("Firebase autenticado anónimamente como:", currentUserId);
-                    if (window.handleAuthSuccess) {
-                        window.handleAuthSuccess(currentUserRole);
+                if (!initialAuthToken) {
+                    // If no custom token, sign in anonymously
+                    try {
+                        const anonUserCredential = await signInAnonymously(auth);
+                        currentUserId = anonUserCredential.user.uid;
+                        currentUserRole = 'client'; // Default for anonymous
+                        window.currentUserRole = currentUserRole;
+                        console.log("Firebase authenticated anonymously as:", currentUserId);
+                        // For anonymous users, we might not have an email, so use N/A
+                        const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
+                        await setDoc(userDocRef, { role: currentUserRole, email: 'N/A' }, { merge: true }); // Use 'N/A' for anonymous email
+                        // After anonymous sign-in, still show the auth section for explicit login/registration
+                        window.showSection('auth-section'); 
+                    } catch (error) {
+                        console.error("Error signing in anonymously:", error);
+                        // If anonymous sign-in fails, ensure auth section is shown
+                        window.showSection('auth-section');
                     }
-                } catch (error) {
-                    console.error("Error al iniciar sesión anónimamente:", error);
+                } else {
+                    // If a custom token is provided, use it for authentication
+                    try {
+                        const customUserCredential = await signInWithCustomToken(auth, initialAuthToken);
+                        currentUserId = customUserCredential.user.uid;
+                        // Fetch role for custom token users
+                        const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
+                        const userDocSnap = await getDoc(userDocRef);
+                        if (userDocSnap.exists()) {
+                            currentUserRole = userDocSnap.data().role;
+                        } else {
+                            currentUserRole = 'client'; // Default if no role found
+                            await setDoc(userDocRef, { role: currentUserRole, email: customUserCredential.user.email || 'N/A' }, { merge: true });
+                        }
+                        window.currentUserRole = currentUserRole;
+                        console.log("Firebase authenticated with custom token as:", currentUserId);
+                        if (currentUserRole === 'admin') {
+                            if (window.setupClientsRealtimeListener) {
+                                window.setupClientsRealtimeListener();
+                            } else {
+                                const checkSetupListener = setInterval(() => {
+                                    if (window.setupClientsRealtimeListener) {
+                                        window.setupClientsRealtimeListener();
+                                        clearInterval(checkSetupListener);
+                                    }
+                                }, 100);
+                            }
+                        }
+                        window.handleAuthSuccess(currentUserRole);
+                    } catch (error) {
+                        console.error("Error signing in with custom token:", error);
+                        // If custom token sign-in fails, ensure auth section is shown
+                        window.showSection('auth-section');
+                    }
                 }
             }
         });
 
-        // Función para configurar un listener en tiempo real para los datos del cliente desde Firestore
+        // Function to set up a real-time listener for client data from Firestore
         function setupClientsRealtimeListener() {
-            // Usar localAppId para la ruta de Firestore
-            const clientsCollectionRef = collection(db, `artifacts/${localAppId}/public/data/registered_clients`);
+            // Path: /artifacts/{appId}/public/data/registered_clients
+            const clientsCollectionRef = collection(db, `artifacts/${appId}/public/data/registered_clients`);
+            
+            // Create a query to order clients by registration date in descending order (newest first)
             const q = query(clientsCollectionRef, orderBy('registrationDate', 'desc'));
 
+            // Set up the real-time listener using onSnapshot
             onSnapshot(q, (snapshot) => {
                 const clientsFromDb = [];
                 snapshot.forEach((doc) => {
+                    // Add document ID and data to the clients array
                     clientsFromDb.push({ id: doc.id, ...doc.data() });
                 });
-                if (window.renderClients) {
+                // Call the globally exposed renderClients function to update the UI
+                if (window.renderClients) { // Check if the function is defined before calling
                     window.renderClients(clientsFromDb); 
                 } else {
-                    console.warn("La función renderClients aún no está disponible. Los datos se renderizarán una vez que se cargue script.js.");
+                    console.warn("renderClients function not yet available. Data will be rendered once script.js loads.");
                 }
             }, (error) => {
-                console.error("Error al obtener datos del cliente:", error);
+                console.error("Error fetching client data:", error);
             });
         }
 
-        // Exponer objetos y funciones auxiliares de Firebase globalmente para que script.js pueda acceder a ellos
+        // Expose Firebase objects and helper functions globally so script.js can access them
         window.firebaseApp = app;
         window.firebaseDb = db;
         window.firebaseAuth = auth;
-        window.getCurrentUserId = () => currentUserId;
-        window.setupClientsRealtimeListener = setupClientsRealtimeListener;
-        window.addDoc = addDoc;
-        window.collection = collection;
-        window.onSnapshot = onSnapshot;
-        window.query = query;
-        window.orderBy = orderBy;
-        window.doc = doc;
-        window.getDoc = getDoc;
-        window.setDoc = setDoc;
-        window.updateDoc = updateDoc;
-        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-        window.signOut = () => auth.signOut();
-        window.where = where;
-        window.getDocs = getDocs;
+        window.getCurrentUserId = () => currentUserId; // Helper to get the current user's ID
+        window.setupClientsRealtimeListener = setupClientsRealtimeListener; // Expose for initial call
+        window.addDoc = addDoc; // Expose addDoc for adding documents to Firestore
+        window.collection = collection; // Expose collection for referencing Firestore collections
+        window.onSnapshot = onSnapshot; // Expose onSnapshot for real-time listeners
+        window.query = query; // Expose query for building Firestore queries
+        window.orderBy = orderBy; // Expose orderBy for ordering query results
+        window.doc = doc; // Expose doc for document references
+        window.getDoc = getDoc; // Expose getDoc for fetching single documents
+        window.setDoc = setDoc; // Expose setDoc for setting documents
+        window.updateDoc = updateDoc; // Expose updateDoc for updating documents
+        window.where = where; // Expose where for filtering queries
+        window.getDocs = getDocs; // Expose getDocs for one-time query fetches
+        window.deleteDoc = deleteDoc; // Expose deleteDoc for deleting documents
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword; // Expose for registration
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword; // Expose for login
+        window.signOut = () => firebaseSignOut(auth); // Expose signOut function
     </script>
 </head>
 <body>
-    <!-- HEADER: Inicialmente oculto hasta que el usuario inicie sesión -->
+    <!-- HEADER: Initially hidden until user logs in -->
     <header class="header hidden-on-auth">
         <div class="container">
             <div class="logo">
@@ -155,9 +222,9 @@
                     <li><a href="#" class="active" data-section="home">Inicio</a></li>
                     <li><a href="#" data-section="full-accounts">Cuentas Completas</a></li>
                     <li><a href="#" data-section="shared-profiles">Perfiles</a></li>
-                    <!-- Enlace del panel de clientes, inicialmente oculto para usuarios no administradores -->
+                    <!-- Clients panel link, initially hidden for non-admin users -->
                     <li><a href="#" data-section="clients-panel" id="clients-panel-nav-link" class="hidden-on-auth">Clientes</a></li> 
-                    <!-- Botón de cerrar sesión -->
+                    <!-- Logout button -->
                     <li><a href="#" id="logout-link">Cerrar Sesión</a></li>
                 </ul>
             </nav>
@@ -171,14 +238,14 @@
     </header>
 
     <main>
-        <!-- SECCIÓN DE AUTENTICACIÓN: Activa por defecto al cargar la página -->
+        <!-- AUTHENTICATION SECTION: Active by default on page load -->
         <section class="auth-section active-section" id="auth-section">
             <div class="auth-header-content">
                 <h1>Tu Acceso Ilimitado al <br> Panel de Administración</h1>
                 <p>Gestiona usuarios, productos y ventas con facilidad.</p>
             </div>
             <div class="auth-container">
-                <!-- Los formularios de inicio de sesión/registro se mostrarán aquí dinámicamente -->
+                <!-- Login/Register forms will be displayed here dynamically -->
                 <div id="login-form-container">
                     <h2>Iniciar Sesión</h2>
                     <form id="login-form">
@@ -220,7 +287,7 @@
             </div>
         </section>
 
-        <!-- SECCIONES PRINCIPALES (Inicialmente ocultas) -->
+        <!-- MAIN SECTIONS (Initially hidden) -->
         <section class="hero-section hero-market hidden-section" id="home-section">
             <div class="hero-content container">
                 <h1>Tu Acceso a Todo el Entretenimiento Premium</h1>
@@ -295,9 +362,10 @@
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </div>
+        </section>
 
-        </main>
+    </main>
 
     <!-- FOOTER: Initially hidden until user logs in -->
     <footer class="footer hidden-on-auth">
@@ -514,6 +582,21 @@
                 <button type="submit" class="btn primary-btn">Restablecer Contraseña</button>
             </form>
             <p id="reset-password-message" class="message" style="display: none;"></p>
+        </div>
+    </div>
+
+    <!-- NEW: Delete Confirmation Modal for Admin -->
+    <div id="delete-confirm-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>Confirmar Eliminación</h3>
+            <p>¿Estás seguro de que quieres eliminar al cliente <strong id="client-to-delete-email"></strong>?</p>
+            <p class="details-note"><i class="fas fa-exclamation-triangle"></i> Esta acción es irreversible.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn secondary-btn" id="cancel-delete-btn">Cancelar</button>
+                <button type="button" class="btn error-btn" id="confirm-delete-btn">Eliminar Cliente</button>
+            </div>
+            <p id="delete-message" class="message" style="display: none;"></p>
         </div>
     </div>
 
