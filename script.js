@@ -1,4 +1,4 @@
-// Version: 1.7.3 - Modifica el flujo de restablecimiento de contraseña para administradores a envío de email.
+// Version: 1.7.4 - Muestra Nombre y WhatsApp en la tabla del panel de clientes.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -326,7 +326,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Clients Panel: Renderizando clientes. Datos recibidos:", clientsData);
         clientDataBody.innerHTML = '';
         if (clientsData.length === 0) {
-            clientDataBody.innerHTML = '<tr><td colspan="5"><p class="no-clients-message">No hay clientes registrados aún.</p></td></tr>';
+            // Ajustar colspan a 7 (Correo, Nombre, WhatsApp, Contraseña, Activación, Corte, Acciones)
+            clientDataBody.innerHTML = '<tr><td colspan="7"><p class="no-clients-message">No hay clientes registrados aún.</p></td></tr>';
             return;
         }
         clientsData.forEach(client => {
@@ -337,11 +338,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                      : 'N/A';
             row.innerHTML = `
                 <td>${client.email}</td>
+                <td>${client.name || 'N/A'}</td> <!-- Muestra el nombre del cliente o 'N/A' -->
+                <td>${client.whatsapp || 'N/A'}</td> <!-- Muestra el WhatsApp del cliente o 'N/A' -->
                 <td>${client.password ? '********' : 'N/A'}</td>
                 <td>${registrationDate}</td>
                 <td>N/A</td>
                 <td class="actions-cell">
-                    <!-- Botones "Renovar" y "Reportar Falla" ELIMINADOS según la solicitud del usuario -->
                     <button type="button" class="reset-password-btn" data-client-uid="${client.uid}" data-client-email="${client.email}">Restablecer Contraseña</button>
                     <button type="button" class="delete-client-btn" data-client-id="${client.id}" data-client-uid="${client.uid}" data-client-email="${client.email}">Eliminar</button>
                 </td>
@@ -350,8 +352,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Event listeners para botones dinámicamente creados
-        // Los listeners para "Renovar" y "Reportar Falla" han sido ELIMINADOS.
-        
         document.querySelectorAll('.reset-password-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const clientUid = e.target.dataset.clientUid;
@@ -890,11 +890,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             console.log("Firestore: Rol de usuario y metadatos guardados.");
 
+            // ADVERTENCIA: Si quieres que los nuevos registros tengan Nombre y WhatsApp,
+            // debes añadir campos de entrada para ellos en el formulario de registro (index.html)
+            // y luego incluirlos aquí en el objeto que se guarda en registered_clients.
             await window.addDoc(window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`), {
                 uid: user.uid,
                 email: email,
                 password: password, // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
                 registrationDate: new Date(),
+                name: '', // Añadido campo de nombre (vacío por ahora)
+                whatsapp: '' // Añadido campo de WhatsApp (vacío por ahora)
             });
             console.log("Firestore: Detalles del usuario guardados en 'registered_clients'.");
 
@@ -929,7 +934,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Este evento ahora enviará un correo de restablecimiento al cliente
     resetPasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        // const clientUid = resetPasswordForm.dataset.clientUid; // No se usa directamente aquí
         const clientEmail = resetClientEmailInput.value; // El email del cliente a quien se le enviará el correo
 
         try {
@@ -993,7 +997,6 @@ document.addEventListener('DOMContentLoaded', () => {
             await window.confirmPasswordReset(window.firebaseAuth, oobCode, newPassword);
 
             // Opcional: Actualizar la contraseña en la colección 'registered_clients' si se está usando.
-            // Esto es solo para mantener la coherencia en tu panel de admin, no afecta Firebase Auth.
             const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('email', '==', emailToReset));
             const querySnapshot = await window.getDocs(q);
@@ -1001,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
                 await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
-                    password: newPassword // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
+                    password: newPassword
                 });
                 console.log(`Firestore: Contraseña actualizada en 'registered_clients' para ${emailToReset}.`);
             } else {
@@ -1014,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
             forgotPasswordCodeMessage.style.display = 'block';
             
             setTimeout(() => {
-                showLoginForm(); // Volver al formulario de login
+                showLoginForm();
             }, 3000);
 
         } catch (error) {
@@ -1062,7 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Admin: Error al eliminar cliente:", error);
             deleteMessage.textContent = `Error al eliminar: ${error.message}`;
             deleteMessage.classList.remove('success-message');
-            deleteMessage.classList.add('error-error'); // Corregido de 'error-error' a 'error-message'
+            deleteMessage.classList.add('error-message'); // Corregido de 'error-error' a 'error-message'
             deleteMessage.style.display = 'block';
         }
     });
