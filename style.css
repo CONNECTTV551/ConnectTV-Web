@@ -1,16 +1,27 @@
 /* Variables CSS para colores */
 :root {
+    /* Paleta de verdes para el fondo animado */
+    --green-darkest: #1a4f1a; /* Verde muy oscuro */
+    --green-dark: #2e7d32;   /* Verde oscuro */
+    --green-medium: #4caf50;  /* Verde medio (tu accent original) */
+    --green-light: #66bb6a;  /* Verde claro */
+    --green-lightest: #81c784; /* Verde muy claro */
+
+    /* Colores base para la interfaz (manteniendo el contraste oscuro) */
     --primary-bg: #141414; /* Fondo principal oscuro (negro) */
     --secondary-bg: #1a1a1a; /* Fondo secundario más claro (gris oscuro) */
     --text-color: #e0e0e0; /* Color de texto claro */
-    --accent-color: #4CAF50; /* Color de acento: VERDE */
+    --accent-color: var(--green-medium); /* Ahora el acento es el verde medio */
     --light-gray: #808080; /* Gris claro para texto secundario */
     --dark-gray: #333333; /* Gris oscuro para bordes/separadores */
-    --button-hover: #45A049; /* Color de hover para botones: Verde oscuro */
-    --success-color: #4CAF50; /* Verde para mensajes de éxito */
+    --button-hover: var(--green-dark); /* Color de hover para botones: Verde oscuro */
+    --success-color: var(--green-medium); /* Verde para mensajes de éxito */
     --error-color: #f44336; /* Rojo para mensajes de error */
     --info-color: #2196F3; /* Azul para información */
     --warning-color: #FF9800; /* Naranja para advertencias */
+
+    /* Fondo específico para el formulario de autenticación */
+    --form-auth-bg: rgba(20, 20, 20, 0.9); /* Fondo oscuro semitransparente para el formulario de auth */
 }
 
 /* Estilos Generales */
@@ -34,6 +45,54 @@ body {
     padding: 0 20px;
 }
 
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--green-lightest); /* Un verde más claro al pasar el ratón */
+}
+
+button, .btn {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:hover, .btn:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+.btn.secondary-btn {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+}
+
+.btn.secondary-btn:hover {
+    background-color: var(--accent-color);
+    border-color: var(--green-lightest);
+    color: white;
+}
+
+.btn.error-btn {
+    background-color: var(--error-color);
+}
+
+.btn.error-btn:hover {
+    background-color: #c82333; /* Un rojo un poco más oscuro */
+}
+
 /* Clases de utilidad */
 .hidden-on-auth {
     display: none !important;
@@ -47,7 +106,27 @@ body {
     display: block !important;
 }
 
-/* Header */
+.message {
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 5px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.success-message {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.error-message {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
+}
+
+/* HEADER */
 .header {
     background-color: var(--secondary-bg);
     padding: 15px 0;
@@ -866,20 +945,35 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--primary-bg) 0%, #2a0050 100%);
     text-align: center;
     padding: 20px;
+    position: relative;
+    overflow: hidden; /* Importante para la animación del fondo */
+
+    /* Fondo animado verde */
+    background: linear-gradient(135deg, var(--green-darkest) 0%, var(--green-dark) 25%, var(--green-medium) 50%, var(--green-light) 75%, var(--green-lightest) 100%);
+    background-size: 400% 400%; /* Tamaño más grande para permitir el movimiento */
+    animation: gradientAnimation 15s ease infinite; /* Animación del fondo */
+    filter: brightness(0.7); /* Oscurece el fondo para mejor legibilidad del texto */
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .auth-header-content {
     margin-bottom: 40px;
     color: white;
+    z-index: 1; /* Asegura que el contenido esté sobre el fondo */
 }
 
 .auth-header-content h1 {
     font-size: 3em;
     margin-bottom: 10px;
     font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .auth-header-content p {
@@ -888,13 +982,22 @@ body {
 }
 
 .auth-container {
-    background-color: var(--secondary-bg);
+    background-color: var(--form-auth-bg); /* Usa el nuevo color de fondo para el formulario de auth */
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 400px;
     text-align: left;
+    z-index: 1; /* Asegura que el formulario esté sobre el fondo */
+    position: relative; /* Necesario para z-index */
+    animation: fadeInScale 0.8s ease-out forwards; /* Animación de aparición */
+    margin: 0 auto; /* ¡NUEVO! Centra el contenedor horizontalmente */
+}
+
+@keyframes fadeInScale {
+    0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .auth-container h2 {
@@ -954,20 +1057,30 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
-.auth-container .forgot-password {
-    text-align: right;
-    margin-top: 10px;
-    font-size: 0.9em;
+/* Enlaces de cambio de formulario y restablecimiento de contraseña */
+.auth-switch-links {
+    display: flex;
+    justify-content: space-between; /* Distribuye los enlaces */
+    margin-top: 25px;
+    font-size: 0.95em;
+    color: var(--light-gray);
+    flex-wrap: wrap; /* Permite que los enlaces se envuelvan en pantallas pequeñas */
+    gap: 10px; /* Espacio entre los elementos */
 }
 
-.auth-container .forgot-password a {
-    color: var(--light-gray);
+.auth-switch-links p {
+    margin: 0; /* Elimina el margen por defecto de los párrafos */
+}
+
+.auth-switch-links a {
+    color: var(--accent-color);
     text-decoration: none;
+    font-weight: 600;
     transition: color 0.3s ease;
 }
 
-.auth-container .forgot-password a:hover {
-    color: var(--accent-color);
+.auth-switch-links a:hover {
+    color: var(--green-lightest);
 }
 
 .auth-container .auth-switch {

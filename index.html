@@ -134,6 +134,8 @@
     <main>
         <!-- SECCIÓN DE AUTENTICACIÓN: Activa por defecto al cargar la página -->
         <section class="auth-section active-section" id="auth-section">
+            <!-- El fondo animado se aplica directamente a .auth-section via CSS -->
+
             <div class="auth-header-content">
                 <h1>Tu Acceso Ilimitado al <br> Panel de Administración</h1>
                 <p>Gestiona usuarios, productos y ventas con facilidad.</p>
@@ -152,10 +154,12 @@
                             <input type="password" id="login-password" required placeholder="Tu contraseña">
                         </div>
                         <button type="submit" class="btn primary-btn">Ingresar</button>
-                        <p class="forgot-password"><a href="#">Olvidé mi contraseña</a></p>
                         <p id="login-message" class="message" style="display: none;"></p>
                     </form>
-                    <p class="auth-switch">¿No tienes cuenta? <a href="#" id="show-register">Regístrate aquí</a></p>
+                    <div class="auth-switch-links">
+                        <p>¿No tienes cuenta? <a href="#" id="show-register">Regístrate aquí</a></p>
+                        <p><a href="#" id="show-forgot-password">Olvidé mi contraseña</a></p>
+                    </div>
                 </div>
 
                 <div id="register-form-container" style="display: none;">
