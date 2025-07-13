@@ -13,7 +13,7 @@
         // Estos módulos son cruciales para la inicialización de la aplicación,
         // la autenticación de usuarios y la interacción con la base de datos Firestore.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendPasswordResetEmail, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Variables globales para la configuración de Firebase y el ID de la aplicación.
@@ -71,6 +71,8 @@
         window.signInWithEmailAndPassword = signInWithEmailAndPassword;
         window.signOut = () => firebaseSignOut(auth);
         window.onAuthStateChanged = onAuthStateChanged; // Expone onAuthStateChanged para ser usado en script.js
+        window.sendPasswordResetEmail = sendPasswordResetEmail; // Expone sendPasswordResetEmail
+        window.confirmPasswordReset = confirmPasswordReset; // Expone confirmPasswordReset
 
         // Función para configurar un listener en tiempo real para los datos de clientes desde Firestore.
         // Esta función se expone globalmente para ser llamada desde script.js cuando sea necesario.
@@ -181,6 +183,35 @@
                         <p id="register-message" class="message" style="display: none;"></p>
                     </form>
                     <p class="auth-switch">¿Ya tienes cuenta? <a href="#" id="show-login">Inicia Sesión</a></p>
+                </div>
+
+                <!-- NUEVO: Formulario para restablecer contraseña con código -->
+                <div id="forgot-password-code-form-container" style="display: none;">
+                    <h2>Restablecer Contraseña</h2>
+                    <p class="instruction-message">
+                        Se ha enviado un enlace de restablecimiento a tu correo. Por favor, ábrelo y copia el código (oobCode) de la URL para pegarlo aquí.
+                    </p>
+                    <form id="forgot-password-code-form">
+                        <div class="input-group">
+                            <label for="forgot-email-display">Correo Electrónico:</label>
+                            <input type="email" id="forgot-email-display" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="oob-code">Código de Verificación:</label>
+                            <input type="text" id="oob-code" required placeholder="Pega el código de tu correo">
+                        </div>
+                        <div class="input-group">
+                            <label for="new-password-reset">Nueva Contraseña:</label>
+                            <input type="password" id="new-password-reset" required placeholder="Ingresa tu nueva contraseña">
+                        </div>
+                        <div class="input-group">
+                            <label for="confirm-new-password-reset">Confirmar Nueva Contraseña:</label>
+                            <input type="password" id="confirm-new-password-reset" required placeholder="Repite tu nueva contraseña">
+                        </div>
+                        <button type="submit" class="btn primary-btn">Restablecer Contraseña</button>
+                        <p id="forgot-password-code-message" class="message" style="display: none;"></p>
+                    </form>
+                    <p class="auth-switch">¿Recordaste tu contraseña? <a href="#" id="show-login-from-forgot-code">Inicia Sesión</a></p>
                 </div>
             </div>
         </section>
@@ -462,7 +493,7 @@
         </div>
     </div>
 
-    <!-- NUEVO: Modal de Restablecimiento de Contraseña para Admin -->
+    <!-- Modal de Restablecimiento de Contraseña para Admin -->
     <div id="reset-password-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -483,7 +514,7 @@
         </div>
     </div>
 
-    <!-- NUEVO: Modal de Confirmación de Eliminación para Admin -->
+    <!-- Modal de Confirmación de Eliminación para Admin -->
     <div id="delete-confirm-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>

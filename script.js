@@ -1,3 +1,4 @@
+// Version: 1.6.1 - Mejoras en la depuración del restablecimiento de contraseña para capturar el código de error de Firebase.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -8,54 +9,53 @@ document.addEventListener('DOMContentLoaded', () => {
     let usdToVesRate = parseFloat(document.getElementById('usd-to-ves-rate').value); // Tasa de cambio inicial
     const WHATSAPP_LINK = "https://walink.co/9fd827"; // Tu enlace de WhatsApp
 
-    // --- Carrusel de Estrenos ---
-    let slideIndex = 0;
-    let slideTimer;
+    // --- Carrusel de Estrenos (Sección Home) ---
+    let homeSlideIndex = 0;
+    let homeSlideTimer;
 
-    const slides = document.querySelectorAll('.mySlides');
-    const dots = document.querySelectorAll('.dot');
-    const carouselContainer = document.querySelector('.carousel-container');
+    const homeSlides = document.querySelectorAll('.mySlides');
+    const homeDots = document.querySelectorAll('.dot');
 
-    function showSlides(n) {
-        if (n >= slides.length) {
-            slideIndex = 0;
+    function showHomeSlides(n) {
+        if (n >= homeSlides.length) {
+            homeSlideIndex = 0;
         } else if (n < 0) {
-            slideIndex = slides.length - 1;
+            homeSlideIndex = homeSlides.length - 1;
         } else {
-            slideIndex = n;
+            homeSlideIndex = n;
         }
 
-        slides.forEach(slide => {
+        homeSlides.forEach(slide => {
             slide.classList.remove('active');
         });
-        dots.forEach(dot => {
+        homeDots.forEach(dot => {
             dot.classList.remove('active');
         });
 
-        slides[slideIndex].classList.add('active');
-        dots[slideIndex].classList.add('active');
+        homeSlides[homeSlideIndex].classList.add('active');
+        homeDots[homeSlideIndex].classList.add('active');
     }
 
     window.plusSlides = function(n) {
-        clearTimeout(slideTimer);
-        showSlides(slideIndex + n);
-        startSlideTimer();
+        clearTimeout(homeSlideTimer);
+        showHomeSlides(homeSlideIndex + n);
+        startHomeSlideTimer();
     };
 
     window.currentSlide = function(n) {
-        clearTimeout(slideTimer);
-        showSlides(n - 1);
-        startSlideTimer();
+        clearTimeout(homeSlideTimer);
+        showHomeSlides(n - 1);
+        startHomeSlideTimer();
     };
 
-    function autoSlide() {
-        showSlides(slideIndex + 1);
-        slideTimer = setTimeout(autoSlide, 10000);
+    function autoHomeSlide() {
+        showHomeSlides(homeSlideIndex + 1);
+        homeSlideTimer = setTimeout(autoHomeSlide, 10000);
     }
 
-    function startSlideTimer() {
-        clearTimeout(slideTimer);
-        slideTimer = setTimeout(autoSlide, 10000);
+    function startHomeSlideTimer() {
+        clearTimeout(homeSlideTimer);
+        homeSlideTimer = setTimeout(autoHomeSlide, 10000);
     }
 
     // --- Navegación entre secciones y control de visibilidad por rol ---
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pricingPanelElement.classList.add('hidden-on-auth');
             logoutLink.classList.add('hidden-on-auth');
             clientsPanelNavLink.classList.add('hidden-on-auth'); // Siempre ocultar en la sección de autenticación
-            clearTimeout(slideTimer); // Detener el carrusel
+            clearTimeout(homeSlideTimer); // Detener el carrusel de la sección Home
         } else {
             headerElement.classList.remove('hidden-on-auth');
             footerElement.classList.remove('hidden-on-auth');
@@ -107,10 +107,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (sectionId === 'home-section') {
-                showSlides(slideIndex);
-                startSlideTimer();
+                showHomeSlides(homeSlideIndex);
+                startHomeSlideTimer();
             } else {
-                clearTimeout(slideTimer);
+                clearTimeout(homeSlideTimer);
             }
         }
 
@@ -231,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     function renderAllServiceCards() {
+        console.log("Rendering all service cards."); // Log de depuración
         const fullAccountsCarousel = document.getElementById('full-accounts-carousel');
         const sharedProfilesCarousel = document.getElementById('shared-profiles-carousel');
         fullAccountsCarousel.innerHTML = '';
@@ -250,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const renewalModal = document.getElementById('renewal-modal');
     const reportModal = document.getElementById('report-modal');
     const detailsModal = document.getElementById('details-modal');
-    const resetPasswordModal = document.getElementById('reset-password-modal'); // Nuevo modal
+    const resetPasswordModal = document.getElementById('reset-password-modal'); // Nuevo modal para admin
     const deleteConfirmModal = document.getElementById('delete-confirm-modal'); // Nuevo modal de confirmación
     const closeButtons = document.querySelectorAll('.close-button');
     const renewalForm = document.getElementById('renewal-form');
@@ -259,9 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const reportMessage = document.getElementById('report-message');
     const reportedEmailInput = document.getElementById('reported-email');
     const reportedCountrySelect = document.getElementById('reported-country');
-    const resetPasswordForm = document.getElementById('reset-password-form'); // Formulario de restablecimiento
-    const resetClientEmailInput = document.getElementById('reset-client-email'); // Email en modal de restablecimiento
-    const resetPasswordMessage = document.getElementById('reset-password-message'); // Mensaje de restablecimiento
+    const resetPasswordForm = document.getElementById('reset-password-form'); // Formulario de restablecimiento para admin
+    const resetClientEmailInput = document.getElementById('reset-client-email'); // Email en modal de restablecimiento para admin
+    const resetPasswordMessage = document.getElementById('reset-password-message'); // Mensaje de restablecimiento para admin
     const clientToDeleteEmailDisplay = document.getElementById('client-to-delete-email'); // Email en modal de eliminación
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
     const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
@@ -377,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.firebaseAuth && window.firebaseDb && window.addDoc && window.collection && 
             window.createUserWithEmailAndPassword && window.signInWithEmailAndPassword && 
             window.signOut && window.doc && window.getDoc && window.setDoc && window.updateDoc &&
-            window.where && window.getDocs && window.deleteDoc) { 
+            window.where && window.getDocs && window.deleteDoc && window.sendPasswordResetEmail && window.confirmPasswordReset) { 
             console.log("Firebase globals are ready in script.js.");
             if (registerSubmitBtn) {
                 registerSubmitBtn.disabled = false; // Habilitar el botón de registro
@@ -404,9 +405,12 @@ document.addEventListener('DOMContentLoaded', () => {
         paymentProofForm.reset();
         paymentMessage.style.display = 'none';
         resetImagePreview();
-        resetPasswordForm.reset();
-        resetPasswordMessage.style.display = 'none';
+        resetPasswordForm.reset(); // Reset admin reset form
+        resetPasswordMessage.style.display = 'none'; // Hide admin reset message
+        forgotPasswordCodeForm.reset(); // Reset client code reset form
+        forgotPasswordCodeMessage.style.display = 'none'; // Hide client code reset message
         deleteMessage.style.display = 'none'; // Clear delete message
+        showLoginForm(); // Always return to login form
     }
 
     closeButtons.forEach(button => {
@@ -689,24 +693,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Lógica de Iniciar Sesión y Registro ---
     const loginFormContainer = document.getElementById('login-form-container');
     const registerFormContainer = document.getElementById('register-form-container');
-    
+    const forgotPasswordCodeFormContainer = document.getElementById('forgot-password-code-form-container'); // Nuevo contenedor
+
     const showRegisterLink = document.getElementById('show-register');
     const showLoginLink = document.getElementById('show-login');
+    const showForgotPasswordLink = document.getElementById('show-forgot-password'); // Enlace para restablecer contraseña (inicial)
+    const showLoginFromForgotCodeLink = document.getElementById('show-login-from-forgot-code'); // Nuevo enlace para volver al login
 
     const loginForm = document.getElementById('login-form');
-    const loginEmailInput = document.getElementById('login-email'); // Cambiado a email
+    const loginEmailInput = document.getElementById('login-email');
     const loginPasswordInput = document.getElementById('login-password');
     const loginMessage = document.getElementById('login-message');
 
     const registerForm = document.getElementById('register-form');
-    const registerEmailInput = document.getElementById('register-email'); // Cambiado a email
+    const registerEmailInput = document.getElementById('register-email');
     const registerPasswordInput = document.getElementById('register-password');
     const confirmPasswordInput = document.getElementById('confirm-password');
     const registerMessage = document.getElementById('register-message');
 
+    const forgotPasswordCodeForm = document.getElementById('forgot-password-code-form'); // Nuevo formulario
+    const forgotEmailDisplay = document.getElementById('forgot-email-display'); // Campo de email en el nuevo formulario
+    const oobCodeInput = document.getElementById('oob-code'); // Campo para el código
+    const newPasswordResetInput = document.getElementById('new-password-reset'); // Campo para nueva contraseña
+    const confirmNewPasswordResetInput = document.getElementById('confirm-new-password-reset'); // Campo para confirmar nueva contraseña
+    const forgotPasswordCodeMessage = document.getElementById('forgot-password-code-message'); // Mensaje del nuevo formulario
+
+
     function showLoginForm() {
         loginFormContainer.style.display = 'block';
         registerFormContainer.style.display = 'none';
+        forgotPasswordCodeFormContainer.style.display = 'none'; // Ocultar el nuevo formulario
         loginMessage.style.display = 'none';
         loginForm.reset();
     }
@@ -714,9 +730,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function showRegisterForm() {
         loginFormContainer.style.display = 'none';
         registerFormContainer.style.display = 'block';
+        forgotPasswordCodeFormContainer.style.display = 'none'; // Ocultar el nuevo formulario
         registerMessage.style.display = 'none';
         registerForm.reset();
     }
+
+    function showForgotPasswordCodeForm(email) {
+        loginFormContainer.style.display = 'none';
+        registerFormContainer.style.display = 'none';
+        forgotPasswordCodeFormContainer.style.display = 'block'; // Mostrar el nuevo formulario
+        forgotEmailDisplay.value = email; // Pre-llenar el email
+        forgotPasswordCodeMessage.style.display = 'none';
+        forgotPasswordCodeForm.reset();
+        oobCodeInput.value = ''; // Asegurarse de que el campo de código esté vacío
+    }
+
 
     showRegisterLink.addEventListener('click', (e) => {
         e.preventDefault();
@@ -728,7 +756,60 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoginForm();
     });
 
-    // Manejar el envío del formulario de Login
+    showLoginFromForgotCodeLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showLoginForm();
+    });
+
+    // Maneja el clic en el enlace de "Olvidé mi contraseña"
+    showForgotPasswordLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        console.log("Clicked 'Olvidé mi contraseña' link."); // Log de depuración
+        const email = loginEmailInput.value; // Intenta usar el email ya ingresado
+
+        // Si el campo de email está vacío, muestra un mensaje de error
+        if (!email) {
+            loginMessage.textContent = 'Por favor, ingresa tu correo electrónico en el campo de arriba para restablecer la contraseña.';
+            loginMessage.classList.remove('success-message');
+            loginMessage.classList.add('error-message');
+            loginMessage.style.display = 'block';
+            console.log("Email field is empty. Displaying error message."); // Log de depuración
+            return; // Detiene la ejecución si el email está vacío
+        }
+
+        try {
+            console.log(`Attempting to send password reset email to: ${email}`); // Log de depuración
+            await window.sendPasswordResetEmail(window.firebaseAuth, email); // Usa la función global
+            
+            // Si el envío es exitoso, muestra el nuevo formulario para el código
+            showForgotPasswordCodeForm(email);
+            forgotPasswordCodeMessage.textContent = 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección. Abre el correo y copia el código (oobCode) de la URL para pegarlo aquí.';
+            forgotPasswordCodeMessage.classList.remove('error-message');
+            forgotPasswordCodeMessage.classList.add('success-message');
+            forgotPasswordCodeMessage.style.display = 'block';
+            console.log("Password reset email sent successfully. Displaying success message and code form."); // Log de depuración
+
+        } catch (error) {
+            console.error("Error al enviar correo de restablecimiento:", error.code, error.message); // Log de depuración con código y mensaje
+            let errorMessage = "Error al enviar correo de restablecimiento. Verifica el email.";
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = "No hay usuario registrado con ese correo.";
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = "Formato de correo electrónico inválido.";
+            } else if (error.code === 'auth/network-request-failed') {
+                errorMessage = "Problema de conexión. Verifica tu internet o inténtalo más tarde.";
+            } else if (error.code === 'auth/operation-not-allowed') { // Specific check for the common error
+                errorMessage = "La operación de restablecimiento de contraseña no está habilitada. Por favor, habilítala en la consola de Firebase (Authentication -> Sign-in method -> Email/Password).";
+            }
+            loginMessage.textContent = errorMessage;
+            loginMessage.classList.remove('success-message');
+            loginMessage.classList.add('error-message');
+            loginMessage.style.display = 'block';
+            console.log(`Displaying error message: ${errorMessage}`); // Log de depuración
+        }
+    });
+
+    // Maneja el envío del formulario de Login
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = loginEmailInput.value;
@@ -739,15 +820,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = userCredential.user;
             console.log("User logged in:", user.uid);
 
-            // Fetch user role from Firestore
             const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
-            const userDocSnap = await window.getDoc(userDocRef);
+            const userDocSnap = await window.getDoc(userDocRef, { source: 'server' }); 
 
             let role = 'client'; // Default role
             if (userDocSnap.exists()) {
                 role = userDocSnap.data().role;
             } else {
-                // If user doc doesn't exist (e.g., old anonymous user), create it with default client role
                 await window.setDoc(userDocRef, { role: 'client', email: email }, { merge: true });
             }
             window.currentUserRole = role; // Update global role
@@ -801,7 +880,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("User registered in Firebase Auth:", user.uid);
 
             // 2. Guardar detalles del usuario (incluyendo el rol 'client') en Firestore
-            // Usamos la colección 'users' para metadatos del usuario como el rol
             const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
             await window.setDoc(userDocRef, {
                 email: email,
@@ -811,10 +889,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("User role and metadata saved to Firestore.");
 
             // 3. Guardar una entrada en la colección 'registered_clients' para el panel de admin
-            // Aquí se guarda la contraseña en texto plano para la funcionalidad de "restablecer" del admin.
-            // EN UN ENTORNO DE PRODUCCIÓN REAL: NUNCA HAGAS ESTO. Las contraseñas NUNCA deben guardarse en texto plano.
-            // La funcionalidad de restablecimiento de contraseña por el admin debería ser a través de un correo electrónico
-            // de restablecimiento enviado por Firebase Admin SDK (requiere un backend).
             await window.addDoc(window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`), {
                 uid: user.uid, // Guardar el UID para referencia
                 email: email,
@@ -926,6 +1000,81 @@ document.addEventListener('DOMContentLoaded', () => {
             resetPasswordMessage.style.display = 'block';
         }
     });
+
+    // --- Lógica para el formulario de restablecimiento de contraseña con código (para el cliente) ---
+    forgotPasswordCodeForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const oobCode = oobCodeInput.value;
+        const newPassword = newPasswordResetInput.value;
+        const confirmNewPassword = confirmNewPasswordResetInput.value;
+        const emailToReset = forgotEmailDisplay.value; // Obtener el email del campo de sólo lectura
+
+        if (newPassword !== confirmNewPassword) {
+            forgotPasswordCodeMessage.textContent = 'Las contraseñas no coinciden.';
+            forgotPasswordCodeMessage.classList.remove('success-message');
+            forgotPasswordCodeMessage.classList.add('error-message');
+            forgotPasswordCodeMessage.style.display = 'block';
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            forgotPasswordCodeMessage.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
+            forgotPasswordCodeMessage.classList.remove('success-message');
+            forgotPasswordCodeMessage.classList.add('error-message');
+            forgotPasswordCodeMessage.style.display = 'block';
+            return;
+        }
+
+        try {
+            console.log(`Attempting to confirm password reset for ${emailToReset} with oobCode: ${oobCode}`);
+            await window.confirmPasswordReset(window.firebaseAuth, oobCode, newPassword);
+
+            // Opcional: Actualizar la contraseña en la colección 'registered_clients' si se está usando.
+            // ADVERTENCIA: Esto sigue siendo inseguro si se guarda en texto plano en producción.
+            const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
+            const q = window.query(clientsCollectionRef, window.where('email', '==', emailToReset));
+            const querySnapshot = await window.getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const clientDoc = querySnapshot.docs[0];
+                await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
+                    password: newPassword // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
+                });
+                console.log(`Password updated in 'registered_clients' for ${emailToReset}.`);
+            } else {
+                console.warn(`Client ${emailToReset} not found in 'registered_clients' collection. Password updated only in Firebase Auth.`);
+            }
+
+            forgotPasswordCodeMessage.textContent = '¡Contraseña restablecida con éxito! Ahora puedes iniciar sesión con tu nueva contraseña.';
+            forgotPasswordCodeMessage.classList.remove('error-message');
+            forgotPasswordCodeMessage.classList.add('success-message');
+            forgotPasswordCodeMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                showLoginForm(); // Volver al formulario de login
+            }, 3000);
+
+        } catch (error) {
+            console.error("Error al restablecer contraseña con código:", error.code, error.message); // Log de depuración con código y mensaje
+            let errorMessage = "Error al restablecer contraseña. Verifica el código o inténtalo de nuevo.";
+            if (error.code === 'auth/invalid-action-code') {
+                errorMessage = "El código de verificación es inválido o ha expirado.";
+            } else if (error.code === 'auth/expired-action-code') {
+                errorMessage = "El código de verificación ha expirado. Solicita uno nuevo.";
+            } else if (error.code === 'auth/user-disabled') {
+                errorMessage = "La cuenta ha sido deshabilitada.";
+            } else if (error.code === 'auth/user-not-found') {
+                errorMessage = "Usuario no encontrado.";
+            } else if (error.code === 'auth/weak-password') {
+                errorMessage = "La nueva contraseña es demasiado débil (mínimo 6 caracteres).";
+            }
+            forgotPasswordCodeMessage.textContent = errorMessage;
+            forgotPasswordCodeMessage.classList.remove('success-message');
+            forgotPasswordCodeMessage.classList.add('error-message');
+            forgotPasswordCodeMessage.style.display = 'block';
+        }
+    });
+
 
     // --- Lógica para Eliminar Cliente (por Admin) ---
     confirmDeleteBtn.addEventListener('click', async () => {
