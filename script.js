@@ -1,4 +1,4 @@
-// Version: 1.8.1 - Implementa flujo de restablecimiento de contraseña admin (temporal) y cambio de contraseña cliente.
+// Version: 1.9.0 - Implementa registro con Nombre, Apellido, Correo, Contraseña, WhatsApp (con código de país) y visibilidad de contraseña en panel admin.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -369,21 +369,34 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Clients Panel: Renderizando clientes. Datos recibidos:", clientsData);
         clientDataBody.innerHTML = '';
         if (clientsData.length === 0) {
-            // Ajustar colspan a 7 (Correo, Nombre, WhatsApp, Contraseña, Activación, Corte, Acciones)
+            // Ajustar colspan a 7 (Correo, Nombre y Apellido, WhatsApp, Contraseña, Activación, Corte, Acciones)
             clientDataBody.innerHTML = '<tr><td colspan="7"><p class="no-clients-message">No hay clientes registrados aún.</p></td></tr>';
             return;
         }
         clientsData.forEach(client => {
             const row = document.createElement('tr');
-            // Asegurarse de que registrationDate es un Timestamp válido de Firestore antes de llamar a toDate()
             const registrationDate = client.registrationDate && typeof client.registrationDate.toDate === 'function' 
                                      ? new Date(client.registrationDate.toDate()).toLocaleDateString() 
                                      : 'N/A';
+            
+            // Determinar el nombre completo
+            const fullName = (client.name || '') + (client.lastName ? ' ' + client.lastName : '');
+            const displayFullName = fullName.trim() === '' ? 'N/A' : fullName;
+
+            // Formatear el número de WhatsApp
+            const displayWhatsapp = (client.whatsappCountryCode || '') + (client.whatsappNumber || '');
+            const formattedWhatsapp = displayWhatsapp.trim() === '' ? 'N/A' : displayWhatsapp;
+
             row.innerHTML = `
                 <td>${client.email}</td>
-                <td>${client.name || 'N/A'}</td>
-                <td>${client.whatsapp || 'N/A'}</td>
-                <td>${client.password ? '********' : 'N/A'}</td>
+                <td>${displayFullName}</td>
+                <td>${formattedWhatsapp}</td>
+                <td class="password-cell">
+                    <span class="password-display" data-password="${client.password || ''}">********</span>
+                    <button type="button" class="toggle-password-btn" data-visible="false">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
                 <td>${registrationDate}</td>
                 <td>N/A</td>
                 <td class="actions-cell">
@@ -421,6 +434,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 deleteConfirmModal.style.display = 'flex';
                 deleteConfirmModal.classList.add('show');
                 deleteMessage.style.display = 'none'; // Hide previous messages
+            });
+        });
+
+        // Lógica para mostrar/ocultar contraseña en el panel de clientes
+        document.querySelectorAll('.toggle-password-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const passwordDisplay = e.target.closest('.password-cell').querySelector('.password-display');
+                const isVisible = button.dataset.visible === 'true';
+                const passwordValue = passwordDisplay.dataset.password;
+                const icon = button.querySelector('i');
+
+                if (isVisible) {
+                    passwordDisplay.textContent = '********';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                    button.dataset.visible = 'false';
+                } else {
+                    passwordDisplay.textContent = passwordValue;
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                    button.dataset.visible = 'true';
+                }
             });
         });
     }
@@ -755,9 +790,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginMessage = document.getElementById('login-message');
 
     const registerForm = document.getElementById('register-form');
+    const registerNameInput = document.getElementById('register-name'); // Nuevo: Nombre
+    const registerLastNameInput = document.getElementById('register-lastname'); // Nuevo: Apellido
     const registerEmailInput = document.getElementById('register-email');
     const registerPasswordInput = document.getElementById('register-password');
     const confirmPasswordInput = document.getElementById('confirm-password');
+    const registerWhatsappCodeSelect = document.getElementById('register-whatsapp-code'); // Nuevo: Selector de código
+    const registerWhatsappNumberInput = document.getElementById('register-whatsapp-number'); // Nuevo: Número de WhatsApp
     const registerMessage = document.getElementById('register-message');
 
     const forgotPasswordCodeForm = document.getElementById('forgot-password-code-form');
@@ -913,9 +952,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Manejar el envío del formulario de Registro
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const name = registerNameInput.value; // Captura el nombre
+        const lastName = registerLastNameInput.value; // Captura el apellido
         const email = registerEmailInput.value;
         const password = registerPasswordInput.value;
         const confirmPassword = confirmPasswordInput.value;
+        const whatsappCountryCode = registerWhatsappCodeSelect.value; // Captura el código de país
+        const whatsappNumber = registerWhatsappNumberInput.value; // Captura el número de WhatsApp
 
         if (password !== confirmPassword) {
             registerMessage.textContent = 'Las contraseñas no coinciden.';
@@ -939,16 +982,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             console.log("Firestore: Rol de usuario y metadatos guardados.");
 
-            // ADVERTENCIA: Si quieres que los nuevos registros tengan Nombre y WhatsApp,
-            // debes añadir campos de entrada para ellos en el formulario de registro (index.html)
-            // y luego incluirlos aquí en el objeto que se guarda en registered_clients.
             await window.addDoc(window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`), {
                 uid: user.uid,
                 email: email,
                 password: password, // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
                 registrationDate: new Date(),
-                name: '', // Añadido campo de nombre (vacío por ahora)
-                whatsapp: '' // Añadido campo de WhatsApp (vacío por ahora)
+                name: name, // Guarda el nombre
+                lastName: lastName, // Guarda el apellido
+                whatsappCountryCode: whatsappCountryCode, // Guarda el código de país de WhatsApp
+                whatsappNumber: whatsappNumber // Guarda el número de WhatsApp
             });
             console.log("Firestore: Detalles del usuario guardados en 'registered_clients'.");
 
