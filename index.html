@@ -39,129 +39,28 @@
 
         let currentUserId = null; // Variable to store the authenticated user's ID
         let currentUserRole = null; // Variable to store the authenticated user's role
+        let isInitialAuthCheckDone = false; // Flag to ensure initial check is processed once
 
-        // Listen for authentication state changes
-        onAuthStateChanged(auth, async (user) => {
-            // Ensure handleAuthSuccess and showSection are available before calling
-            // This waits for script.js to load and expose the functions
-            const waitForScriptFunctions = () => {
-                return new Promise(resolve => {
-                    const check = () => {
-                        if (window.handleAuthSuccess && window.showSection) {
-                            resolve();
-                        } else {
-                            setTimeout(check, 50); // Check again after 50ms
-                        }
-                    };
-                    check();
-                });
-            };
-            await waitForScriptFunctions();
-
-
-            if (user) {
-                // User is signed in
-                currentUserId = user.uid;
-                console.log("Firebase authenticated as:", currentUserId);
-
-                // Fetch user's role from Firestore
-                const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
-                // Force getDoc to fetch from server to ensure latest role
-                const userDocSnap = await getDoc(userDocRef, { source: 'server' }); 
-
-                if (userDocSnap.exists()) {
-                    currentUserRole = userDocSnap.data().role;
-                    console.log("User role:", currentUserRole);
-                } else {
-                    // If user document doesn't exist, assign a default role (e.g., 'client')
-                    currentUserRole = 'client';
-                    await setDoc(userDocRef, { role: currentUserRole, email: user.email || 'N/A' }, { merge: true });
-                    console.log("Default role 'client' assigned to new user and saved to Firestore.");
-                }
-
-                // Expose the role globally
-                window.currentUserRole = currentUserRole;
-
-                // Call setupClientsRealtimeListener only if the user is an admin
-                if (currentUserRole === 'admin') {
-                    if (window.setupClientsRealtimeListener) {
-                        window.setupClientsRealtimeListener();
-                    } else {
-                        console.warn("setupClientsRealtimeListener function not yet available. Will retry.");
-                        const checkSetupListener = setInterval(() => {
-                            if (window.setupClientsRealtimeListener) {
-                                window.setupClientsRealtimeListener();
-                                clearInterval(checkSetupListener);
-                            }
-                        }, 100);
-                    }
-                }
-                
-                // Trigger the UI update after authentication and role check
-                window.handleAuthSuccess(currentUserRole);
-
-            } else {
-                // User is signed out. Attempt to sign in anonymously or with custom token.
-                currentUserId = null;
-                currentUserRole = null;
-                window.currentUserRole = null; // Clear global role
-
-                if (!initialAuthToken) {
-                    // If no custom token, sign in anonymously
-                    try {
-                        const anonUserCredential = await signInAnonymously(auth);
-                        currentUserId = anonUserCredential.user.uid;
-                        currentUserRole = 'client'; // Default for anonymous
-                        window.currentUserRole = currentUserRole;
-                        console.log("Firebase authenticated anonymously as:", currentUserId);
-                        // For anonymous users, we might not have an email, so use N/A
-                        const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
-                        await setDoc(userDocRef, { role: currentUserRole, email: 'N/A' }, { merge: true }); // Use 'N/A' for anonymous email
-                        // After anonymous sign-in, still show the auth section for explicit login/registration
-                        window.showSection('auth-section'); 
-                    } catch (error) {
-                        console.error("Error signing in anonymously:", error);
-                        // If anonymous sign-in fails, ensure auth section is shown
-                        window.showSection('auth-section');
-                    }
-                } else {
-                    // If a custom token is provided, use it for authentication
-                    try {
-                        const customUserCredential = await signInWithCustomToken(auth, initialAuthToken);
-                        currentUserId = customUserCredential.user.uid;
-                        // Fetch role for custom token users
-                        const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
-                        // Force getDoc to fetch from server to ensure latest role
-                        const userDocSnap = await getDoc(userDocRef, { source: 'server' }); 
-                        if (userDocSnap.exists()) {
-                            currentUserRole = userDocSnap.data().role;
-                        } else {
-                            currentUserRole = 'client'; // Default if no role found
-                            await setDoc(userDocRef, { role: currentUserRole, email: customUserCredential.user.email || 'N/A' }, { merge: true });
-                        }
-                        window.currentUserRole = currentUserRole;
-                        console.log("Firebase authenticated with custom token as:", currentUserId);
-                        if (currentUserRole === 'admin') {
-                            if (window.setupClientsRealtimeListener) {
-                                window.setupClientsRealtimeListener();
-                            } else {
-                                const checkSetupListener = setInterval(() => {
-                                    if (window.setupClientsRealtimeListener) {
-                                        window.setupClientsRealtimeListener();
-                                        clearInterval(checkSetupListener);
-                                    }
-                                }, 100);
-                            }
-                        }
-                        window.handleAuthSuccess(currentUserRole);
-                    } catch (error) {
-                        console.error("Error signing in with custom token:", error);
-                        // If custom token sign-in fails, ensure auth section is shown
-                        window.showSection('auth-section');
-                    }
-                }
-            }
-        });
+        // Expose Firebase objects and helper functions globally so script.js can access them
+        window.firebaseApp = app;
+        window.firebaseDb = db;
+        window.firebaseAuth = auth;
+        window.getCurrentUserId = () => currentUserId; // Helper to get the current user's ID
+        window.addDoc = addDoc; // Expose addDoc for adding documents to Firestore
+        window.collection = collection; // Expose collection for referencing Firestore collections
+        window.onSnapshot = onSnapshot; // Expose onSnapshot for real-time listeners
+        window.query = query; // Expose query for building Firestore queries
+        window.orderBy = orderBy; // Expose orderBy for ordering query results
+        window.doc = doc; // Expose doc for document references
+        window.getDoc = getDoc; // Expose getDoc for fetching single documents
+        window.setDoc = setDoc; // Expose setDoc for setting documents
+        window.updateDoc = updateDoc; // Expose updateDoc for updating documents
+        window.where = where; // Expose where for filtering queries
+        window.getDocs = getDocs; // Expose getDocs for one-time query fetches
+        window.deleteDoc = deleteDoc; // Expose deleteDoc for deleting documents
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword; // Expose for registration
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword; // Expose for login
+        window.signOut = () => firebaseSignOut(auth); // Expose signOut function
 
         // Function to set up a real-time listener for client data from Firestore
         function setupClientsRealtimeListener() {
@@ -188,28 +87,95 @@
                 console.error("Error fetching client data:", error);
             });
         }
-
-        // Expose Firebase objects and helper functions globally so script.js can access them
-        window.firebaseApp = app;
-        window.firebaseDb = db;
-        window.firebaseAuth = auth;
-        window.getCurrentUserId = () => currentUserId; // Helper to get the current user's ID
         window.setupClientsRealtimeListener = setupClientsRealtimeListener; // Expose for initial call
-        window.addDoc = addDoc; // Expose addDoc for adding documents to Firestore
-        window.collection = collection; // Expose collection for referencing Firestore collections
-        window.onSnapshot = onSnapshot; // Expose onSnapshot for real-time listeners
-        window.query = query; // Expose query for building Firestore queries
-        window.orderBy = orderBy; // Expose orderBy for ordering query results
-        window.doc = doc; // Expose doc for document references
-        window.getDoc = getDoc; // Expose getDoc for fetching single documents
-        window.setDoc = setDoc; // Expose setDoc for setting documents
-        window.updateDoc = updateDoc; // Expose updateDoc for updating documents
-        window.where = where; // Expose where for filtering queries
-        window.getDocs = getDocs; // Expose getDocs for one-time query fetches
-        window.deleteDoc = deleteDoc; // Expose deleteDoc for deleting documents
-        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword; // Expose for registration
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword; // Expose for login
-        window.signOut = () => firebaseSignOut(auth); // Expose signOut function
+
+        // --- NEW: Function to handle initial Firebase sign-in and UI update ---
+        window.initializeFirebaseAuthAndUI = async () => {
+            // Wait for script.js functions to be ready
+            await new Promise(resolve => {
+                const check = () => {
+                    if (window.handleAuthSuccess && window.showSection) {
+                        resolve();
+                    } else {
+                        setTimeout(check, 50);
+                    }
+                };
+                check();
+            });
+
+            // Listen for authentication state changes (this will run immediately if a user is cached/token exists)
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUserId = user.uid;
+                    console.log("Firebase authenticated as:", currentUserId);
+
+                    // Fetch user's role from Firestore (always from server for latest)
+                    const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
+                    const userDocSnap = await getDoc(userDocRef, { source: 'server' }); 
+
+                    if (userDocSnap.exists()) {
+                        currentUserRole = userDocSnap.data().role;
+                        console.log("User role:", currentUserRole);
+                    } else {
+                        currentUserRole = 'client';
+                        await setDoc(userDocRef, { role: currentUserRole, email: user.email || 'N/A' }, { merge: true });
+                        console.log("Default role 'client' assigned to new user and saved to Firestore.");
+                    }
+
+                    window.currentUserRole = currentUserRole; // Expose globally
+
+                    // Call setupClientsRealtimeListener only if the user is an admin
+                    if (currentUserRole === 'admin') {
+                        if (window.setupClientsRealtimeListener) {
+                            window.setupClientsRealtimeListener();
+                        } else {
+                            const checkSetupListener = setInterval(() => {
+                                if (window.setupClientsRealtimeListener) {
+                                    window.setupClientsRealtimeListener();
+                                    clearInterval(checkSetupListener);
+                                }
+                            }, 100);
+                        }
+                    }
+                    
+                    // Only redirect if it's not an anonymous user
+                    if (!user.isAnonymous) {
+                        window.handleAuthSuccess(currentUserRole); 
+                    } else {
+                        // If it's an anonymous user, ensure auth section is visible
+                        window.showSection('auth-section');
+                    }
+
+                } else {
+                    // No user signed in (or signed out)
+                    currentUserId = null;
+                    currentUserRole = null;
+                    window.currentUserRole = null; // Clear global role
+                    
+                    window.showSection('auth-section'); // Always show auth section if no user
+                }
+            });
+
+            // Attempt initial sign-in if no user is found by onAuthStateChanged initially
+            // This ensures anonymous user is created if no custom token is provided
+            if (!auth.currentUser) {
+                if (initialAuthToken) {
+                    try {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } catch (error) {
+                        console.error("Error signing in with custom token:", error);
+                        window.showSection('auth-section');
+                    }
+                } else {
+                    try {
+                        await signInAnonymously(auth);
+                    } catch (error) {
+                        console.error("Error signing in anonymously:", error);
+                        window.showSection('auth-section');
+                    }
+                }
+            }
+        };
     </script>
 </head>
 <body>
