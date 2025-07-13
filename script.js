@@ -1,4 +1,4 @@
-// Version: 1.7.4 - Muestra Nombre y WhatsApp en la tabla del panel de clientes.
+// Version: 1.8.1 - Implementa flujo de restablecimiento de contraseña admin (temporal) y cambio de contraseña cliente.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Variables Globales para Precios ---
     let usdToVesRate = parseFloat(document.getElementById('usd-to-ves-rate').value); // Tasa de cambio inicial
     const WHATSAPP_LINK = "https://walink.co/9fd827"; // Tu enlace de WhatsApp
+
+    // --- Contraseña Temporal (¡ADVERTENCIA DE SEGURIDAD!) ---
+    // Define la contraseña temporal que el administrador usará.
+    // ¡¡¡ADVERTENCIA: Esta contraseña se almacena en texto plano en Firestore!!!
+    // En un entorno de producción real, NUNCA almacenes contraseñas en texto plano.
+    // La forma segura sería usar Firebase Admin SDK en un backend para forzar un restablecimiento
+    // de contraseña que el usuario final completa, o para establecer una contraseña real de forma segura.
+    const TEMPORARY_PASSWORD = "12345678"; // Contraseña temporal predefinida
 
     // --- Carrusel de Estrenos (Sección Home) ---
     let homeSlideIndex = 0;
@@ -87,7 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Lógica de visibilidad de elementos globales (header, footer, pricing panel)
-        if (sectionId === 'auth-section') {
+        // El modal de cambio de contraseña es una excepción, no oculta el header/footer si está activo
+        const isChangePasswordModalActive = document.getElementById('change-password-modal').classList.contains('show');
+
+        if (sectionId === 'auth-section' && !isChangePasswordModalActive) { // Solo ocultar si no es el modal de cambio de contraseña
             console.log("UI: Ocultando elementos para auth-section.");
             headerElement.classList.add('hidden-on-auth');
             footerElement.classList.add('hidden-on-auth');
@@ -103,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("UI: Listener de clientes desuscrito al ir a auth-section.");
             }
 
-        } else {
+        } else if (sectionId !== 'auth-section') { // Mostrar elementos si no es la sección de autenticación
             console.log("UI: Mostrando elementos para secciones de contenido.");
             headerElement.classList.remove('hidden-on-auth');
             footerElement.classList.remove('hidden-on-auth');
@@ -149,20 +160,48 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Actualizar el estado activo de los enlaces de navegación
         navLinks.forEach(link => link.classList.remove('active'));
-        const activeNavLink = document.querySelector(`.nav ul li a[data-section="${sectionId.replace('-section', '')}"]`);
-        if (activeNavLink) {
-            activeNavLink.classList.add('active');
+        // Solo activa el enlace si no estamos en el modal de cambio de contraseña
+        if (sectionId !== 'change-password-modal') {
+            const activeNavLink = document.querySelector(`.nav ul li a[data-section="${sectionId.replace('-section', '')}"]`);
+            if (activeNavLink) {
+                activeNavLink.classList.add('active');
+            }
         }
     }
 
     // Manejar el éxito de autenticación para actualizar la UI
-    window.handleAuthSuccess = (role) => {
-        console.log("Auth: handleAuthSuccess llamado con rol:", role);
+    window.handleAuthSuccess = async (role, userUid) => {
+        console.log("Auth: handleAuthSuccess llamado con rol:", role, "y UID:", userUid);
+
+        if (role === 'client') {
+            // Para clientes, verificar si la contraseña en Firestore es la temporal
+            const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
+            const q = window.query(clientsCollectionRef, window.where('uid', '==', userUid));
+            const querySnapshot = await window.getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const clientDoc = querySnapshot.docs[0];
+                const clientData = clientDoc.data();
+                // Si la contraseña en Firestore coincide con la temporal, forzar el cambio
+                if (clientData.password === TEMPORARY_PASSWORD) {
+                    document.getElementById('current-user-email-display').value = clientData.email;
+                    document.getElementById('change-password-modal').style.display = 'flex';
+                    document.getElementById('change-password-modal').classList.add('show');
+                    document.getElementById('change-password-message').style.display = 'none';
+                    document.getElementById('change-password-form').reset();
+                    console.log("Auth: Contraseña temporal detectada en Firestore. Redirigiendo a cambio de contraseña.");
+                    return; // Detener el flujo normal, el modal se encargará
+                }
+            }
+        }
+        
+        // Si no es cliente con contraseña temporal, o es admin, proceder con la redirección normal
         if (role === 'admin') {
             window.showSection('clients-panel-section'); // Ir al panel de clientes si es admin
         } else {
-            window.showSection('home-section'); // Ir a la sección de inicio si es cliente
+            window.showSection('home-section'); // Ir a la sección de inicio si es cliente normal
         }
     };
 
@@ -182,8 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             console.log("Auth: Intentando cerrar sesión.");
             await window.signOut();
-            // onAuthStateChanged en index.html manejará la redirección a 'auth-section'
-            // y la limpieza del listener de clientes.
             loginForm.reset();
             loginMessage.style.display = 'none';
             registerMessage.style.display = 'none';
@@ -287,8 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const renewalModal = document.getElementById('renewal-modal');
     const reportModal = document.getElementById('report-modal');
     const detailsModal = document.getElementById('details-modal');
-    const resetPasswordModal = document.getElementById('reset-password-modal'); // Nuevo modal para admin
-    const deleteConfirmModal = document.getElementById('delete-confirm-modal'); // Nuevo modal de confirmación
+    const resetPasswordModal = document.getElementById('reset-password-modal'); // Modal para admin
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal'); // Modal de confirmación
+    const changePasswordModal = document.getElementById('change-password-modal'); // Nuevo modal para cliente
     const closeButtons = document.querySelectorAll('.close-button');
     const renewalForm = document.getElementById('renewal-form');
     const renewalMessage = document.getElementById('renewal-message');
@@ -303,6 +341,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
     const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
     const deleteMessage = document.getElementById('delete-message');
+    const changePasswordForm = document.getElementById('change-password-form'); // Formulario de cambio de contraseña para cliente
+    const newPasswordClientInput = document.getElementById('new-password-client');
+    const confirmNewPasswordClientInput = document.getElementById('confirm-new-password-client');
+    const changePasswordMessage = document.getElementById('change-password-message');
+    const currentUserEmailDisplay = document.getElementById('current-user-email-display');
 
 
     const countries = [
@@ -338,8 +381,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                      : 'N/A';
             row.innerHTML = `
                 <td>${client.email}</td>
-                <td>${client.name || 'N/A'}</td> <!-- Muestra el nombre del cliente o 'N/A' -->
-                <td>${client.whatsapp || 'N/A'}</td> <!-- Muestra el WhatsApp del cliente o 'N/A' -->
+                <td>${client.name || 'N/A'}</td>
+                <td>${client.whatsapp || 'N/A'}</td>
                 <td>${client.password ? '********' : 'N/A'}</td>
                 <td>${registrationDate}</td>
                 <td>N/A</td>
@@ -388,9 +431,6 @@ document.addEventListener('DOMContentLoaded', () => {
         registerSubmitBtn.disabled = true; 
     }
 
-    // Ya no necesitamos checkFirebaseReady aquí, ya que onAuthStateChanged en index.html
-    // se encarga de la inicialización y de llamar a handleAuthSuccess cuando todo está listo.
-
     // --- Cierre de Modales ---
     function closeAllModals() {
         const modals = document.querySelectorAll('.modal');
@@ -410,6 +450,8 @@ document.addEventListener('DOMContentLoaded', () => {
         forgotPasswordCodeForm.reset(); // Reset client code reset form
         forgotPasswordCodeMessage.style.display = 'none'; // Hide client code reset message
         deleteMessage.style.display = 'none'; // Clear delete message
+        changePasswordForm.reset(); // Reset client change password form
+        changePasswordMessage.style.display = 'none'; // Hide client change password message
         showLoginForm(); // Siempre volver al formulario de login
     }
 
@@ -419,6 +461,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
+            // No cerrar el modal de cambio de contraseña si está activo y no se hace clic en el botón de cerrar
+            if (e.target.id === 'change-password-modal' && changePasswordModal.classList.contains('show')) {
+                // Solo cerrar si se hace clic en el botón de cerrar dentro del modal
+                if (!e.target.classList.contains('close-button')) {
+                    return; 
+                }
+            }
             closeAllModals();
         }
     });
@@ -693,12 +742,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Lógica de Iniciar Sesión y Registro ---
     const loginFormContainer = document.getElementById('login-form-container');
     const registerFormContainer = document.getElementById('register-form-container');
-    const forgotPasswordCodeFormContainer = document.getElementById('forgot-password-code-form-container'); // Nuevo contenedor
+    const forgotPasswordCodeFormContainer = document.getElementById('forgot-password-code-form-container');
 
     const showRegisterLink = document.getElementById('show-register');
     const showLoginLink = document.getElementById('show-login');
-    const showForgotPasswordLink = document.getElementById('show-forgot-password'); // Enlace para restablecer contraseña (inicial)
-    const showLoginFromForgotCodeLink = document.getElementById('show-login-from-forgot-code'); // Nuevo enlace para volver al login
+    const showForgotPasswordLink = document.getElementById('show-forgot-password');
+    const showLoginFromForgotCodeLink = document.getElementById('show-login-from-forgot-code');
 
     const loginForm = document.getElementById('login-form');
     const loginEmailInput = document.getElementById('login-email');
@@ -711,18 +760,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPasswordInput = document.getElementById('confirm-password');
     const registerMessage = document.getElementById('register-message');
 
-    const forgotPasswordCodeForm = document.getElementById('forgot-password-code-form'); // Nuevo formulario
-    const forgotEmailDisplay = document.getElementById('forgot-email-display'); // Campo de email en el nuevo formulario
-    const oobCodeInput = document.getElementById('oob-code'); // Campo para el código
-    const newPasswordResetInput = document.getElementById('new-password-reset'); // Campo para nueva contraseña
-    const confirmNewPasswordResetInput = document.getElementById('confirm-new-password-reset'); // Campo para confirmar nueva contraseña
-    const forgotPasswordCodeMessage = document.getElementById('forgot-password-code-message'); // Mensaje del nuevo formulario
+    const forgotPasswordCodeForm = document.getElementById('forgot-password-code-form');
+    const forgotEmailDisplay = document.getElementById('forgot-email-display');
+    const oobCodeInput = document.getElementById('oob-code');
+    const newPasswordResetInput = document.getElementById('new-password-reset');
+    const confirmNewPasswordResetInput = document.getElementById('confirm-new-password-reset');
+    const forgotPasswordCodeMessage = document.getElementById('forgot-password-code-message');
 
 
     function showLoginForm() {
         loginFormContainer.style.display = 'block';
         registerFormContainer.style.display = 'none';
-        forgotPasswordCodeFormContainer.style.display = 'none'; // Ocultar el nuevo formulario
+        forgotPasswordCodeFormContainer.style.display = 'none';
         loginMessage.style.display = 'none';
         loginForm.reset();
     }
@@ -730,7 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showRegisterForm() {
         loginFormContainer.style.display = 'none';
         registerFormContainer.style.display = 'block';
-        forgotPasswordCodeFormContainer.style.display = 'none'; // Ocultar el nuevo formulario
+        forgotPasswordCodeFormContainer.style.display = 'none';
         registerMessage.style.display = 'none';
         registerForm.reset();
     }
@@ -738,11 +787,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function showForgotPasswordCodeForm(email) {
         loginFormContainer.style.display = 'none';
         registerFormContainer.style.display = 'none';
-        forgotPasswordCodeFormContainer.style.display = 'block'; // Mostrar el nuevo formulario
-        forgotEmailDisplay.value = email; // Pre-llenar el email
+        forgotPasswordCodeFormContainer.style.display = 'block';
+        forgotEmailDisplay.value = email;
         forgotPasswordCodeMessage.style.display = 'none';
         forgotPasswordCodeForm.reset();
-        oobCodeInput.value = ''; // Asegurarse de que el campo de código esté vacío
+        oobCodeInput.value = '';
     }
 
 
@@ -761,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoginForm();
     });
 
-    // Maneja el clic en el enlace de "Olvidé mi contraseña"
+    // Maneja el clic en el enlace de "Olvidé mi contraseña" (para el cliente que olvidó su contraseña)
     showForgotPasswordLink.addEventListener('click', async (e) => {
         e.preventDefault();
         console.log("Auth: Clicked 'Olvidé mi contraseña' link.");
@@ -820,7 +869,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Auth: Usuario inició sesión:", user.uid);
 
             const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
-            const userDocSnap = await window.getDoc(userDocRef); // No { source: 'server' } aquí, ya que puede haber caché
+            const userDocSnap = await window.getDoc(userDocRef);
 
             let role = 'client';
             if (userDocSnap.exists()) {
@@ -838,7 +887,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loginMessage.style.display = 'block';
             
             setTimeout(() => {
-                window.handleAuthSuccess(role);
+                window.handleAuthSuccess(role, user.uid); // Pasamos el UID aquí
                 loginMessage.style.display = 'none';
             }, 1000);
 
@@ -931,37 +980,64 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Lógica para Restablecer Contraseña del Cliente (por Admin) ---
-    // Este evento ahora enviará un correo de restablecimiento al cliente
+    // Este evento ahora establecerá una contraseña temporal en Firestore
     resetPasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const clientEmail = resetClientEmailInput.value; // El email del cliente a quien se le enviará el correo
+        const clientUid = resetPasswordForm.dataset.clientUid;
+        const newPassword = document.getElementById('new-password').value; // Nueva contraseña temporal
+        const confirmNewPassword = document.getElementById('confirm-new-password').value;
+
+        if (newPassword !== confirmNewPassword) {
+            resetPasswordMessage.textContent = 'Las contraseñas no coinciden.';
+            resetPasswordMessage.classList.remove('success-message');
+            resetPasswordMessage.classList.add('error-message');
+            resetPasswordMessage.style.display = 'block';
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            resetPasswordMessage.textContent = 'La contraseña temporal debe tener al menos 6 caracteres.';
+            resetPasswordMessage.classList.remove('success-message');
+            resetPasswordMessage.classList.add('error-message');
+            resetPasswordMessage.style.display = 'block';
+            return;
+        }
 
         try {
-            console.log(`Admin: Intentando enviar correo de restablecimiento a: ${clientEmail}`);
-            await window.sendPasswordResetEmail(window.firebaseAuth, clientEmail);
+            console.log(`Admin: Intentando establecer contraseña temporal para UID: ${clientUid}`);
+            const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
+            const q = window.query(clientsCollectionRef, window.where('uid', '==', clientUid));
+            const querySnapshot = await window.getDocs(q);
 
-            resetPasswordMessage.textContent = `¡Correo de restablecimiento enviado a ${clientEmail}! El cliente deberá seguir las instrucciones en su correo.`;
-            resetPasswordMessage.classList.remove('error-message');
-            resetPasswordMessage.classList.add('success-message');
-            resetPasswordMessage.style.display = 'block';
-            
-            console.log(`Admin: Correo de restablecimiento enviado para el cliente ${clientEmail}.`);
-            
-            setTimeout(() => {
-                closeAllModals();
-            }, 4000); // Dar más tiempo para leer el mensaje
+            if (!querySnapshot.empty) {
+                const clientDoc = querySnapshot.docs[0];
+                // ¡¡¡ADVERTENCIA DE SEGURIDAD: ALMACENANDO CONTRASEÑA EN TEXTO PLANO!!!
+                await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
+                    password: newPassword // Contraseña temporal
+                });
+
+                resetPasswordMessage.textContent = `¡Contraseña temporal "${newPassword}" establecida en el panel! Ahora, DEBES CAMBIAR MANUALMENTE LA CONTRASEÑA DE ESTE USUARIO EN LA CONSOLA DE FIREBASE AUTHENTICATION a esta misma contraseña temporal.`;
+                resetPasswordMessage.classList.remove('error-message');
+                resetPasswordMessage.classList.add('success-message');
+                resetPasswordMessage.style.display = 'block';
+                
+                console.log(`Admin: Contraseña temporal para el cliente ${resetClientEmailInput.value} establecida en Firestore.`);
+                
+                setTimeout(() => {
+                    closeAllModals();
+                }, 8000); // Dar más tiempo para leer el mensaje importante
+
+            } else {
+                resetPasswordMessage.textContent = 'Error: Cliente no encontrado en la base de datos de clientes.';
+                resetPasswordMessage.classList.remove('success-message');
+                resetPasswordMessage.classList.add('error-message');
+                resetPasswordMessage.style.display = 'block';
+                console.warn(`Admin: Cliente con UID ${clientUid} no encontrado en 'registered_clients'.`);
+            }
 
         } catch (error) {
-            console.error("Admin: Error al enviar correo de restablecimiento:", error.code, error.message);
-            let errorMessage = `Error al enviar correo: ${error.message}`;
-            if (error.code === 'auth/user-not-found') {
-                errorMessage = "No se encontró un usuario con ese correo electrónico en Firebase Authentication.";
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = "El formato del correo electrónico es inválido.";
-            } else if (error.code === 'auth/network-request-failed') {
-                errorMessage = "Problema de conexión. Verifica tu internet o inténtalo más tarde.";
-            }
-            resetPasswordMessage.textContent = errorMessage;
+            console.error("Admin: Error al establecer contraseña temporal:", error);
+            resetPasswordMessage.textContent = `Error al establecer: ${error.message}`;
             resetPasswordMessage.classList.remove('success-message');
             resetPasswordMessage.classList.add('error-message');
             resetPasswordMessage.style.display = 'block';
@@ -996,7 +1072,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Auth: Intentando confirmar restablecimiento de contraseña para ${emailToReset} con oobCode: ${oobCode}`);
             await window.confirmPasswordReset(window.firebaseAuth, oobCode, newPassword);
 
-            // Opcional: Actualizar la contraseña en la colección 'registered_clients' si se está usando.
+            // Actualizar la contraseña en la colección 'registered_clients'
             const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('email', '==', emailToReset));
             const querySnapshot = await window.getDocs(q);
@@ -1004,7 +1080,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
                 await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
-                    password: newPassword
+                    password: newPassword // Actualiza la contraseña en Firestore
                 });
                 console.log(`Firestore: Contraseña actualizada en 'registered_clients' para ${emailToReset}.`);
             } else {
@@ -1041,6 +1117,81 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- NUEVA Lógica para que el Cliente Cambie su Contraseña Temporal ---
+    changePasswordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newPassword = newPasswordClientInput.value;
+        const confirmNewPassword = confirmNewPasswordClientInput.value;
+        const currentUser = window.firebaseAuth.currentUser; // Obtener el usuario actualmente logueado
+
+        if (!currentUser) {
+            changePasswordMessage.textContent = 'Error: No hay usuario autenticado.';
+            changePasswordMessage.classList.remove('success-message');
+            changePasswordMessage.classList.add('error-message');
+            changePasswordMessage.style.display = 'block';
+            return;
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            changePasswordMessage.textContent = 'Las contraseñas no coinciden.';
+            changePasswordMessage.classList.remove('success-message');
+            changePasswordMessage.classList.add('error-message');
+            changePasswordMessage.style.display = 'block';
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            changePasswordMessage.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
+            changePasswordMessage.classList.remove('success-message');
+            changePasswordMessage.classList.add('error-message');
+            changePasswordMessage.style.display = 'block';
+            return;
+        }
+
+        try {
+            console.log(`Client: Intentando actualizar contraseña en Firebase Auth para ${currentUser.email}`);
+            await window.updatePassword(currentUser, newPassword); // Actualiza la contraseña en Firebase Auth
+
+            // También actualiza la contraseña en la colección 'registered_clients'
+            const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
+            const q = window.query(clientsCollectionRef, window.where('uid', '==', currentUser.uid));
+            const querySnapshot = await window.getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const clientDoc = querySnapshot.docs[0];
+                await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
+                    password: newPassword // Actualiza la contraseña en Firestore
+                });
+                console.log(`Firestore: Contraseña actualizada en 'registered_clients' para ${currentUser.email}.`);
+            } else {
+                console.warn(`Firestore: Cliente ${currentUser.email} no encontrado en 'registered_clients'. Contraseña actualizada solo en Firebase Auth.`);
+            }
+
+            changePasswordMessage.textContent = '¡Contraseña cambiada con éxito! Redirigiendo...';
+            changePasswordMessage.classList.remove('error-message');
+            changePasswordMessage.classList.add('success-message');
+            changePasswordMessage.style.display = 'block';
+
+            setTimeout(() => {
+                closeAllModals(); // Cierra el modal de cambio de contraseña
+                window.showSection('home-section'); // Redirige al cliente a la sección de inicio
+            }, 2000);
+
+        } catch (error) {
+            console.error("Client: Error al cambiar contraseña:", error.code, error.message);
+            let errorMessage = "Error al cambiar contraseña. Inténtalo de nuevo.";
+            if (error.code === 'auth/weak-password') {
+                errorMessage = "La nueva contraseña es demasiado débil (mínimo 6 caracteres).";
+            } else if (error.code === 'auth/requires-recent-login') {
+                errorMessage = "Debes haber iniciado sesión recientemente para cambiar tu contraseña. Por favor, cierra sesión y vuelve a iniciarla, luego intenta cambiarla de nuevo.";
+            }
+            changePasswordMessage.textContent = errorMessage;
+            changePasswordMessage.classList.remove('success-message');
+            changePasswordMessage.classList.add('error-message');
+            changePasswordMessage.style.display = 'block';
+        }
+    });
+
 
     // --- Lógica para Eliminar Cliente (por Admin) ---
     confirmDeleteBtn.addEventListener('click', async () => {
@@ -1065,7 +1216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Admin: Error al eliminar cliente:", error);
             deleteMessage.textContent = `Error al eliminar: ${error.message}`;
             deleteMessage.classList.remove('success-message');
-            deleteMessage.classList.add('error-message'); // Corregido de 'error-error' a 'error-message'
+            deleteMessage.classList.add('error-message');
             deleteMessage.style.display = 'block';
         }
     });

@@ -11,7 +11,7 @@
     <script type="module">
         // Importa los módulos necesarios de Firebase SDKs.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendPasswordResetEmail, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendPasswordResetEmail, confirmPasswordReset, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"; // Añadido updatePassword
         import { getFirestore, collection, addDoc, onSnapshot, query, doc, getDoc, setDoc, updateDoc, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Variables globales para la configuración de Firebase y el ID de la aplicación.
@@ -57,6 +57,7 @@
         window.onAuthStateChanged = onAuthStateChanged;
         window.sendPasswordResetEmail = sendPasswordResetEmail;
         window.confirmPasswordReset = confirmPasswordReset;
+        window.updatePassword = updatePassword; // Expone updatePassword
 
         // Variable global para almacenar la función de desuscripción del listener de clientes
         window.unsubscribeClientsListener = null;
@@ -123,13 +124,12 @@
                 window.currentUserRole = role;
 
                 if (window.handleAuthSuccess) {
-                    window.handleAuthSuccess(role);
+                    window.handleAuthSuccess(role, user.uid); // Pasamos el UID para que script.js lo use
                 } else {
                     console.warn("Auth: window.handleAuthSuccess aún no está disponible en script.js.");
-                    // Si script.js no se ha cargado completamente, reintentar después de un breve retraso
                     setTimeout(() => {
                         if (window.handleAuthSuccess) {
-                            window.handleAuthSuccess(role);
+                            window.handleAuthSuccess(role, user.uid);
                         }
                     }, 200);
                 }
@@ -140,14 +140,12 @@
                     window.showSection('auth-section');
                 } else {
                     console.warn("Auth: window.showSection aún no está disponible en script.js.");
-                    // Si script.js no se ha cargado completamente, reintentar
                     setTimeout(() => {
                         if (window.showSection) {
                             window.showSection('auth-section');
                         }
                     }, 200);
                 }
-                // Desuscribir el listener de clientes si no hay usuario autenticado
                 if (window.unsubscribeClientsListener) {
                     window.unsubscribeClientsListener();
                     window.unsubscribeClientsListener = null;
@@ -155,10 +153,6 @@
                 }
             }
         });
-
-        // NOTA: Se ha eliminado el bloque de signInAnonymously/signInWithCustomToken
-        // para asegurar que la aplicación no inicie sesión automáticamente.
-        // La autenticación ahora depende de las credenciales del usuario o de una sesión persistente.
     </script>
 </head>
 <body>
@@ -335,8 +329,8 @@
                         <thead>
                             <tr>
                                 <th>Correo</th>
-                                <th>Nombre</th> <!-- NUEVO -->
-                                <th>WhatsApp</th> <!-- NUEVO -->
+                                <th>Nombre</th>
+                                <th>WhatsApp</th>
                                 <th>Contraseña</th>
                                 <th>Activación</th>
                                 <th>Corte</th>
@@ -556,23 +550,49 @@
             <span class="close-button">&times;</span>
             <h3>Restablecer Contraseña del Cliente</h3>
             <p class="instruction-message">
-                Se enviará un correo de restablecimiento de contraseña al cliente.
-                El cliente deberá seguir las instrucciones en su correo para establecer una nueva contraseña.
+                Establece una contraseña temporal para el cliente.
+                <br>
+                <strong style="color: var(--error-color);">¡IMPORTANTE!</strong> Después de establecerla aquí,
+                <strong style="color: var(--error-color);">DEBES CAMBIAR MANUALMENTE LA CONTRASEÑA DE ESTE USUARIO EN LA CONSOLA DE FIREBASE AUTHENTICATION</strong>
+                a esta misma contraseña temporal para que el cliente pueda iniciar sesión con ella.
             </p>
             <form id="reset-password-form">
                 <label for="reset-client-email">Correo del Cliente:</label>
                 <input type="email" id="reset-client-email" readonly>
                 
-                <!-- Campos de nueva contraseña ELIMINADOS, ya que el admin no la establece directamente -->
-                <!-- <label for="new-password">Nueva Contraseña:</label>
-                <input type="password" id="new-password" required placeholder="Ingresa la nueva contraseña">
+                <label for="new-password">Nueva Contraseña Temporal:</label>
+                <input type="password" id="new-password" required placeholder="Ej: 12345678">
                 
-                <label for="confirm-new-password">Confirmar Nueva Contraseña:</label>
-                <input type="password" id="confirm-new-password" required placeholder="Repite la nueva contraseña"> -->
+                <label for="confirm-new-password">Confirmar Contraseña Temporal:</label>
+                <input type="password" id="confirm-new-password" required placeholder="Repite la contraseña temporal">
                 
-                <button type="submit" class="btn primary-btn">Enviar Correo de Restablecimiento</button>
+                <button type="submit" class="btn primary-btn">Establecer Contraseña Temporal</button>
             </form>
             <p id="reset-password-message" class="message" style="display: none;"></p>
+        </div>
+    </div>
+
+    <!-- NUEVO: Modal para que el cliente cambie la contraseña temporal -->
+    <div id="change-password-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>Cambiar Contraseña</h3>
+            <p class="instruction-message">
+                Tu contraseña actual es temporal. Por favor, establece una nueva contraseña segura.
+            </p>
+            <form id="change-password-form">
+                <label for="current-user-email-display">Tu Correo Electrónico:</label>
+                <input type="email" id="current-user-email-display" readonly>
+
+                <label for="new-password-client">Nueva Contraseña:</label>
+                <input type="password" id="new-password-client" required placeholder="Ingresa tu nueva contraseña">
+                
+                <label for="confirm-new-password-client">Confirmar Nueva Contraseña:</label>
+                <input type="password" id="confirm-new-password-client" required placeholder="Repite tu nueva contraseña">
+                
+                <button type="submit" class="btn primary-btn">Cambiar Contraseña</button>
+            </form>
+            <p id="change-password-message" class="message" style="display: none;"></p>
         </div>
     </div>
 
