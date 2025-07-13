@@ -1,4 +1,4 @@
-// Version: 1.7.1 - Corrección robusta para la visibilidad del panel de clientes y carga de datos.
+// Version: 1.7.2 - Simplifica las acciones del panel de clientes a solo Restablecer Contraseña y Eliminar.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -341,8 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${registrationDate}</td>
                 <td>N/A</td>
                 <td class="actions-cell">
-                    <button type="button" class="renew-btn" data-email="${client.email}">Renovar</button>
-                    <button type="button" class="report-btn" data-email="${client.email}">Reportar Falla</button>
+                    <!-- Botones "Renovar" y "Reportar Falla" ELIMINADOS según la solicitud del usuario -->
                     <button type="button" class="reset-password-btn" data-client-uid="${client.uid}" data-client-email="${client.email}">Restablecer Contraseña</button>
                     <button type="button" class="delete-client-btn" data-client-id="${client.id}" data-client-uid="${client.uid}" data-client-email="${client.email}">Eliminar</button>
                 </td>
@@ -351,27 +350,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Event listeners para botones dinámicamente creados
-        document.querySelectorAll('.renew-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                renewalMessage.style.display = 'none';
-                renewalForm.reset();
-                renewalModal.style.display = 'flex';
-                renewalModal.classList.add('show');
-            });
-        });
-
-        document.querySelectorAll('.report-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const clientEmail = e.target.dataset.email;
-                reportedEmailInput.value = clientEmail;
-                reportModal.style.display = 'flex';
-                reportModal.classList.add('show');
-                reportMessage.style.display = 'none';
-                reportForm.reset();
-                reportedEmailInput.value = clientEmail;
-            });
-        });
-
+        // Los listeners para "Renovar" y "Reportar Falla" han sido ELIMINADOS.
+        
         document.querySelectorAll('.reset-password-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const clientUid = e.target.dataset.clientUid;
