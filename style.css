@@ -420,9 +420,12 @@ button:hover, .btn:hover {
 
 .service-card img {
     width: 100%;
-    height: 150px;
-    object-fit: cover;
+    max-height: 150px; /* Limita la altura máxima */
+    height: auto; /* Permite que la altura se ajuste automáticamente */
+    object-fit: contain; /* Ajusta la imagen completa dentro del contenedor */
     border-bottom: 1px solid var(--dark-gray);
+    padding: 10px; /* Añade un poco de relleno alrededor de la imagen */
+    background-color: var(--primary-bg); /* Fondo para el espacio vacío si la imagen no llena */
 }
 
 .service-card-info {
@@ -623,7 +626,7 @@ button:hover, .btn:hover {
     background-color: var(--button-hover);
 }
 
-/* Modals */
+/* Modales */
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -785,21 +788,23 @@ button:hover, .btn:hover {
 }
 
 .message {
-    text-align: center;
     padding: 10px;
     margin-top: 15px;
     border-radius: 5px;
     font-weight: 600;
+    text-align: center;
 }
 
 .success-message {
     background-color: rgba(76, 175, 80, 0.2);
     color: var(--success-color);
+    border: 1px solid var(--success-color);
 }
 
 .error-message {
     background-color: rgba(244, 67, 54, 0.2);
     color: var(--error-color);
+    border: 1px solid var(--error-color);
 }
 
 /* Details Modal */
@@ -950,18 +955,22 @@ button:hover, .btn:hover {
     position: relative;
     overflow: hidden; /* Importante para la animación del fondo */
 
-    /* Fondo animado verde */
-    background: linear-gradient(135deg, var(--green-darkest) 0%, var(--green-dark) 25%, var(--green-medium) 50%, var(--green-light) 75%, var(--green-lightest) 100%);
-    background-size: 400% 400%; /* Tamaño más grande para permitir el movimiento */
-    animation: gradientAnimation 15s ease infinite; /* Animación del fondo */
+    /* Fondo de imagen */
+    background-image: url('img/mi-nueva-imagen-de-fondo.jpg'); /* ¡TU NUEVA IMAGEN AQUÍ! */
+    background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+    background-position: center center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed; /* Opcional: hace que la imagen de fondo sea fija al hacer scroll */
+
     filter: brightness(0.7); /* Oscurece el fondo para mejor legibilidad del texto */
 }
 
-@keyframes gradientAnimation {
+/* Eliminamos la animación de gradiente ya que ahora es una imagen de fondo */
+/* @keyframes gradientAnimation {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
-}
+} */
 
 .auth-header-content {
     margin-bottom: 40px;
@@ -992,7 +1001,7 @@ button:hover, .btn:hover {
     z-index: 1; /* Asegura que el formulario esté sobre el fondo */
     position: relative; /* Necesario para z-index */
     animation: fadeInScale 0.8s ease-out forwards; /* Animación de aparición */
-    margin: 0 auto; /* ¡NUEVO! Centra el contenedor horizontalmente */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
 }
 
 @keyframes fadeInScale {
@@ -1100,6 +1109,19 @@ button:hover, .btn:hover {
 .auth-container .auth-switch a:hover {
     color: var(--button-hover);
 }
+
+/* Estilos específicos para el mensaje de instrucción en el formulario de restablecimiento por código */
+.auth-container .instruction-message {
+    color: var(--info-color); /* Un color que resalte para las instrucciones */
+    font-size: 0.95em;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(33, 150, 243, 0.1); /* Fondo suave para el mensaje */
+    border-radius: 8px;
+    border: 1px solid var(--info-color);
+}
+
 
 /* Clients Panel Styling */
 .clients-panel {
