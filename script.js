@@ -1,4 +1,4 @@
-// Version: 1.6.1 - Mejoras en la depuración del restablecimiento de contraseña para capturar el código de error de Firebase.
+// Version: 1.7.0 - Activa la visibilidad del panel de clientes solo para administradores y carga de datos en tiempo real.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             homeSlideIndex = n;
         }
 
-        homeSlides.forEach(slide => {
+        homeSlides.forEach(slide => { // Corregido de 'slides' a 'homeSlides'
             slide.classList.remove('active');
         });
         homeDots.forEach(dot => {
@@ -92,6 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
             logoutLink.classList.add('hidden-on-auth');
             clientsPanelNavLink.classList.add('hidden-on-auth'); // Siempre ocultar en la sección de autenticación
             clearTimeout(homeSlideTimer); // Detener el carrusel de la sección Home
+            
+            // Al ir a la sección de autenticación, desuscribir el listener de clientes si está activo
+            if (window.unsubscribeClientsListener) {
+                window.unsubscribeClientsListener();
+                window.unsubscribeClientsListener = null;
+                console.log("Listener de clientes desuscrito al ir a auth-section.");
+            }
+
         } else {
             headerElement.classList.remove('hidden-on-auth');
             footerElement.classList.remove('hidden-on-auth');
@@ -102,8 +110,25 @@ document.addEventListener('DOMContentLoaded', () => {
             // Mostrar/ocultar el enlace del panel de clientes según el rol
             if (window.currentUserRole === 'admin') {
                 clientsPanelNavLink.classList.remove('hidden-on-auth');
+                // Si estamos en la sección de clientes, activar el listener
+                if (sectionId === 'clients-panel-section') {
+                    window.setupClientsRealtimeListener(); // Llama a la función global de index.html
+                } else {
+                    // Si no estamos en la sección de clientes pero somos admin, desuscribir el listener si estaba activo
+                    if (window.unsubscribeClientsListener) {
+                        window.unsubscribeClientsListener();
+                        window.unsubscribeClientsListener = null;
+                        console.log("Listener de clientes desuscrito al salir de clients-panel-section.");
+                    }
+                }
             } else {
                 clientsPanelNavLink.classList.add('hidden-on-auth');
+                // Si no somos admin, asegurarnos de que el listener de clientes no esté activo
+                if (window.unsubscribeClientsListener) {
+                    window.unsubscribeClientsListener();
+                    window.unsubscribeClientsListener = null;
+                    console.log("Listener de clientes desuscrito (no admin).");
+                }
             }
 
             if (sectionId === 'home-section') {
@@ -123,11 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar el éxito de autenticación para actualizar la UI
     window.handleAuthSuccess = (role) => {
-        console.log("handleAuthSuccess called with role:", role); // Added console log
+        console.log("handleAuthSuccess llamado con rol:", role); // Log de depuración
         if (role === 'admin') {
             window.showSection('clients-panel-section'); // Ir al panel de clientes si es admin
+            // El listener de clientes se activará automáticamente dentro de showSection
         } else {
             window.showSection('home-section'); // Ir a la sección de inicio si es cliente
+            // El listener de clientes se desuscribirá automáticamente dentro de showSection
         }
     };
 
@@ -138,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.id === 'logout-link') {
                 return;
             }
-            window.showSection(targetSection); // Use window.showSection
+            window.showSection(targetSection); // Usa window.showSection
         });
     });
 
@@ -146,7 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         try {
             await window.signOut(); // Usa la función signOut de Firebase
-            window.showSection('auth-section'); // Use window.showSection
+            // onAuthStateChanged en index.html manejará la redirección a 'auth-section'
+            // y la limpieza del listener de clientes.
             loginForm.reset();
             loginMessage.style.display = 'none';
             registerMessage.style.display = 'none';
@@ -827,6 +855,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userDocSnap.exists()) {
                 role = userDocSnap.data().role;
             } else {
+                // Si el documento del usuario no existe, crearlo con rol 'client'
                 await window.setDoc(userDocRef, { role: 'client', email: email }, { merge: true });
             }
             window.currentUserRole = role; // Update global role

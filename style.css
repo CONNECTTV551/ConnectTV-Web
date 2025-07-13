@@ -141,7 +141,7 @@ button:hover, .btn:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
 }
 
 .logo a {
@@ -407,29 +407,32 @@ button:hover, .btn:hover {
     margin: 0 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Transición mejorada para todas las propiedades de hover */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    border: 1px solid transparent; /* Borde transparente para la transición */
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
 }
 
 .service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    transform: translateY(-8px) scale(1.03); /* Se levanta más y se escala ligeramente */
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6); /* Sombra más pronunciada */
+    border: 1px solid var(--accent-color); /* Borde del color de acento */
 }
 
 .service-card img {
     width: 100%;
-    max-height: 150px; /* Limita la altura máxima */
+    max-height: 160px; /* Altura máxima aumentada para el icono */
     height: auto; /* Permite que la altura se ajuste automáticamente */
     object-fit: contain; /* Ajusta la imagen completa dentro del contenedor */
     border-bottom: 1px solid var(--dark-gray);
-    padding: 10px; /* Añade un poco de relleno alrededor de la imagen */
+    padding: 10px; /* Padding ajustado */
     background-color: var(--primary-bg); /* Fondo para el espacio vacío si la imagen no llena */
 }
 
 .service-card-info {
-    padding: 15px;
+    padding: 8px; /* Padding reducido para hacer el cuadro de info más pequeño */
     flex-grow: 1; /* Allows info section to grow */
 }
 
@@ -1282,6 +1285,7 @@ button:hover, .btn:hover {
 }
 
 /* Responsive Design */
+/* Estilos para pantallas de hasta 768px (tablets y móviles) */
 @media (max-width: 768px) {
     .header .container {
         flex-direction: column;
@@ -1306,67 +1310,74 @@ button:hover, .btn:hover {
     }
 
     .search-box input {
-        width: 80%;
+        width: 80%; /* Ajusta el ancho del input de búsqueda */
     }
 
     .hero-content h1 {
-        font-size: 2.5em;
+        font-size: 2.5em; /* Reduce el tamaño del título principal */
     }
 
     .hero-content p {
-        font-size: 1em;
+        font-size: 1em; /* Reduce el tamaño del párrafo principal */
     }
 
     .service-card {
-        width: 90%; /* Make cards wider on small screens */
+        width: 90%; /* Hace las tarjetas más anchas en pantallas medianas */
         margin: 0 10px;
     }
 
     .content-rows {
-        padding: 40px 0;
+        padding: 40px 0; /* Reduce el padding de las secciones de contenido */
     }
 
     .content-rows h2 {
-        font-size: 1.8em;
+        font-size: 1.8em; /* Reduce el tamaño de los títulos de sección */
         margin-bottom: 30px;
     }
 
     .modal-content {
-        padding: 25px;
+        padding: 25px; /* Reduce el padding de los modales */
     }
     .modal-content h3 {
-        font-size: 1.5em;
+        font-size: 1.5em; /* Reduce el tamaño de los títulos de modal */
     }
     .details-info p {
-        font-size: 1em;
+        font-size: 1em; /* Ajusta el tamaño de fuente en los detalles */
     }
 
     .auth-container {
-        padding: 25px;
+        padding: 25px; /* Reduce el padding del contenedor de autenticación */
     }
     .auth-container h2 {
-        font-size: 1.5em;
+        font-size: 1.5em; /* Reduce el tamaño del título de autenticación */
     }
     .auth-header-content h1 {
-        font-size: 2.2em;
+        font-size: 2.2em; /* Reduce el tamaño del título del encabezado de auth */
     }
     .auth-header-content p {
-        font-size: 0.9em;
+        font-size: 0.9em; /* Reduce el tamaño del párrafo del encabezado de auth */
+    }
+
+    .client-table-container th,
+    .client-table-container td {
+        padding: 15px 10px; /* Ajusta el padding de las celdas de la tabla */
+        font-size: 0.9em; /* Reduce el tamaño de fuente de la tabla */
     }
 }
 
+/* Estilos para pantallas de hasta 480px (móviles pequeños) */
 @media (max-width: 480px) {
     .logo a {
-        font-size: 1.8em;
+        font-size: 1.8em; /* Más pequeño para el logo */
     }
 
     .nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-direction: column; /* Apila los elementos de navegación */
+        align-items: center;
     }
 
     .nav ul li {
-        margin: 5px 10px;
+        margin: 5px 0; /* Ajusta el margen para elementos apilados */
     }
 
     .search-box {
@@ -1375,40 +1386,38 @@ button:hover, .btn:hover {
     }
 
     .search-box input {
-        width: 100%;
+        width: 100%; /* El input de búsqueda ocupa todo el ancho */
     }
 
     .hero-section {
-        height: 450px;
+        height: 450px; /* Reduce la altura de la sección principal */
     }
 
     .hero-content h1 {
-        font-size: 2em;
+        font-size: 2em; /* Ajuste adicional para títulos */
     }
 
     .hero-content p {
-        font-size: 0.9em;
+        font-size: 0.9em; /* Ajuste adicional para párrafos */
     }
 
     .service-card {
-        width: 100%; /* Full width cards */
-        margin: 0 0 20px 0; /* Stack vertically */
+        width: 100%; /* Las tarjetas ocupan todo el ancho */
+        margin: 0 0 20px 0; /* Se apilan verticalmente con margen inferior */
     }
 
     .carousel {
-        padding: 0;
-        margin: 0;
-        flex-direction: column; /* Stack cards vertically */
+        flex-direction: column; /* Apila las tarjetas del carrusel */
         align-items: center;
     }
 
     .actions-cell {
-        flex-direction: column; /* Stack buttons vertically */
+        flex-direction: column; /* Apila los botones de acción */
         gap: 10px;
     }
 
     .actions-cell button {
-        width: 100%; /* Full width buttons */
+        width: 100%; /* Los botones ocupan todo el ancho */
     }
 
     .pricing-panel {
@@ -1417,17 +1426,30 @@ button:hover, .btn:hover {
     }
 
     .pricing-panel.expanded {
-        width: calc(100% - 20px);
+        width: calc(100% - 20px); /* El panel de precios expandido ocupa casi todo el ancho */
     }
 
     .client-table-container th,
     .client-table-container td {
-        padding: 12px 10px;
-        font-size: 0.8em;
+        padding: 10px 8px; /* Más reducción de padding en la tabla */
+        font-size: 0.75em; /* Más reducción de fuente en la tabla */
     }
 
     .client-table-container .no-clients-message {
-        font-size: 1em;
-        padding: 20px;
+        font-size: 0.9em;
+        padding: 15px;
+    }
+
+    .auth-container {
+        padding: 20px; /* Más reducción de padding en el contenedor de autenticación */
+    }
+    .auth-container h2 {
+        font-size: 1.3em; /* Más reducción de título de autenticación */
+    }
+    .auth-header-content h1 {
+        font-size: 1.8em; /* Más reducción de título de encabezado de auth */
+    }
+    .auth-header-content p {
+        font-size: 0.8em; /* Más reducción de párrafo de encabezado de auth */
     }
 }
