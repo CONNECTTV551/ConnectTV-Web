@@ -9,14 +9,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Firebase SDKs -->
     <script type="module">
-        // Import Firebase modules
+        // Importa los módulos necesarios de Firebase SDKs.
+        // Estos módulos son cruciales para la inicialización de la aplicación,
+        // la autenticación de usuarios y la interacción con la base de datos Firestore.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global variables for Firebase config and app ID (provided by Canvas environment)
+        // Variables globales para la configuración de Firebase y el ID de la aplicación.
+        // Estas variables son proporcionadas por el entorno de Canvas.
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        // If __firebase_config is empty, use the user-provided config
+        
+        // Si la configuración de Firebase proporcionada por Canvas está vacía,
+        // se usa una configuración de respaldo (tus credenciales de Firebase).
+        // Esto asegura que la aplicación pueda inicializarse incluso si el entorno no las inyecta.
         if (Object.keys(firebaseConfig).length === 0) {
             Object.assign(firebaseConfig, {
                 apiKey: "AIzaSyBPAASk4M0gCUv3kxRDrRPztLuEdU8lP80",
@@ -29,157 +35,77 @@
             });
         }
 
+        // Obtiene el ID de la aplicación, usando un valor por defecto si no está definido.
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // Obtiene el token de autenticación inicial, si está disponible.
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // Initialize Firebase app, Firestore, and Auth services
+        // Inicializa la aplicación de Firebase con la configuración.
         const app = initializeApp(firebaseConfig);
+        // Obtiene la instancia de Firestore (base de datos).
         const db = getFirestore(app);
+        // Obtiene la instancia de Auth (autenticación).
         const auth = getAuth(app);
 
-        let currentUserId = null; // Variable to store the authenticated user's ID
-        let currentUserRole = null; // Variable to store the authenticated user's role
-        let isInitialAuthCheckDone = false; // Flag to ensure initial check is processed once
-
-        // Expose Firebase objects and helper functions globally so script.js can access them
+        // Expone los objetos y funciones de Firebase globalmente.
+        // Esto permite que el archivo `script.js` acceda a ellos directamente
+        // sin necesidad de re-importarlos o pasarlos como argumentos.
         window.firebaseApp = app;
         window.firebaseDb = db;
         window.firebaseAuth = auth;
-        window.getCurrentUserId = () => currentUserId; // Helper to get the current user's ID
-        window.addDoc = addDoc; // Expose addDoc for adding documents to Firestore
-        window.collection = collection; // Expose collection for referencing Firestore collections
-        window.onSnapshot = onSnapshot; // Expose onSnapshot for real-time listeners
-        window.query = query; // Expose query for building Firestore queries
-        window.orderBy = orderBy; // Expose orderBy for ordering query results
-        window.doc = doc; // Expose doc for document references
-        window.getDoc = getDoc; // Expose getDoc for fetching single documents
-        window.setDoc = setDoc; // Expose setDoc for setting documents
-        window.updateDoc = updateDoc; // Expose updateDoc for updating documents
-        window.where = where; // Expose where for filtering queries
-        window.getDocs = getDocs; // Expose getDocs for one-time query fetches
-        window.deleteDoc = deleteDoc; // Expose deleteDoc for deleting documents
-        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword; // Expose for registration
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword; // Expose for login
-        window.signOut = () => firebaseSignOut(auth); // Expose signOut function
+        window.__app_id = appId; // Se asegura que appId esté disponible globalmente
+        window.__initial_auth_token = initialAuthToken; // Se asegura que initialAuthToken esté disponible globalmente
+        window.addDoc = addDoc;
+        window.collection = collection;
+        window.onSnapshot = onSnapshot;
+        window.query = query;
+        window.orderBy = orderBy;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.setDoc = setDoc;
+        window.updateDoc = updateDoc;
+        window.where = where;
+        window.getDocs = getDocs;
+        window.deleteDoc = deleteDoc;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.signOut = () => firebaseSignOut(auth);
+        window.onAuthStateChanged = onAuthStateChanged; // Expone onAuthStateChanged para ser usado en script.js
 
-        // Function to set up a real-time listener for client data from Firestore
+        // Función para configurar un listener en tiempo real para los datos de clientes desde Firestore.
+        // Esta función se expone globalmente para ser llamada desde script.js cuando sea necesario.
         function setupClientsRealtimeListener() {
-            // Path: /artifacts/{appId}/public/data/registered_clients
+            // Define la referencia a la colección de clientes registrados.
+            // La ruta sigue el patrón recomendado para datos públicos en Canvas.
             const clientsCollectionRef = collection(db, `artifacts/${appId}/public/data/registered_clients`);
             
-            // Create a query to order clients by registration date in descending order (newest first)
+            // Crea una consulta para ordenar los clientes por fecha de registro en orden descendente (los más nuevos primero).
             const q = query(clientsCollectionRef, orderBy('registrationDate', 'desc'));
 
-            // Set up the real-time listener using onSnapshot
+            // Configura el listener en tiempo real usando onSnapshot.
+            // Cada vez que los datos en la colección cambien, esta función se ejecutará.
             onSnapshot(q, (snapshot) => {
                 const clientsFromDb = [];
+                // Itera sobre los documentos en la instantánea y los añade al array de clientes.
                 snapshot.forEach((doc) => {
-                    // Add document ID and data to the clients array
                     clientsFromDb.push({ id: doc.id, ...doc.data() });
                 });
-                // Call the globally exposed renderClients function to update the UI
-                if (window.renderClients) { // Check if the function is defined before calling
+                // Llama a la función global `renderClients` (definida en script.js) para actualizar la UI.
+                if (window.renderClients) {
                     window.renderClients(clientsFromDb); 
                 } else {
-                    console.warn("renderClients function not yet available. Data will be rendered once script.js loads.");
+                    console.warn("La función renderClients aún no está disponible. Los datos se renderizarán una vez que script.js se cargue.");
                 }
             }, (error) => {
-                console.error("Error fetching client data:", error);
+                // Manejo de errores en caso de que la lectura de datos falle.
+                console.error("Error al obtener los datos del cliente:", error);
             });
         }
-        window.setupClientsRealtimeListener = setupClientsRealtimeListener; // Expose for initial call
-
-        // --- NEW: Function to handle initial Firebase sign-in and UI update ---
-        window.initializeFirebaseAuthAndUI = async () => {
-            // Wait for script.js functions to be ready
-            await new Promise(resolve => {
-                const check = () => {
-                    if (window.handleAuthSuccess && window.showSection) {
-                        resolve();
-                    } else {
-                        setTimeout(check, 50);
-                    }
-                };
-                check();
-            });
-
-            // Listen for authentication state changes (this will run immediately if a user is cached/token exists)
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    currentUserId = user.uid;
-                    console.log("Firebase authenticated as:", currentUserId);
-
-                    // Fetch user's role from Firestore (always from server for latest)
-                    const userDocRef = doc(db, `artifacts/${appId}/users`, currentUserId);
-                    const userDocSnap = await getDoc(userDocRef, { source: 'server' }); 
-
-                    if (userDocSnap.exists()) {
-                        currentUserRole = userDocSnap.data().role;
-                        console.log("User role:", currentUserRole);
-                    } else {
-                        currentUserRole = 'client';
-                        await setDoc(userDocRef, { role: currentUserRole, email: user.email || 'N/A' }, { merge: true });
-                        console.log("Default role 'client' assigned to new user and saved to Firestore.");
-                    }
-
-                    window.currentUserRole = currentUserRole; // Expose globally
-
-                    // Call setupClientsRealtimeListener only if the user is an admin
-                    if (currentUserRole === 'admin') {
-                        if (window.setupClientsRealtimeListener) {
-                            window.setupClientsRealtimeListener();
-                        } else {
-                            const checkSetupListener = setInterval(() => {
-                                if (window.setupClientsRealtimeListener) {
-                                    window.setupClientsRealtimeListener();
-                                    clearInterval(checkSetupListener);
-                                }
-                            }, 100);
-                        }
-                    }
-                    
-                    // Only redirect if it's not an anonymous user
-                    if (!user.isAnonymous) {
-                        window.handleAuthSuccess(currentUserRole); 
-                    } else {
-                        // If it's an anonymous user, ensure auth section is visible
-                        window.showSection('auth-section');
-                    }
-
-                } else {
-                    // No user signed in (or signed out)
-                    currentUserId = null;
-                    currentUserRole = null;
-                    window.currentUserRole = null; // Clear global role
-                    
-                    window.showSection('auth-section'); // Always show auth section if no user
-                }
-            });
-
-            // Attempt initial sign-in if no user is found by onAuthStateChanged initially
-            // This ensures anonymous user is created if no custom token is provided
-            if (!auth.currentUser) {
-                if (initialAuthToken) {
-                    try {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                    } catch (error) {
-                        console.error("Error signing in with custom token:", error);
-                        window.showSection('auth-section');
-                    }
-                } else {
-                    try {
-                        await signInAnonymously(auth);
-                    } catch (error) {
-                        console.error("Error signing in anonymously:", error);
-                        window.showSection('auth-section');
-                    }
-                }
-            }
-        };
+        window.setupClientsRealtimeListener = setupClientsRealtimeListener; // Expone la función globalmente
     </script>
 </head>
 <body>
-    <!-- HEADER: Initially hidden until user logs in -->
+    <!-- HEADER: Inicialmente oculto hasta que el usuario inicie sesión -->
     <header class="header hidden-on-auth">
         <div class="container">
             <div class="logo">
@@ -190,9 +116,9 @@
                     <li><a href="#" class="active" data-section="home">Inicio</a></li>
                     <li><a href="#" data-section="full-accounts">Cuentas Completas</a></li>
                     <li><a href="#" data-section="shared-profiles">Perfiles</a></li>
-                    <!-- Clients panel link, initially hidden for non-admin users -->
+                    <!-- Enlace del panel de clientes, inicialmente oculto para usuarios no administradores -->
                     <li><a href="#" data-section="clients-panel" id="clients-panel-nav-link" class="hidden-on-auth">Clientes</a></li> 
-                    <!-- Logout button -->
+                    <!-- Botón para cerrar sesión -->
                     <li><a href="#" id="logout-link">Cerrar Sesión</a></li>
                 </ul>
             </nav>
@@ -206,14 +132,14 @@
     </header>
 
     <main>
-        <!-- AUTHENTICATION SECTION: Active by default on page load -->
+        <!-- SECCIÓN DE AUTENTICACIÓN: Activa por defecto al cargar la página -->
         <section class="auth-section active-section" id="auth-section">
             <div class="auth-header-content">
                 <h1>Tu Acceso Ilimitado al <br> Panel de Administración</h1>
                 <p>Gestiona usuarios, productos y ventas con facilidad.</p>
             </div>
             <div class="auth-container">
-                <!-- Login/Register forms will be displayed here dynamically -->
+                <!-- Los formularios de inicio de sesión/registro se mostrarán aquí dinámicamente -->
                 <div id="login-form-container">
                     <h2>Iniciar Sesión</h2>
                     <form id="login-form">
@@ -255,7 +181,7 @@
             </div>
         </section>
 
-        <!-- MAIN SECTIONS (Initially hidden) -->
+        <!-- SECCIONES PRINCIPALES (Inicialmente ocultas) -->
         <section class="hero-section hero-market hidden-section" id="home-section">
             <div class="hero-content container">
                 <h1>Tu Acceso a Todo el Entretenimiento Premium</h1>
@@ -297,7 +223,7 @@
             <div class="container">
                 <h2>Cuentas Completas Disponibles</h2>
                 <div class="carousel" id="full-accounts-carousel">
-                    <!-- Service cards will be loaded here with JavaScript -->
+                    <!-- Las tarjetas de servicio se cargarán aquí con JavaScript -->
                 </div>
             </div>
         </section>
@@ -306,7 +232,7 @@
             <div class="container">
                 <h2>Perfiles Compartidos al Instante</h2>
                 <div class="carousel" id="shared-profiles-carousel">
-                    <!-- Profile cards will be loaded here with JavaScript -->
+                    <!-- Las tarjetas de perfil se cargarán aquí con JavaScript -->
                 </div>
             </div>
         </section>
@@ -326,7 +252,7 @@
                             </tr>
                         </thead>
                         <tbody id="client-data-body">
-                            <!-- Client data will be loaded here with JavaScript from Firestore -->
+                            <!-- Los datos de los clientes se cargarán aquí con JavaScript desde Firestore -->
                         </tbody>
                     </table>
                 </div>
@@ -335,7 +261,7 @@
 
     </main>
 
-    <!-- FOOTER: Initially hidden until user logs in -->
+    <!-- FOOTER: Inicialmente oculto hasta que el usuario inicie sesión -->
     <footer class="footer hidden-on-auth">
         <div class="container">
             <div class="footer-links">
@@ -348,7 +274,7 @@
         </div>
     </footer>
 
-    <!-- PRICING PANEL: Initially hidden until user logs in -->
+    <!-- PANEL DE PRECIOS: Inicialmente oculto hasta que el usuario inicie sesión -->
     <div id="pricing-panel" class="pricing-panel hidden-on-auth">
         <button type="button" class="pricing-toggle-btn"><i class="fas fa-dollar-sign"></i> Precios</button>
         <div class="pricing-content">
@@ -362,7 +288,7 @@
         </div>
     </div>
 
-    <!-- Modals (not hidden initially as they are modals) -->
+    <!-- Modales (no ocultos inicialmente ya que son modales) -->
     <div id="renewal-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -396,7 +322,7 @@
                 <label for="reported-country">País:</label>
                 <select id="reported-country" required>
                     <option value="">Selecciona un país</option>
-                    <!-- Country options will be loaded with JS -->
+                    <!-- Las opciones de país se cargarán con JS -->
                 </select>
 
                 <label for="issue-description">Descripción de la falla:</label>
@@ -418,7 +344,7 @@
             <div class="payment-methods-container">
                 <h4>Selecciona tu método de pago:</h4>
                 <div class="accordion">
-                    <!-- Mobile Payment Venezuela -->
+                    <!-- Pago Móvil Venezuela -->
                     <div class="accordion-item">
                         <button type="button" class="accordion-header">
                             <i class="fas fa-money-bill-transfer"></i> Pago Móvil Banco de Venezuela
@@ -431,7 +357,7 @@
                             <p>Titular: GILBERTO GOTERA</p>
                         </div>
                     </div>
-                    <!-- Mobile Payment Bancamiga -->
+                    <!-- Pago Móvil Bancamiga -->
                     <div class="accordion-item">
                         <button type="button" class="accordion-header">
                             <i class="fas fa-mobile-screen-button"></i> Pago Móvil Bancamiga
@@ -489,7 +415,7 @@
                 </div>
             </div>
 
-            <!-- Payment proof fields -->
+            <!-- Campos para comprobante de pago -->
             <form id="payment-proof-form">
                 <label for="customer-name">Tu Nombre Completo:</label>
                 <input type="text" id="customer-name" required placeholder="Ej: Juan Pérez">
@@ -532,7 +458,7 @@
         </div>
     </div>
 
-    <!-- NEW: Reset Password Modal for Admin -->
+    <!-- NUEVO: Modal de Restablecimiento de Contraseña para Admin -->
     <div id="reset-password-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -553,7 +479,7 @@
         </div>
     </div>
 
-    <!-- NEW: Delete Confirmation Modal for Admin -->
+    <!-- NUEVO: Modal de Confirmación de Eliminación para Admin -->
     <div id="delete-confirm-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
