@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clientsPanelNavLink = document.getElementById('clients-panel-nav-link'); // Enlace del panel de clientes
 
     // Función para mostrar una sección específica y ocultar las demás
-    function showSection(sectionId) {
+    window.showSection = function(sectionId) { // Made global for index.html to call
         sections.forEach(section => {
             section.classList.remove('active-section');
             section.classList.add('hidden-section');
@@ -123,19 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar el éxito de autenticación para actualizar la UI
     window.handleAuthSuccess = (role) => {
+        console.log("handleAuthSuccess called with role:", role); // Added console log
         if (role === 'admin') {
-            showSection('clients-panel-section'); // Ir al panel de clientes si es admin
+            window.showSection('clients-panel-section'); // Ir al panel de clientes si es admin
         } else {
-            showSection('home-section'); // Ir a la sección de inicio si es cliente
+            window.showSection('home-section'); // Ir a la sección de inicio si es cliente
         }
     };
-
-    // Al cargar la página, mostrar solo la sección de autenticación
-    // Ensure this runs after all sections are defined in HTML and script is parsed
-    // Added a small delay to ensure DOM is fully ready and showSection is properly defined
-    setTimeout(() => {
-        showSection('auth-section');
-    }, 0); // Execute as soon as possible after current script execution
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -144,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.id === 'logout-link') {
                 return;
             }
-            showSection(targetSection);
+            window.showSection(targetSection); // Use window.showSection
         });
     });
 
@@ -152,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         try {
             await window.signOut(); // Usa la función signOut de Firebase
-            showSection('auth-section');
+            window.showSection('auth-section'); // Use window.showSection
             loginForm.reset();
             loginMessage.style.display = 'none';
             registerMessage.style.display = 'none';
@@ -257,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reportModal = document.getElementById('report-modal');
     const detailsModal = document.getElementById('details-modal');
     const resetPasswordModal = document.getElementById('reset-password-modal'); // Nuevo modal
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal'); // Nuevo modal de confirmación
     const closeButtons = document.querySelectorAll('.close-button');
     const renewalForm = document.getElementById('renewal-form');
     const renewalMessage = document.getElementById('renewal-message');
@@ -267,6 +262,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetPasswordForm = document.getElementById('reset-password-form'); // Formulario de restablecimiento
     const resetClientEmailInput = document.getElementById('reset-client-email'); // Email en modal de restablecimiento
     const resetPasswordMessage = document.getElementById('reset-password-message'); // Mensaje de restablecimiento
+    const clientToDeleteEmailDisplay = document.getElementById('client-to-delete-email'); // Email en modal de eliminación
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    const deleteMessage = document.getElementById('delete-message');
+
 
     const countries = [
         "Argentina", "Bolivia", "Brasil", "Chile", "Colombia", "Costa Rica", "Cuba", "Ecuador", "El Salvador",
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Rendering clients. Data received:", clientsData);
         clientDataBody.innerHTML = '';
         if (clientsData.length === 0) {
-            clientDataBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--light-gray);">No hay clientes registrados aún.</td></tr>';
+            clientDataBody.innerHTML = '<tr><td colspan="5"><p class="no-clients-message">No hay clientes registrados aún.</p></td></tr>';
             return;
         }
         clientsData.forEach(client => {
@@ -307,6 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button type="button" class="renew-btn" data-email="${client.email}">Renovar</button>
                     <button type="button" class="report-btn" data-email="${client.email}">Reportar Falla</button>
                     <button type="button" class="reset-password-btn" data-client-uid="${client.uid}" data-client-email="${client.email}">Restablecer Contraseña</button>
+                    <button type="button" class="delete-client-btn" data-client-id="${client.id}" data-client-uid="${client.uid}" data-client-email="${client.email}">Eliminar</button>
                 </td>
             `;
             clientDataBody.appendChild(row);
@@ -346,6 +347,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetPasswordForm.reset();
             });
         });
+
+        document.querySelectorAll('.delete-client-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const clientId = e.target.dataset.clientId;
+                const clientUid = e.target.dataset.clientUid;
+                const clientEmail = e.target.dataset.clientEmail;
+
+                clientToDeleteEmailDisplay.textContent = clientEmail; // Display email in confirmation modal
+                confirmDeleteBtn.dataset.clientId = clientId; // Store Firestore doc ID
+                confirmDeleteBtn.dataset.clientUid = clientUid; // Store Firebase Auth UID (if needed for future Admin SDK use)
+
+                deleteConfirmModal.style.display = 'flex';
+                deleteConfirmModal.classList.add('show');
+                deleteMessage.style.display = 'none'; // Hide previous messages
+            });
+        });
     }
 
     // --- Firebase Readiness Check y Inicialización ---
@@ -360,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.firebaseAuth && window.firebaseDb && window.addDoc && window.collection && 
             window.createUserWithEmailAndPassword && window.signInWithEmailAndPassword && 
             window.signOut && window.doc && window.getDoc && window.setDoc && window.updateDoc &&
-            window.where && window.getDocs) {
+            window.where && window.getDocs && window.deleteDoc) { 
             console.log("Firebase globals are ready in script.js.");
             if (registerSubmitBtn) {
                 registerSubmitBtn.disabled = false; // Habilitar el botón de registro
@@ -389,6 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetImagePreview();
         resetPasswordForm.reset();
         resetPasswordMessage.style.display = 'none';
+        deleteMessage.style.display = 'none'; // Clear delete message
     }
 
     closeButtons.forEach(button => {
@@ -862,9 +880,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // que solo deben manejarse en un entorno de servidor seguro (ej. Firebase Cloud Functions
             // con Firebase Admin SDK).
             //
-            // Para este entorno de Canvas y para cumplir con el requisito, estamos simulando
-            // la actualización de la contraseña en el lado del cliente, lo cual es INSEGURO.
-            //
             // Aquí, actualizaremos la contraseña almacenada en el documento de Firestore del cliente
             // en la colección `registered_clients`. Esto NO CAMBIA la contraseña en Firebase Authentication.
             // Si quieres que la contraseña de Firebase Authentication se actualice, necesitarías
@@ -910,5 +925,51 @@ document.addEventListener('DOMContentLoaded', () => {
             resetPasswordMessage.classList.add('error-message');
             resetPasswordMessage.style.display = 'block';
         }
+    });
+
+    // --- Lógica para Eliminar Cliente (por Admin) ---
+    confirmDeleteBtn.addEventListener('click', async () => {
+        const clientId = confirmDeleteBtn.dataset.clientId;
+        const clientUid = confirmDeleteBtn.dataset.clientUid; // Esto es el UID de Firebase Auth
+
+        try {
+            // Eliminar el documento del cliente de la colección 'registered_clients'
+            await window.deleteDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientId));
+            console.log(`Cliente con ID ${clientId} eliminado del panel.`);
+
+            // ADVERTENCIA DE SEGURIDAD:
+            // Para eliminar completamente al usuario de Firebase Authentication, se necesita el Admin SDK
+            // de Firebase, que solo puede ejecutarse en un entorno de servidor seguro (ej. Cloud Functions).
+            // Si se desea eliminar al usuario de Firebase Auth, se debería implementar una Cloud Function
+            // que reciba el UID del cliente y lo elimine de Auth.
+            //
+            // Ejemplo conceptual (NO EJECUTAR EN EL FRONTEND):
+            // firebase.auth().deleteUser(clientUid); // Esto NO funciona en el cliente.
+
+            // También se podría eliminar el documento de metadatos del usuario en la colección 'users'
+            // si se desea una limpieza completa en Firestore:
+            // await window.deleteDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, clientUid));
+            // Sin embargo, para este ejercicio, nos enfocamos en el panel de clientes.
+
+            deleteMessage.textContent = '¡Cliente eliminado con éxito del panel!';
+            deleteMessage.classList.remove('error-message');
+            deleteMessage.classList.add('success-message');
+            deleteMessage.style.display = 'block';
+
+            setTimeout(() => {
+                closeAllModals();
+            }, 2000);
+
+        } catch (error) {
+            console.error("Error al eliminar cliente:", error);
+            deleteMessage.textContent = `Error al eliminar: ${error.message}`;
+            deleteMessage.classList.remove('success-message');
+            deleteMessage.classList.add('error-message');
+            deleteMessage.style.display = 'block';
+        }
+    });
+
+    cancelDeleteBtn.addEventListener('click', () => {
+        closeAllModals();
     });
 });
