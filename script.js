@@ -1,4 +1,4 @@
-// Version: 1.7.0 - Activa la visibilidad del panel de clientes solo para administradores y carga de datos en tiempo real.
+// Version: 1.7.1 - Corrección robusta para la visibilidad del panel de clientes y carga de datos.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             homeSlideIndex = n;
         }
 
-        homeSlides.forEach(slide => { // Corregido de 'slides' a 'homeSlides'
+        homeSlides.forEach(slide => {
             slide.classList.remove('active');
         });
         homeDots.forEach(dot => {
@@ -69,23 +69,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const clientsPanelNavLink = document.getElementById('clients-panel-nav-link'); // Enlace del panel de clientes
 
     // Función para mostrar una sección específica y ocultar las demás
-    window.showSection = function(sectionId) { // Made global for index.html to call
+    window.showSection = function(sectionId) {
+        console.log(`UI: Intentando mostrar sección: ${sectionId}`);
         sections.forEach(section => {
             section.classList.remove('active-section');
             section.classList.add('hidden-section');
         });
 
         const targetSectionElement = document.getElementById(sectionId);
-        if (targetSectionElement) { // Ensure the element exists
+        if (targetSectionElement) {
             targetSectionElement.classList.remove('hidden-section');
             targetSectionElement.classList.add('active-section');
+            console.log(`UI: Sección ${sectionId} activada.`);
         } else {
-            console.error(`Section with ID ${sectionId} not found.`);
-            return; // Exit if section not found
+            console.error(`UI: Sección con ID ${sectionId} no encontrada.`);
+            return;
         }
 
         // Lógica de visibilidad de elementos globales (header, footer, pricing panel)
         if (sectionId === 'auth-section') {
+            console.log("UI: Ocultando elementos para auth-section.");
             headerElement.classList.add('hidden-on-auth');
             footerElement.classList.add('hidden-on-auth');
             pricingPanelElement.classList.add('hidden-on-auth');
@@ -97,37 +100,44 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.unsubscribeClientsListener) {
                 window.unsubscribeClientsListener();
                 window.unsubscribeClientsListener = null;
-                console.log("Listener de clientes desuscrito al ir a auth-section.");
+                console.log("UI: Listener de clientes desuscrito al ir a auth-section.");
             }
 
         } else {
+            console.log("UI: Mostrando elementos para secciones de contenido.");
             headerElement.classList.remove('hidden-on-auth');
             footerElement.classList.remove('hidden-on-auth');
             pricingPanelElement.classList.remove('hidden-on-auth');
             logoutLink.classList.remove('hidden-on-auth');
-            authSection.classList.add('hidden-section'); // Ocultar auth
+            authSection.classList.add('hidden-section'); // Asegurarse de ocultar auth
 
-            // Mostrar/ocultar el enlace del panel de clientes según el rol
+            // Control de visibilidad del enlace "Clientes" y activación del listener
             if (window.currentUserRole === 'admin') {
                 clientsPanelNavLink.classList.remove('hidden-on-auth');
-                // Si estamos en la sección de clientes, activar el listener
+                console.log("UI: Enlace 'Clientes' visible (admin).");
                 if (sectionId === 'clients-panel-section') {
-                    window.setupClientsRealtimeListener(); // Llama a la función global de index.html
+                    console.log("UI: En 'clients-panel-section', activando listener de clientes.");
+                    if (window.setupClientsRealtimeListener) {
+                        window.setupClientsRealtimeListener(); // Llama a la función global de index.html
+                    } else {
+                        console.error("UI: window.setupClientsRealtimeListener no está definido.");
+                    }
                 } else {
                     // Si no estamos en la sección de clientes pero somos admin, desuscribir el listener si estaba activo
                     if (window.unsubscribeClientsListener) {
                         window.unsubscribeClientsListener();
                         window.unsubscribeClientsListener = null;
-                        console.log("Listener de clientes desuscrito al salir de clients-panel-section.");
+                        console.log("UI: Listener de clientes desuscrito al salir de clients-panel-section (admin).");
                     }
                 }
             } else {
                 clientsPanelNavLink.classList.add('hidden-on-auth');
+                console.log("UI: Enlace 'Clientes' oculto (no admin).");
                 // Si no somos admin, asegurarnos de que el listener de clientes no esté activo
                 if (window.unsubscribeClientsListener) {
                     window.unsubscribeClientsListener();
                     window.unsubscribeClientsListener = null;
-                    console.log("Listener de clientes desuscrito (no admin).");
+                    console.log("UI: Listener de clientes desuscrito (no admin).");
                 }
             }
 
@@ -148,13 +158,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar el éxito de autenticación para actualizar la UI
     window.handleAuthSuccess = (role) => {
-        console.log("handleAuthSuccess llamado con rol:", role); // Log de depuración
+        console.log("Auth: handleAuthSuccess llamado con rol:", role);
         if (role === 'admin') {
             window.showSection('clients-panel-section'); // Ir al panel de clientes si es admin
-            // El listener de clientes se activará automáticamente dentro de showSection
         } else {
             window.showSection('home-section'); // Ir a la sección de inicio si es cliente
-            // El listener de clientes se desuscribirá automáticamente dentro de showSection
         }
     };
 
@@ -165,24 +173,24 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.id === 'logout-link') {
                 return;
             }
-            window.showSection(targetSection); // Usa window.showSection
+            window.showSection(targetSection);
         });
     });
 
     logoutLink.addEventListener('click', async (e) => {
         e.preventDefault();
         try {
-            await window.signOut(); // Usa la función signOut de Firebase
+            console.log("Auth: Intentando cerrar sesión.");
+            await window.signOut();
             // onAuthStateChanged en index.html manejará la redirección a 'auth-section'
             // y la limpieza del listener de clientes.
             loginForm.reset();
             loginMessage.style.display = 'none';
             registerMessage.style.display = 'none';
             showLoginForm();
-            console.log('Sesión cerrada correctamente.');
+            console.log('Auth: Sesión cerrada correctamente.');
         } catch (error) {
-            console.error("Error al cerrar sesión:", error);
-            // Mostrar un mensaje de error al usuario si es necesario
+            console.error("Auth: Error al cerrar sesión:", error);
         }
     });
 
@@ -259,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     function renderAllServiceCards() {
-        console.log("Rendering all service cards."); // Log de depuración
+        console.log("Services: Renderizando todas las tarjetas de servicio.");
         const fullAccountsCarousel = document.getElementById('full-accounts-carousel');
         const sharedProfilesCarousel = document.getElementById('shared-profiles-carousel');
         fullAccountsCarousel.innerHTML = '';
@@ -315,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función para renderizar datos de clientes en la tabla
     window.renderClients = function(clientsData) {
-        console.log("Rendering clients. Data received:", clientsData);
+        console.log("Clients Panel: Renderizando clientes. Datos recibidos:", clientsData);
         clientDataBody.innerHTML = '';
         if (clientsData.length === 0) {
             clientDataBody.innerHTML = '<tr><td colspan="5"><p class="no-clients-message">No hay clientes registrados aún.</p></td></tr>';
@@ -323,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         clientsData.forEach(client => {
             const row = document.createElement('tr');
-            // Ensure registrationDate is a valid Firestore Timestamp before calling toDate()
+            // Asegurarse de que registrationDate es un Timestamp válido de Firestore antes de llamar a toDate()
             const registrationDate = client.registrationDate && typeof client.registrationDate.toDate === 'function' 
                                      ? new Date(client.registrationDate.toDate()).toLocaleDateString() 
                                      : 'N/A';
@@ -396,28 +404,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Firebase Readiness Check y Inicialización ---
     const registerSubmitBtn = document.getElementById('register-submit-btn');
-    // Disable initially only if it's not already disabled (to avoid re-disabling if HTML sets it)
     if (registerSubmitBtn && !registerSubmitBtn.disabled) {
         registerSubmitBtn.disabled = true; 
     }
 
-    function checkFirebaseReady() {
-        // Check for all necessary Firebase globals to be available
-        if (window.firebaseAuth && window.firebaseDb && window.addDoc && window.collection && 
-            window.createUserWithEmailAndPassword && window.signInWithEmailAndPassword && 
-            window.signOut && window.doc && window.getDoc && window.setDoc && window.updateDoc &&
-            window.where && window.getDocs && window.deleteDoc && window.sendPasswordResetEmail && window.confirmPasswordReset) { 
-            console.log("Firebase globals are ready in script.js.");
-            if (registerSubmitBtn) {
-                registerSubmitBtn.disabled = false; // Habilitar el botón de registro
-            }
-            // The onAuthStateChanged listener in index.html will handle initial UI state after auth
-        } else {
-            // If not ready, retry after a short delay
-            setTimeout(checkFirebaseReady, 100);
-        }
-    }
-    checkFirebaseReady(); // Start checking for Firebase readiness
+    // Ya no necesitamos checkFirebaseReady aquí, ya que onAuthStateChanged en index.html
+    // se encarga de la inicialización y de llamar a handleAuthSuccess cuando todo está listo.
 
     // --- Cierre de Modales ---
     function closeAllModals() {
@@ -438,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
         forgotPasswordCodeForm.reset(); // Reset client code reset form
         forgotPasswordCodeMessage.style.display = 'none'; // Hide client code reset message
         deleteMessage.style.display = 'none'; // Clear delete message
-        showLoginForm(); // Always return to login form
+        showLoginForm(); // Siempre volver al formulario de login
     }
 
     closeButtons.forEach(button => {
@@ -792,33 +784,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // Maneja el clic en el enlace de "Olvidé mi contraseña"
     showForgotPasswordLink.addEventListener('click', async (e) => {
         e.preventDefault();
-        console.log("Clicked 'Olvidé mi contraseña' link."); // Log de depuración
-        const email = loginEmailInput.value; // Intenta usar el email ya ingresado
+        console.log("Auth: Clicked 'Olvidé mi contraseña' link.");
+        const email = loginEmailInput.value;
 
-        // Si el campo de email está vacío, muestra un mensaje de error
         if (!email) {
             loginMessage.textContent = 'Por favor, ingresa tu correo electrónico en el campo de arriba para restablecer la contraseña.';
             loginMessage.classList.remove('success-message');
             loginMessage.classList.add('error-message');
             loginMessage.style.display = 'block';
-            console.log("Email field is empty. Displaying error message."); // Log de depuración
-            return; // Detiene la ejecución si el email está vacío
+            console.log("Auth: Email field is empty. Displaying error message.");
+            return;
         }
 
         try {
-            console.log(`Attempting to send password reset email to: ${email}`); // Log de depuración
-            await window.sendPasswordResetEmail(window.firebaseAuth, email); // Usa la función global
+            console.log(`Auth: Intentando enviar correo de restablecimiento a: ${email}`);
+            await window.sendPasswordResetEmail(window.firebaseAuth, email);
             
-            // Si el envío es exitoso, muestra el nuevo formulario para el código
             showForgotPasswordCodeForm(email);
             forgotPasswordCodeMessage.textContent = 'Se ha enviado un correo de restablecimiento de contraseña a tu dirección. Abre el correo y copia el código (oobCode) de la URL para pegarlo aquí.';
             forgotPasswordCodeMessage.classList.remove('error-message');
             forgotPasswordCodeMessage.classList.add('success-message');
             forgotPasswordCodeMessage.style.display = 'block';
-            console.log("Password reset email sent successfully. Displaying success message and code form."); // Log de depuración
+            console.log("Auth: Correo de restablecimiento enviado con éxito.");
 
         } catch (error) {
-            console.error("Error al enviar correo de restablecimiento:", error.code, error.message); // Log de depuración con código y mensaje
+            console.error("Auth: Error al enviar correo de restablecimiento:", error.code, error.message);
             let errorMessage = "Error al enviar correo de restablecimiento. Verifica el email.";
             if (error.code === 'auth/user-not-found') {
                 errorMessage = "No hay usuario registrado con ese correo.";
@@ -826,14 +816,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorMessage = "Formato de correo electrónico inválido.";
             } else if (error.code === 'auth/network-request-failed') {
                 errorMessage = "Problema de conexión. Verifica tu internet o inténtalo más tarde.";
-            } else if (error.code === 'auth/operation-not-allowed') { // Specific check for the common error
+            } else if (error.code === 'auth/operation-not-allowed') {
                 errorMessage = "La operación de restablecimiento de contraseña no está habilitada. Por favor, habilítala en la consola de Firebase (Authentication -> Sign-in method -> Email/Password).";
             }
             loginMessage.textContent = errorMessage;
             loginMessage.classList.remove('success-message');
             loginMessage.classList.add('error-message');
             loginMessage.style.display = 'block';
-            console.log(`Displaying error message: ${errorMessage}`); // Log de depuración
+            console.log(`Auth: Mostrando mensaje de error: ${errorMessage}`);
         }
     });
 
@@ -844,21 +834,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = loginPasswordInput.value;
 
         try {
+            console.log("Auth: Intentando iniciar sesión con:", email);
             const userCredential = await window.signInWithEmailAndPassword(window.firebaseAuth, email, password);
             const user = userCredential.user;
-            console.log("User logged in:", user.uid);
+            console.log("Auth: Usuario inició sesión:", user.uid);
 
             const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
-            const userDocSnap = await window.getDoc(userDocRef, { source: 'server' }); 
+            const userDocSnap = await window.getDoc(userDocRef); // No { source: 'server' } aquí, ya que puede haber caché
 
-            let role = 'client'; // Default role
+            let role = 'client';
             if (userDocSnap.exists()) {
                 role = userDocSnap.data().role;
+                console.log("Auth: Rol obtenido de Firestore:", role);
             } else {
-                // Si el documento del usuario no existe, crearlo con rol 'client'
                 await window.setDoc(userDocRef, { role: 'client', email: email }, { merge: true });
+                console.log("Auth: Documento de usuario creado con rol 'client' (no existía).");
             }
-            window.currentUserRole = role; // Update global role
+            window.currentUserRole = role;
 
             loginMessage.textContent = '¡Inicio de sesión exitoso! Redirigiendo...';
             loginMessage.classList.remove('error-message');
@@ -866,12 +858,12 @@ document.addEventListener('DOMContentLoaded', () => {
             loginMessage.style.display = 'block';
             
             setTimeout(() => {
-                window.handleAuthSuccess(role); // Call the global handler
+                window.handleAuthSuccess(role);
                 loginMessage.style.display = 'none';
             }, 1000);
 
         } catch (error) {
-            console.error("Error logging in:", error);
+            console.error("Auth: Error al iniciar sesión:", error.code, error.message);
             let errorMessage = "Error al iniciar sesión. Verifica tus credenciales.";
             if (error.code === 'auth/user-not-found') {
                 errorMessage = "Usuario no encontrado. Regístrate si no tienes una cuenta.";
@@ -879,6 +871,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorMessage = "Contraseña incorrecta.";
             } else if (error.code === 'auth/invalid-email') {
                 errorMessage = "Formato de correo electrónico inválido.";
+            } else if (error.code === 'auth/too-many-requests') {
+                errorMessage = "Demasiados intentos fallidos. Inténtalo de nuevo más tarde.";
             }
             loginMessage.textContent = errorMessage;
             loginMessage.classList.remove('success-message');
@@ -903,28 +897,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // 1. Crear usuario en Firebase Authentication
+            console.log("Auth: Intentando registrar usuario:", email);
             const userCredential = await window.createUserWithEmailAndPassword(window.firebaseAuth, email, password);
             const user = userCredential.user;
-            console.log("User registered in Firebase Auth:", user.uid);
+            console.log("Auth: Usuario registrado en Firebase Auth:", user.uid);
 
-            // 2. Guardar detalles del usuario (incluyendo el rol 'client') en Firestore
             const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
             await window.setDoc(userDocRef, {
                 email: email,
                 role: 'client', // Por defecto, todos los nuevos registros son 'cliente'
                 registrationDate: new Date(),
             });
-            console.log("User role and metadata saved to Firestore.");
+            console.log("Firestore: Rol de usuario y metadatos guardados.");
 
-            // 3. Guardar una entrada en la colección 'registered_clients' para el panel de admin
             await window.addDoc(window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`), {
-                uid: user.uid, // Guardar el UID para referencia
+                uid: user.uid,
                 email: email,
                 password: password, // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
                 registrationDate: new Date(),
             });
-            console.log("User details saved to registered_clients collection for admin panel.");
+            console.log("Firestore: Detalles del usuario guardados en 'registered_clients'.");
 
             registerMessage.textContent = '¡Registro exitoso! Ahora puedes iniciar sesión.';
             registerMessage.classList.remove('error-message');
@@ -937,7 +929,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000);
 
         } catch (error) {
-            console.error("Error al registrar usuario:", error);
+            console.error("Auth: Error al registrar usuario:", error.code, error.message);
             let errorMessage = "Error al registrar. Inténtalo de nuevo.";
             if (error.code === 'auth/email-already-in-use') {
                 errorMessage = "El correo electrónico ya está en uso.";
@@ -977,22 +969,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // ADVERTENCIA DE SEGURIDAD CRÍTICA:
-            // En un entorno de producción real, NUNCA se debería permitir que el frontend
-            // actualice la contraseña de otro usuario directamente. Esto requiere privilegios de administrador
-            // que solo deben manejarse en un entorno de servidor seguro (ej. Firebase Cloud Functions
-            // con Firebase Admin SDK).
-            //
-            // Aquí, actualizaremos la contraseña almacenada en el documento de Firestore del cliente
-            // en la colección `registered_clients`. Esto NO CAMBIA la contraseña en Firebase Authentication.
-            // Si quieres que la contraseña de Firebase Authentication se actualice, necesitarías
-            // una función de backend (Cloud Function) que use el Admin SDK de Firebase.
-            //
-            // Dado que el objetivo es que el admin "restablezca" para su control, y las contraseñas
-            // se guardan en texto plano en `registered_clients` (¡repito, INSEGURO para producción!),
-            // esta actualización solo afecta esa entrada.
-
-            // Primero, busca el documento del cliente en `registered_clients` por su UID
+            console.log(`Admin: Intentando restablecer contraseña para UID: ${clientUid}`);
             const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('uid', '==', clientUid));
             const querySnapshot = await window.getDocs(q);
@@ -1000,7 +977,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
                 await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
-                    password: newPassword // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
+                    password: newPassword
                 });
 
                 resetPasswordMessage.textContent = '¡Contraseña restablecida y actualizada en el panel!';
@@ -1008,8 +985,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetPasswordMessage.classList.add('success-message');
                 resetPasswordMessage.style.display = 'block';
                 
-                console.log(`Contraseña para el cliente ${resetClientEmailInput.value} restablecida.`);
-                // La tabla se re-renderizará automáticamente si el listener de onSnapshot está activo.
+                console.log(`Admin: Contraseña para el cliente ${resetClientEmailInput.value} restablecida en Firestore.`);
                 
                 setTimeout(() => {
                     closeAllModals();
@@ -1019,10 +995,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetPasswordMessage.classList.remove('success-message');
                 resetPasswordMessage.classList.add('error-message');
                 resetPasswordMessage.style.display = 'block';
+                console.warn(`Admin: Cliente con UID ${clientUid} no encontrado en 'registered_clients'.`);
             }
 
         } catch (error) {
-            console.error("Error al restablecer contraseña del cliente:", error);
+            console.error("Admin: Error al restablecer contraseña del cliente:", error);
             resetPasswordMessage.textContent = `Error al restablecer: ${error.message}`;
             resetPasswordMessage.classList.remove('success-message');
             resetPasswordMessage.classList.add('error-message');
@@ -1036,7 +1013,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const oobCode = oobCodeInput.value;
         const newPassword = newPasswordResetInput.value;
         const confirmNewPassword = confirmNewPasswordResetInput.value;
-        const emailToReset = forgotEmailDisplay.value; // Obtener el email del campo de sólo lectura
+        const emailToReset = forgotEmailDisplay.value;
 
         if (newPassword !== confirmNewPassword) {
             forgotPasswordCodeMessage.textContent = 'Las contraseñas no coinciden.';
@@ -1055,11 +1032,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            console.log(`Attempting to confirm password reset for ${emailToReset} with oobCode: ${oobCode}`);
+            console.log(`Auth: Intentando confirmar restablecimiento de contraseña para ${emailToReset} con oobCode: ${oobCode}`);
             await window.confirmPasswordReset(window.firebaseAuth, oobCode, newPassword);
 
             // Opcional: Actualizar la contraseña en la colección 'registered_clients' si se está usando.
-            // ADVERTENCIA: Esto sigue siendo inseguro si se guarda en texto plano en producción.
             const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('email', '==', emailToReset));
             const querySnapshot = await window.getDocs(q);
@@ -1067,11 +1043,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
                 await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
-                    password: newPassword // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
+                    password: newPassword
                 });
-                console.log(`Password updated in 'registered_clients' for ${emailToReset}.`);
+                console.log(`Firestore: Contraseña actualizada en 'registered_clients' para ${emailToReset}.`);
             } else {
-                console.warn(`Client ${emailToReset} not found in 'registered_clients' collection. Password updated only in Firebase Auth.`);
+                console.warn(`Firestore: Cliente ${emailToReset} no encontrado en 'registered_clients'. Contraseña actualizada solo en Firebase Auth.`);
             }
 
             forgotPasswordCodeMessage.textContent = '¡Contraseña restablecida con éxito! Ahora puedes iniciar sesión con tu nueva contraseña.';
@@ -1080,11 +1056,11 @@ document.addEventListener('DOMContentLoaded', () => {
             forgotPasswordCodeMessage.style.display = 'block';
             
             setTimeout(() => {
-                showLoginForm(); // Volver al formulario de login
+                showLoginForm();
             }, 3000);
 
         } catch (error) {
-            console.error("Error al restablecer contraseña con código:", error.code, error.message); // Log de depuración con código y mensaje
+            console.error("Auth: Error al restablecer contraseña con código:", error.code, error.message);
             let errorMessage = "Error al restablecer contraseña. Verifica el código o inténtalo de nuevo.";
             if (error.code === 'auth/invalid-action-code') {
                 errorMessage = "El código de verificación es inválido o ha expirado.";
@@ -1108,26 +1084,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Lógica para Eliminar Cliente (por Admin) ---
     confirmDeleteBtn.addEventListener('click', async () => {
         const clientId = confirmDeleteBtn.dataset.clientId;
-        const clientUid = confirmDeleteBtn.dataset.clientUid; // Esto es el UID de Firebase Auth
+        const clientUid = confirmDeleteBtn.dataset.clientUid;
 
         try {
-            // Eliminar el documento del cliente de la colección 'registered_clients'
+            console.log(`Admin: Intentando eliminar cliente con ID: ${clientId}`);
             await window.deleteDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientId));
-            console.log(`Cliente con ID ${clientId} eliminado del panel.`);
-
-            // ADVERTENCIA DE SEGURIDAD:
-            // Para eliminar completamente al usuario de Firebase Authentication, se necesita el Admin SDK
-            // de Firebase, que solo puede ejecutarse en un entorno de servidor seguro (ej. Cloud Functions).
-            // Si se desea eliminar al usuario de Firebase Auth, se debería implementar una Cloud Function
-            // que reciba el UID del cliente y lo elimine de Auth.
-            //
-            // Ejemplo conceptual (NO EJECUTAR EN EL FRONTEND):
-            // firebase.auth().deleteUser(clientUid); // Esto NO funciona en el cliente.
-
-            // También se podría eliminar el documento de metadatos del usuario en la colección 'users'
-            // si se desea una limpieza completa en Firestore:
-            // await window.deleteDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, clientUid));
-            // Sin embargo, para este ejercicio, nos enfocamos en el panel de clientes.
+            console.log(`Admin: Cliente con ID ${clientId} eliminado del panel.`);
 
             deleteMessage.textContent = '¡Cliente eliminado con éxito del panel!';
             deleteMessage.classList.remove('error-message');
@@ -1139,7 +1101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000);
 
         } catch (error) {
-            console.error("Error al eliminar cliente:", error);
+            console.error("Admin: Error al eliminar cliente:", error);
             deleteMessage.textContent = `Error al eliminar: ${error.message}`;
             deleteMessage.classList.remove('success-message');
             deleteMessage.classList.add('error-message');

@@ -10,19 +10,13 @@
     <!-- Firebase SDKs -->
     <script type="module">
         // Importa los módulos necesarios de Firebase SDKs.
-        // Estos módulos son cruciales para la inicialización de la aplicación,
-        // la autenticación de usuarios y la interacción con la base de datos Firestore.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendPasswordResetEmail, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendPasswordResetEmail, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, doc, getDoc, setDoc, updateDoc, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Variables globales para la configuración de Firebase y el ID de la aplicación.
-        // Estas variables son proporcionadas por el entorno de Canvas.
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
         
-        // Si la configuración de Firebase proporcionada por Canvas está vacía,
-        // se usa una configuración de respaldo (tus credenciales de Firebase).
-        // Esto asegura que la aplicación pueda inicializarse incluso si el entorno no las inyecta.
         if (Object.keys(firebaseConfig).length === 0) {
             Object.assign(firebaseConfig, {
                 apiKey: "AIzaSyBPAASk4M0gCUv3kxRDrRPztLuEdU8lP80",
@@ -35,31 +29,21 @@
             });
         }
 
-        // Obtiene el ID de la aplicación, usando un valor por defecto si no está definido.
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        // Obtiene el token de autenticación inicial, si está disponible.
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // Inicializa la aplicación de Firebase con la configuración.
         const app = initializeApp(firebaseConfig);
-        // Obtiene la instancia de Firestore (base de datos).
         const db = getFirestore(app);
-        // Obtiene la instancia de Auth (autenticación).
         const auth = getAuth(app);
 
         // Expone los objetos y funciones de Firebase globalmente.
-        // Esto permite que el archivo `script.js` acceda a ellos directamente
-        // sin necesidad de re-importarlos o pasarlos como argumentos.
         window.firebaseApp = app;
         window.firebaseDb = db;
         window.firebaseAuth = auth;
-        window.__app_id = appId; // Se asegura que appId esté disponible globalmente
-        window.__initial_auth_token = initialAuthToken; // Se asegura que initialAuthToken esté disponible globalmente
+        window.__app_id = appId;
         window.addDoc = addDoc;
         window.collection = collection;
         window.onSnapshot = onSnapshot;
         window.query = query;
-        window.orderBy = orderBy;
         window.doc = doc;
         window.getDoc = getDoc;
         window.setDoc = setDoc;
@@ -70,40 +54,110 @@
         window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
         window.signInWithEmailAndPassword = signInWithEmailAndPassword;
         window.signOut = () => firebaseSignOut(auth);
-        window.onAuthStateChanged = onAuthStateChanged; // Expone onAuthStateChanged para ser usado en script.js
-        window.sendPasswordResetEmail = sendPasswordResetEmail; // Expone sendPasswordResetEmail
-        window.confirmPasswordReset = confirmPasswordReset; // Expone confirmPasswordReset
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.sendPasswordResetEmail = sendPasswordResetEmail;
+        window.confirmPasswordReset = confirmPasswordReset;
+
+        // Variable global para almacenar la función de desuscripción del listener de clientes
+        window.unsubscribeClientsListener = null;
 
         // Función para configurar un listener en tiempo real para los datos de clientes desde Firestore.
-        // Esta función se expone globalmente para ser llamada desde script.js cuando sea necesario.
-        function setupClientsRealtimeListener() {
-            // Define la referencia a la colección de clientes registrados.
-            // La ruta sigue el patrón recomendado para datos públicos en Canvas.
-            const clientsCollectionRef = collection(db, `artifacts/${appId}/public/data/registered_clients`);
-            
-            // Crea una consulta para ordenar los clientes por fecha de registro en orden descendente (los más nuevos primero).
-            const q = query(clientsCollectionRef, orderBy('registrationDate', 'desc'));
+        window.setupClientsRealtimeListener = function() {
+            // Si ya hay un listener activo, desuscribirse de él primero para evitar duplicados
+            if (window.unsubscribeClientsListener) {
+                window.unsubscribeClientsListener();
+                console.log("Firestore: Listener de clientes desuscrito (evitando duplicados).");
+                window.unsubscribeClientsListener = null;
+            }
 
-            // Configura el listener en tiempo real usando onSnapshot.
-            // Cada vez que los datos en la colección cambien, esta función se ejecutará.
-            onSnapshot(q, (snapshot) => {
-                const clientsFromDb = [];
-                // Itera sobre los documentos en la instantánea y los añade al array de clientes.
-                snapshot.forEach((doc) => {
-                    clientsFromDb.push({ id: doc.id, ...doc.data() });
+            // Solo configurar el listener si Firebase está completamente listo y el rol es admin
+            // La comprobación de rol se hará en handleAuthSuccess antes de llamar a esta función
+            if (window.firebaseDb && window.collection && window.onSnapshot && window.__app_id) {
+                console.log("Firestore: Configurando listener de clientes...");
+                const clientsCollectionRef = collection(db, `artifacts/${appId}/public/data/registered_clients`);
+                const q = query(clientsCollectionRef); // Sin orderBy aquí, se ordena en JS si es necesario
+
+                window.unsubscribeClientsListener = onSnapshot(q, (snapshot) => {
+                    const clientsFromDb = [];
+                    snapshot.forEach((doc) => {
+                        clientsFromDb.push({ id: doc.id, ...doc.data() });
+                    });
+                    // Ordenar clientes por fecha de registro en JS (más nuevos primero)
+                    clientsFromDb.sort((a, b) => {
+                        const dateA = a.registrationDate && typeof a.registrationDate.toDate === 'function' ? a.registrationDate.toDate() : new Date(0);
+                        const dateB = b.registrationDate && typeof b.registrationDate.toDate === 'function' ? b.registrationDate.toDate() : new Date(0);
+                        return dateB - dateA;
+                    });
+                    
+                    if (window.renderClients) {
+                        window.renderClients(clientsFromDb); 
+                        console.log("Firestore: Clientes renderizados en la tabla.");
+                    } else {
+                        console.warn("Firestore: La función renderClients aún no está disponible.");
+                    }
+                }, (error) => {
+                    console.error("Firestore: Error al obtener los datos del cliente:", error);
                 });
-                // Llama a la función global `renderClients` (definida en script.js) para actualizar la UI.
-                if (window.renderClients) {
-                    window.renderClients(clientsFromDb); 
+            } else {
+                console.log("Firestore: Firebase no está completamente listo para configurar el listener de clientes.");
+            }
+        };
+
+        // Lógica de autenticación inicial al cargar la página
+        onAuthStateChanged(auth, async (user) => {
+            console.log("Auth: onAuthStateChanged disparado.");
+            if (user) {
+                console.log("Auth: Usuario autenticado:", user.uid);
+                const userDocRef = doc(db, `artifacts/${appId}/users`, user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                let role = 'client';
+                if (userDocSnap.exists()) {
+                    role = userDocSnap.data().role;
+                    console.log("Auth: Rol del usuario desde Firestore:", role);
                 } else {
-                    console.warn("La función renderClients aún no está disponible. Los datos se renderizarán una vez que script.js se cargue.");
+                    await setDoc(userDocRef, { role: 'client', email: user.email }, { merge: true });
+                    console.log("Auth: Documento de usuario creado con rol 'client'.");
                 }
-            }, (error) => {
-                // Manejo de errores en caso de que la lectura de datos falle.
-                console.error("Error al obtener los datos del cliente:", error);
-            });
-        }
-        window.setupClientsRealtimeListener = setupClientsRealtimeListener; // Expone la función globalmente
+                window.currentUserRole = role;
+
+                if (window.handleAuthSuccess) {
+                    window.handleAuthSuccess(role);
+                } else {
+                    console.warn("Auth: window.handleAuthSuccess aún no está disponible en script.js.");
+                    // Si script.js no se ha cargado completamente, reintentar después de un breve retraso
+                    setTimeout(() => {
+                        if (window.handleAuthSuccess) {
+                            window.handleAuthSuccess(role);
+                        }
+                    }, 200);
+                }
+            } else {
+                console.log("Auth: Usuario no autenticado (o sesión cerrada).");
+                window.currentUserRole = null;
+                if (window.showSection) {
+                    window.showSection('auth-section');
+                } else {
+                    console.warn("Auth: window.showSection aún no está disponible en script.js.");
+                    // Si script.js no se ha cargado completamente, reintentar
+                    setTimeout(() => {
+                        if (window.showSection) {
+                            window.showSection('auth-section');
+                        }
+                    }, 200);
+                }
+                // Desuscribir el listener de clientes si no hay usuario autenticado
+                if (window.unsubscribeClientsListener) {
+                    window.unsubscribeClientsListener();
+                    window.unsubscribeClientsListener = null;
+                    console.log("Firestore: Listener de clientes desuscrito (usuario no autenticado).");
+                }
+            }
+        });
+
+        // NOTA: Se ha eliminado el bloque de signInAnonymously/signInWithCustomToken
+        // para asegurar que la aplicación no inicie sesión automáticamente.
+        // La autenticación ahora depende de las credenciales del usuario o de una sesión persistente.
     </script>
 </head>
 <body>
