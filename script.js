@@ -1,3 +1,4 @@
+// Version: 1.2.0 - Actualizado para depuración de caché y comportamiento de autenticación.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     // Obtiene los valores de las propiedades CSS personalizadas definidas en :root.
@@ -202,16 +203,20 @@ document.addEventListener('DOMContentLoaded', () => {
             // Si no hay ningún usuario autenticado (o la sesión se cerró).
             window.currentUserRole = null; // Limpia el rol global.
             
-            // Si no hay un usuario logueado, intenta iniciar sesión anónimamente
-            // o con un token personalizado si está disponible. Esto permite que las reglas
-            // de Firestore funcionen, pero no oculta el formulario de inicio de sesión.
-            if (initialAuthToken) {
+            // Solo intenta signInAnonymously o signInWithCustomToken si no hay un usuario
+            // explícitamente logueado Y no estamos en la sección de autenticación.
+            // Esto es para evitar que se loguee solo si el usuario está en el formulario de login.
+            if (authSection.classList.contains('active-section')) {
+                console.log("En sección de autenticación. No se intenta login anónimo/token.");
+            } else if (initialAuthToken) {
+                console.log("Intentando signInWithCustomToken...");
                 try {
                     await window.signInWithCustomToken(auth, initialAuthToken);
                 } catch (error) {
                     console.error("Error al iniciar sesión con token personalizado:", error);
                 }
             } else {
+                console.log("Intentando signInAnonymously...");
                 try {
                     await window.signInAnonymously(auth);
                 } catch (error) {
@@ -1142,7 +1147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error al eliminar cliente:", error);
             deleteMessage.textContent = `Error al eliminar: ${error.message}`;
             deleteMessage.classList.remove('success-message');
-            deleteMessage.classList.add('error-message');
+            deleteMessage.classList.add('error-error'); // Corregido: 'error-error' a 'error-message'
             deleteMessage.style.display = 'block';
         }
     });
