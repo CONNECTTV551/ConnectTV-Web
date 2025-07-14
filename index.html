@@ -10,6 +10,8 @@
     <!-- Firebase SDKs -->
     <script type="module">
         // Importa los módulos necesarios de Firebase SDKs.
+        // Estos módulos son cruciales para la inicialización de la aplicación,
+        // la autenticación de usuarios y la interacción con la base de datos Firestore.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendPasswordResetEmail, confirmPasswordReset, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"; // Añadido updatePassword
         import { getFirestore, collection, addDoc, onSnapshot, query, doc, getDoc, setDoc, updateDoc, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -139,7 +141,7 @@
                 if (window.showSection) {
                     window.showSection('auth-section');
                 } else {
-                    console.warn("Auth: window.showSection aún no está disponible en script.js.");
+                    console.warn("Auth: window.showSection aún no está disponible. Reintentando...");
                     setTimeout(() => {
                         if (window.showSection) {
                             window.showSection('auth-section');
@@ -156,6 +158,14 @@
     </script>
 </head>
 <body>
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="toast-container"></div>
+
     <!-- HEADER: Inicialmente oculto hasta que el usuario inicie sesión -->
     <header class="header hidden-on-auth">
         <div class="container">
@@ -187,22 +197,27 @@
         <section class="auth-section active-section" id="auth-section">
             <!-- El fondo animado se aplica directamente a .auth-section via CSS -->
 
-            <div class="auth-header-content">
-                <h1>Tu Acceso Ilimitado al <br> Panel de Administración</h1>
-                <p>Gestiona usuarios, productos y ventas con facilidad.</p>
+            <!-- Nuevo: Contenedor para el mensaje de bienvenida y el logo -->
+            <div class="auth-welcome-header">
+                <!-- RUTA DEL LOGO REAL: Asegúrate de que este archivo exista en tu carpeta 'img/' -->
+                <img src="img/connecttv-logo-small.png" alt="ConnectTV Logo" class="auth-logo">
+                <h1>Bienvenido a ConnectTV</h1>
+                <p>Tu portal al entretenimiento premium.</p>
             </div>
+
+            <!-- CONTENEDOR DE AUTENTICACIÓN: Contiene los formularios de inicio de sesión/registro -->
             <div class="auth-container">
                 <!-- Los formularios de inicio de sesión/registro se mostrarán aquí dinámicamente -->
                 <div id="login-form-container">
                     <h2>Iniciar Sesión</h2>
                     <form id="login-form">
-                        <div class="input-group">
-                            <label for="login-email">Correo Electrónico:</label>
-                            <input type="email" id="login-email" required placeholder="Tu correo electrónico">
+                        <div class="input-group input-float-group">
+                            <input type="email" id="login-email" required placeholder=" ">
+                            <label for="login-email">Correo Electrónico</label>
                         </div>
-                        <div class="input-group">
-                            <label for="login-password">Contraseña:</label>
-                            <input type="password" id="login-password" required placeholder="Tu contraseña">
+                        <div class="input-group input-float-group">
+                            <input type="password" id="login-password" required placeholder=" ">
+                            <label for="login-password">Contraseña</label>
                         </div>
                         <button type="submit" class="btn primary-btn">Ingresar</button>
                         <p id="login-message" class="message" style="display: none;"></p>
@@ -216,27 +231,28 @@
                 <div id="register-form-container" style="display: none;">
                     <h2>Crear Cuenta</h2>
                     <form id="register-form">
-                        <div class="input-group">
-                            <label for="register-name">Nombre:</label>
-                            <input type="text" id="register-name" required placeholder="Tu nombre">
+                        <div class="input-group input-float-group">
+                            <input type="text" id="register-name" required placeholder=" ">
+                            <label for="register-name">Nombre</label>
                         </div>
-                        <div class="input-group">
-                            <label for="register-lastname">Apellido:</label>
-                            <input type="text" id="register-lastname" required placeholder="Tu apellido">
+                        <div class="input-group input-float-group">
+                            <input type="text" id="register-lastname" required placeholder=" ">
+                            <label for="register-lastname">Apellido</label>
                         </div>
-                        <div class="input-group">
-                            <label for="register-email">Correo Electrónico:</label>
-                            <input type="email" id="register-email" required placeholder="Tu correo electrónico">
+                        <div class="input-group input-float-group">
+                            <input type="email" id="register-email" required placeholder=" ">
+                            <label for="register-email">Correo Electrónico</label>
                         </div>
-                        <div class="input-group">
-                            <label for="register-password">Contraseña:</label>
-                            <input type="password" id="register-password" required placeholder="Crea tu contraseña">
+                        <div class="input-group input-float-group">
+                            <input type="password" id="register-password" required placeholder=" ">
+                            <label for="register-password">Contraseña</label>
                         </div>
-                        <div class="input-group">
-                            <label for="confirm-password">Confirmar Contraseña:</label>
-                            <input type="password" id="confirm-password" required placeholder="Repite tu contraseña">
+                        <div class="input-group input-float-group">
+                            <input type="password" id="confirm-password" required placeholder=" ">
+                            <label for="confirm-password">Confirmar Contraseña</label>
                         </div>
                         <div class="input-group whatsapp-input-group">
+                            <!-- El label para WhatsApp se mantiene fuera del input-float-group para el select -->
                             <label for="register-whatsapp-code">WhatsApp:</label>
                             <div class="whatsapp-flex-container">
                                 <select id="register-whatsapp-code" class="whatsapp-code-select">
@@ -283,21 +299,21 @@
                         Se ha enviado un enlace de restablecimiento a tu correo. Por favor, ábrelo y copia el código (oobCode) de la URL para pegarlo aquí.
                     </p>
                     <form id="forgot-password-code-form">
-                        <div class="input-group">
-                            <label for="forgot-email-display">Correo Electrónico:</label>
-                            <input type="email" id="forgot-email-display" readonly>
+                        <div class="input-group input-float-group">
+                            <input type="email" id="forgot-email-display" readonly placeholder=" ">
+                            <label for="forgot-email-display">Correo Electrónico</label>
                         </div>
-                        <div class="input-group">
-                            <label for="oob-code">Código de Verificación:</label>
-                            <input type="text" id="oob-code" required placeholder="Pega el código de tu correo">
+                        <div class="input-group input-float-group">
+                            <input type="text" id="oob-code" required placeholder=" ">
+                            <label for="oob-code">Código de Verificación</label>
                         </div>
-                        <div class="input-group">
-                            <label for="new-password-reset">Nueva Contraseña:</label>
-                            <input type="password" id="new-password-reset" required placeholder="Ingresa tu nueva contraseña">
+                        <div class="input-group input-float-group">
+                            <input type="password" id="new-password-reset" required placeholder=" ">
+                            <label for="new-password-reset">Nueva Contraseña</label>
                         </div>
-                        <div class="input-group">
-                            <label for="confirm-new-password-reset">Confirmar Nueva Contraseña:</label>
-                            <input type="password" id="confirm-new-password-reset" required placeholder="Repite tu nueva contraseña">
+                        <div class="input-group input-float-group">
+                            <input type="password" id="confirm-new-password-reset" required placeholder=" ">
+                            <label for="confirm-new-password-reset">Confirmar Nueva Contraseña</label>
                         </div>
                         <button type="submit" class="btn primary-btn">Restablecer Contraseña</button>
                         <p id="forgot-password-code-message" class="message" style="display: none;"></p>
@@ -315,6 +331,8 @@
                 <div class="hero-buttons">
                     <button type="button" class="btn primary-btn help-support-btn" data-type="ayuda"><i class="fas fa-question-circle"></i> Ayuda</button>
                     <button type="button" class="btn secondary-btn help-support-btn" data-type="soporte"><i class="fas fa-headset"></i> Soporte</button>
+                    <!-- Nuevo botón para explorar servicios -->
+                    <button type="button" class="btn primary-btn explore-services-btn">Explorar Servicios</button>
                 </div>
             </div>
             <div class="carousel-container">
@@ -333,8 +351,8 @@
                 <div class="mySlides fade">
                     <img src="img/estreno5.jpg" alt="Estreno de Película 5">
                 </div>
-                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                <a class="prev" onclick="plusSlides(-1)"><i class="fas fa-chevron-left"></i></a>
+                <a class="next" onclick="plusSlides(1)"><i class="fas fa-chevron-right"></i></a>
             </div>
             <div class="dot-navigation">
                 <span class="dot" onclick="currentSlide(1)"></span>
@@ -350,15 +368,6 @@
                 <h2>Cuentas Completas Disponibles</h2>
                 <div class="carousel" id="full-accounts-carousel">
                     <!-- Las tarjetas de servicio se cargarán aquí con JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <section class="content-rows hidden-section" id="shared-profiles-section">
-            <div class="container">
-                <h2>Perfiles Compartidos al Instante</h2>
-                <div class="carousel" id="shared-profiles-carousel">
-                    <!-- Las tarjetas de perfil se cargarán aquí con JavaScript -->
                 </div>
             </div>
         </section>
@@ -402,18 +411,9 @@
         </div>
     </footer>
 
-    <!-- PANEL DE PRECIOS: Inicialmente oculto hasta que el usuario inicie sesión -->
-    <div id="pricing-panel" class="pricing-panel hidden-on-auth">
-        <button type="button" class="pricing-toggle-btn"><i class="fas fa-dollar-sign"></i> Precios</button>
-        <div class="pricing-content">
-            <h4>Ajustar Tasa de Cambio</h4>
-            <div class="rate-input-group">
-                <label for="usd-to-ves-rate">1 USD = </label>
-                <input type="number" id="usd-to-ves-rate" step="0.01" value="36.50">
-                <span>VES</span>
-            </div>
-            <button type="button" class="btn primary-btn apply-rate-btn">Aplicar Tasa</button>
-        </div>
+    <!-- PANEL DE WHATSAPP FLOTANTE -->
+    <div id="whatsapp-panel" class="whatsapp-panel hidden-on-auth">
+        <button type="button" class="whatsapp-toggle-btn" title="Soporte WhatsApp"><i class="fab fa-whatsapp"></i></button>
     </div>
 
     <!-- Modales (no ocultos inicialmente ya que son modales) -->
@@ -422,15 +422,18 @@
             <span class="close-button">&times;</span>
             <h3>Renovar Cuenta</h3>
             <form id="renewal-form">
-                <label for="client-name">Nombre del Cliente:</label>
-                <input type="text" id="client-name" required>
-
-                <label for="whatsapp">WhatsApp:</label>
-                <input type="text" id="whatsapp" required>
-
-                <label for="renewal-text">Escribe "renovar" para confirmar:</label>
-                <input type="text" id="renewal-text" required>
-
+                <div class="input-group input-float-group">
+                    <input type="text" id="client-name" required placeholder=" ">
+                    <label for="client-name">Nombre del Cliente</label>
+                </div>
+                <div class="input-group input-float-group">
+                    <input type="text" id="whatsapp" required placeholder=" ">
+                    <label for="whatsapp">WhatsApp</label>
+                </div>
+                <div class="input-group input-float-group">
+                    <input type="text" id="renewal-text" required placeholder=" ">
+                    <label for="renewal-text">Escribe "renovar" para confirmar</label>
+                </div>
                 <button type="submit" class="btn primary-btn">Renovar</button>
             </form>
             <p id="renewal-message" class="success-message" style="display: none;"></p>
@@ -442,20 +445,25 @@
             <span class="close-button">&times;</span>
             <h3>Reportar Falla</h3>
             <form id="report-form">
-                <label for="reported-email">Correo de la cuenta:</label>
-                <input type="email" id="reported-email" readonly> 
-                <label for="reported-password">Contraseña (opcional):</label>
-                <input type="password" id="reported-password">
-
-                <label for="reported-country">País:</label>
-                <select id="reported-country" required>
-                    <option value="">Selecciona un país</option>
-                    <!-- Las opciones de país se cargarán con JS -->
-                </select>
-
-                <label for="issue-description">Descripción de la falla:</label>
-                <textarea id="issue-description" rows="4" required></textarea>
-
+                <div class="input-group input-float-group">
+                    <input type="email" id="reported-email" readonly placeholder=" ">
+                    <label for="reported-email">Correo de la cuenta</label>
+                </div>
+                <div class="input-group input-float-group">
+                    <input type="password" id="reported-password" placeholder=" ">
+                    <label for="reported-password">Contraseña (opcional)</label>
+                </div>
+                <div class="input-group">
+                    <label for="reported-country">País:</label>
+                    <select id="reported-country" required>
+                        <option value="">Selecciona un país</option>
+                        <!-- Las opciones de país se cargarán con JS -->
+                    </select>
+                </div>
+                <div class="input-group input-float-group">
+                    <textarea id="issue-description" rows="4" required placeholder=" "></textarea>
+                    <label for="issue-description">Descripción de la falla</label>
+                </div>
                 <button type="submit" class="btn primary-btn">Enviar Reporte</button>
             </form>
             <p id="report-message" class="success-message" style="display: none;"></p>
@@ -545,9 +553,10 @@
 
             <!-- Campos para comprobante de pago -->
             <form id="payment-proof-form">
-                <label for="customer-name">Tu Nombre Completo:</label>
-                <input type="text" id="customer-name" required placeholder="Ej: Juan Pérez">
-
+                <div class="input-group input-float-group">
+                    <input type="text" id="customer-name" required placeholder=" ">
+                    <label for="customer-name">Tu Nombre Completo</label>
+                </div>
                 <label for="payment-proof">Subir Comprobante de Pago:</label>
                 <input type="file" id="payment-proof" accept="image/*" required>
                 <div class="image-preview" id="image-preview">
@@ -555,15 +564,18 @@
                     <img src="" alt="Previsualización del Comprobante" style="display: none;" class="preview-image">
                 </div>
 
-                <label for="payment-date">Fecha del Pago:</label>
-                <input type="date" id="payment-date" required>
-
-                <label for="payment-time">Hora del Pago:</label>
-                <input type="time" id="payment-time" required>
-
-                <label for="transaction-id">ID de la Transacción:</label>
-                <input type="text" id="transaction-id" placeholder="Ej: 1234567890" required>
-
+                <div class="input-group input-float-group">
+                    <input type="date" id="payment-date" required placeholder=" ">
+                    <label for="payment-date">Fecha del Pago</label>
+                </div>
+                <div class="input-group input-float-group">
+                    <input type="time" id="payment-time" required placeholder=" ">
+                    <label for="payment-time">Hora del Pago</label>
+                </div>
+                <div class="input-group input-float-group">
+                    <input type="text" id="transaction-id" placeholder=" " required>
+                    <label for="transaction-id">ID de la Transacción</label>
+                </div>
                 <button type="submit" class="btn primary-btn">Enviar Comprobante y Contactar</button>
             </form>
             <p id="payment-message" class="success-message" style="display: none;"></p>
@@ -594,20 +606,23 @@
             <p class="instruction-message">
                 Establece una contraseña temporal para el cliente.
                 <br>
-                <strong style="color: var(--error-color);">¡IMPORTANTE!</strong> Después de establecerla aquí,
+                <strong style="color: var(--error-color);">¡IMPORTANT!</strong> Después de establecerla aquí,
                 <strong style="color: var(--error-color);">DEBES CAMBIAR MANUALMENTE LA CONTRASEÑA DE ESTE USUARIO EN LA CONSOLA DE FIREBASE AUTHENTICATION</strong>
                 a esta misma contraseña temporal para que el cliente pueda iniciar sesión con ella.
             </p>
             <form id="reset-password-form">
-                <label for="reset-client-email">Correo del Cliente:</label>
-                <input type="email" id="reset-client-email" readonly>
-                
-                <label for="new-password">Nueva Contraseña Temporal:</label>
-                <input type="password" id="new-password" required placeholder="Ej: 12345678">
-                
-                <label for="confirm-new-password">Confirmar Contraseña Temporal:</label>
-                <input type="password" id="confirm-new-password" required placeholder="Repite la contraseña temporal">
-                
+                <div class="input-group input-float-group">
+                    <input type="email" id="reset-client-email" readonly placeholder=" ">
+                    <label for="reset-client-email">Correo del Cliente</label>
+                </div>
+                <div class="input-group input-float-group">
+                    <input type="password" id="new-password" required placeholder=" ">
+                    <label for="new-password">Nueva Contraseña Temporal</label>
+                </div>
+                <div class="input-group input-float-group">
+                    <input type="password" id="confirm-new-password" required placeholder=" ">
+                    <label for="confirm-new-password">Confirmar Contraseña Temporal</label>
+                </div>
                 <button type="submit" class="btn primary-btn">Establecer Contraseña Temporal</button>
             </form>
             <p id="reset-password-message" class="message" style="display: none;"></p>
@@ -623,15 +638,18 @@
                 Tu contraseña actual es temporal. Por favor, establece una nueva contraseña segura.
             </p>
             <form id="change-password-form">
-                <label for="current-user-email-display">Tu Correo Electrónico:</label>
-                <input type="email" id="current-user-email-display" readonly>
-
-                <label for="new-password-client">Nueva Contraseña:</label>
-                <input type="password" id="new-password-client" required placeholder="Ingresa tu nueva contraseña">
-                
-                <label for="confirm-new-password-client">Confirmar Nueva Contraseña:</label>
-                <input type="password" id="confirm-new-password-client" required placeholder="Repite tu nueva contraseña">
-                
+                <div class="input-group input-float-group">
+                    <input type="email" id="current-user-email-display" readonly placeholder=" ">
+                    <label for="current-user-email-display">Tu Correo Electrónico</label>
+                </div>
+                <div class="input-group input-float-group">
+                    <input type="password" id="new-password-client" required placeholder=" ">
+                    <label for="new-password-client">Nueva Contraseña</label>
+                </div>
+                <div class="input-group input-float-group">
+                    <input type="password" id="confirm-new-password-client" required placeholder=" ">
+                    <label for="confirm-new-password-client">Confirmar Nueva Contraseña</label>
+                </div>
                 <button type="submit" class="btn primary-btn">Cambiar Contraseña</button>
             </form>
             <p id="change-password-message" class="message" style="display: none;"></p>

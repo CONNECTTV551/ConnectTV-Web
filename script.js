@@ -1,4 +1,4 @@
-// Version: 1.9.1 - Asegura que el botón de registro se habilite después de que Firebase Auth se inicialice.
+// Version: 1.9.3 - Añadida comprobación de existencia para los elementos del carrusel.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -6,7 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorColor = computedStyle.getPropertyValue('--error-color');
 
     // --- Variables Globales para Precios ---
-    let usdToVesRate = parseFloat(document.getElementById('usd-to-ves-rate').value); // Tasa de cambio inicial
+    // NOTA: usdToVesRate ya no se obtiene de un input en el panel flotante,
+    // se puede inicializar aquí o cargar desde otro lugar si es necesario.
+    // Para simplificar, lo inicializamos con un valor por defecto.
+    let usdToVesRate = 36.00; // Tasa de cambio inicial por defecto
     const WHATSAPP_LINK = "https://walink.co/9fd827"; // Tu enlace de WhatsApp
 
     // --- Contraseña Temporal (¡ADVERTENCIA DE SEGURIDAD!) ---
@@ -25,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeDots = document.querySelectorAll('.dot');
 
     function showHomeSlides(n) {
+        if (homeSlides.length === 0) return; // Evitar errores si no hay slides
+
         if (n >= homeSlides.length) {
             homeSlideIndex = 0;
         } else if (n < 0) {
@@ -71,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('main section');
     const headerElement = document.querySelector('.header');
     const footerElement = document.querySelector('.footer');
-    const pricingPanelElement = document.getElementById('pricing-panel');
+    const whatsappPanelElement = document.getElementById('whatsapp-panel'); 
     const authSection = document.getElementById('auth-section');
     const logoutLink = document.getElementById('logout-link');
     const clientsPanelNavLink = document.getElementById('clients-panel-nav-link'); // Enlace del panel de clientes
@@ -94,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Lógica de visibilidad de elementos globales (header, footer, pricing panel)
+        // Lógica de visibilidad de elementos globales (header, footer, whatsapp panel)
         // El modal de cambio de contraseña es una excepción, no oculta el header/footer si está activo
         const isChangePasswordModalActive = document.getElementById('change-password-modal').classList.contains('show');
 
@@ -102,7 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("UI: Ocultando elementos para auth-section.");
             headerElement.classList.add('hidden-on-auth');
             footerElement.classList.add('hidden-on-auth');
-            pricingPanelElement.classList.add('hidden-on-auth');
+            if (whatsappPanelElement) { 
+                whatsappPanelElement.classList.add('hidden-on-auth');
+            }
             logoutLink.classList.add('hidden-on-auth');
             clientsPanelNavLink.classList.add('hidden-on-auth'); // Siempre ocultar en la sección de autenticación
             clearTimeout(homeSlideTimer); // Detener el carrusel de la sección Home
@@ -118,7 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("UI: Mostrando elementos para secciones de contenido.");
             headerElement.classList.remove('hidden-on-auth');
             footerElement.classList.remove('hidden-on-auth');
-            pricingPanelElement.classList.remove('hidden-on-auth');
+            if (whatsappPanelElement) {
+                whatsappPanelElement.classList.remove('hidden-on-auth');
+            }
             logoutLink.classList.remove('hidden-on-auth');
             authSection.classList.add('hidden-section'); // Asegurarse de ocultar auth
 
@@ -307,15 +316,25 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Services: Renderizando todas las tarjetas de servicio.");
         const fullAccountsCarousel = document.getElementById('full-accounts-carousel');
         const sharedProfilesCarousel = document.getElementById('shared-profiles-carousel');
-        fullAccountsCarousel.innerHTML = '';
-        fullAccountsData.forEach(service => {
-            fullAccountsCarousel.appendChild(createServiceCard(service));
-        });
+        
+        // Añadir comprobación de nulidad antes de usar innerHTML
+        if (fullAccountsCarousel) {
+            fullAccountsCarousel.innerHTML = '';
+            fullAccountsData.forEach(service => {
+                fullAccountsCarousel.appendChild(createServiceCard(service));
+            });
+        } else {
+            console.warn("Services: Elemento 'full-accounts-carousel' no encontrado. No se pudieron renderizar las tarjetas de cuentas completas.");
+        }
 
-        sharedProfilesCarousel.innerHTML = '';
-        sharedProfilesData.forEach(service => {
-            sharedProfilesCarousel.appendChild(createServiceCard(service));
-        });
+        if (sharedProfilesCarousel) {
+            sharedProfilesCarousel.innerHTML = '';
+            sharedProfilesData.forEach(service => {
+                sharedProfilesCarousel.appendChild(createServiceCard(service));
+            });
+        } else {
+            console.warn("Services: Elemento 'shared-profiles-carousel' no encontrado. No se pudieron renderizar las tarjetas de perfiles compartidos.");
+        }
     }
     renderAllServiceCards();
 
@@ -687,69 +706,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 5000);
     });
 
-    // --- Panel de Precios Desplegable ---
-    const pricingToggleBtn = document.querySelector('.pricing-toggle-btn');
-    const pricingContent = document.querySelector('.pricing-content');
-    const usdToVesRateInput = document.getElementById('usd-to-ves-rate');
-    const applyRateBtn = document.querySelector('.apply-rate-btn');
-
-    pricingToggleBtn.addEventListener('click', () => {
-        pricingPanelElement.classList.toggle('expanded');
-        if (pricingPanelElement.classList.contains('expanded')) {
-            pricingContent.style.maxHeight = pricingContent.scrollHeight + "px";
-            pricingContent.style.paddingTop = '15px';
-            pricingContent.style.paddingBottom = '20px';
-        } else {
-            pricingContent.style.maxHeight = null;
-            pricingContent.style.paddingTop = '0';
-            pricingContent.style.paddingBottom = '0';
-            setTimeout(() => {
-                pricingPanelElement.style.width = '60px';
-                pricingPanelElement.style.height = '60px';
-                pricingToggleBtn.style.borderRadius = '50%';
-                pricingToggleBtn.style.width = '60px';
-                pricingToggleBtn.style.height = '60px';
-                pricingToggleBtn.style.fontSize = '1.5em';
-                pricingToggleBtn.style.justifyContent = 'center';
-                pricingToggleBtn.querySelector('i').style.marginRight = '0';
-            }, 400);
-        }
-    });
-
-    applyRateBtn.addEventListener('click', () => {
-        const newRate = parseFloat(usdToVesRateInput.value);
-        if (!isNaN(newRate) && newRate > 0) {
-            usdToVesRate = newRate;
-            renderAllServiceCards();
-            if (buyModal.style.display === 'flex') {
-                paymentAmountVesDisplay.textContent = `Bs. ${(parseFloat(selectedService.usdPrice) * usdToVesRate).toFixed(2)}`;
-            }
-            const tempMessage = document.createElement('div');
-            tempMessage.textContent = `Tasa de cambio actualizada: 1 USD = ${usdToVesRate.toFixed(2)} VES`;
-            tempMessage.style.cssText = `
-                position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-                background-color: var(--success-color); color: white; padding: 10px 20px;
-                border-radius: 5px; z-index: 9999; opacity: 0; transition: opacity 0.5s ease-in-out;
-            `;
-            document.body.appendChild(tempMessage);
-            setTimeout(() => { tempMessage.style.opacity = '1'; }, 10);
-            setTimeout(() => { tempMessage.style.opacity = '0'; }, 3000);
-            setTimeout(() => { tempMessage.remove(); }, 3500);
-
-        } else {
-            const tempMessage = document.createElement('div');
-            tempMessage.textContent = 'Por favor, ingresa una tasa de cambio válida.';
-            tempMessage.style.cssText = `
-                position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-                background-color: var(--error-color); color: white; padding: 10px 20px;
-                border-radius: 5px; z-index: 9999; opacity: 0; transition: opacity 0.5s ease-in-out;
-            `;
-            document.body.appendChild(tempMessage);
-            setTimeout(() => { tempMessage.style.opacity = '1'; }, 10);
-            setTimeout(() => { tempMessage.style.opacity = '0'; }, 3000);
-            setTimeout(() => { tempMessage.remove(); }, 3500);
-        }
-    });
+    // --- Panel de Precios Desplegable (Lógica Eliminada/Refactorizada) ---
+    // Se ha eliminado la lógica del panel de precios desplegable ya que el HTML fue modificado
+    // para un simple botón de WhatsApp.
+    // Si necesitas una funcionalidad similar para la tasa de cambio, se puede implementar
+    // de otra manera, por ejemplo, un modal de configuración para administradores.
 
     // --- Modal de Detalles ---
     const detailsServiceName = document.getElementById('details-service-name');
@@ -1187,7 +1148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (newPassword.length < 6) {
             changePasswordMessage.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
             changePasswordMessage.classList.remove('success-message');
-            changePasswordMessage.classList.add('error-message');
+            changePasswordMessage.classList.add('error-error'); // CORRECCIÓN: Cambiado de 'error-message' a 'error-error'
             changePasswordMessage.style.display = 'block';
             return;
         }
