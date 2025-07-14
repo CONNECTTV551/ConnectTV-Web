@@ -1,4 +1,4 @@
-// Version: 1.9.3 - Añadida comprobación de existencia para los elementos del carrusel.
+// Version: 1.9.4 - Corrección de error al inicializar usdToVesRate.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -6,9 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorColor = computedStyle.getPropertyValue('--error-color');
 
     // --- Variables Globales para Precios ---
-    // NOTA: usdToVesRate ya no se obtiene de un input en el panel flotante,
-    // se puede inicializar aquí o cargar desde otro lugar si es necesario.
-    // Para simplificar, lo inicializamos con un valor por defecto.
+    // Se inicializa usdToVesRate con un valor por defecto.
+    // El elemento 'usd-to-ves-rate' ya no existe en el HTML.
     let usdToVesRate = 36.00; // Tasa de cambio inicial por defecto
     const WHATSAPP_LINK = "https://walink.co/9fd827"; // Tu enlace de WhatsApp
 
@@ -1148,7 +1147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (newPassword.length < 6) {
             changePasswordMessage.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
             changePasswordMessage.classList.remove('success-message');
-            changePasswordMessage.classList.add('error-error'); // CORRECCIÓN: Cambiado de 'error-message' a 'error-error'
+            changePasswordMessage.classList.add('error-message'); // CORRECCIÓN: Cambiado de 'error-error' a 'error-message'
             changePasswordMessage.style.display = 'block';
             return;
         }
