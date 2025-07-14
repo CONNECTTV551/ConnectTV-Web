@@ -1,4 +1,4 @@
-// Version: 1.9.4 - Corrección de error al inicializar usdToVesRate.
+// Version: 1.9.7 - Eliminada columna 'Corte' del panel de clientes.
 document.addEventListener('DOMContentLoaded', () => {
     // --- Variables de CSS para colores ---
     const computedStyle = getComputedStyle(document.body);
@@ -6,17 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorColor = computedStyle.getPropertyValue('--error-color');
 
     // --- Variables Globales para Precios ---
-    // Se inicializa usdToVesRate con un valor por defecto.
-    // El elemento 'usd-to-ves-rate' ya no existe en el HTML.
     let usdToVesRate = 36.00; // Tasa de cambio inicial por defecto
     const WHATSAPP_LINK = "https://walink.co/9fd827"; // Tu enlace de WhatsApp
 
     // --- Contraseña Temporal (¡ADVERTENCIA DE SEGURIDAD!) ---
-    // Define la contraseña temporal que el administrador usará.
-    // ¡¡¡ADVERTENCIA: Esta contraseña se almacena en texto plano en Firestore!!!
-    // En un entorno de producción real, NUNCA almacenes contraseñas en texto plano.
-    // La forma segura sería usar Firebase Admin SDK en un backend para forzar un restablecimiento
-    // de contraseña que el usuario final completa, o para establecer una contraseña real de forma segura.
     const TEMPORARY_PASSWORD = "12345678"; // Contraseña temporal predefinida
 
     // --- Carrusel de Estrenos (Sección Home) ---
@@ -27,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeDots = document.querySelectorAll('.dot');
 
     function showHomeSlides(n) {
-        if (homeSlides.length === 0) return; // Evitar errores si no hay slides
+        if (homeSlides.length === 0) return; 
 
         if (n >= homeSlides.length) {
             homeSlideIndex = 0;
@@ -83,6 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Función para mostrar una sección específica y ocultar las demás
     window.showSection = function(sectionId) {
         console.log(`UI: Intentando mostrar sección: ${sectionId}`);
+        // DEBUG: Verificar si la sección de perfiles está siendo llamada
+        if (sectionId === 'shared-profiles-section') {
+            console.log("DEBUG: showSection llamada para 'shared-profiles-section'.");
+        }
+
         sections.forEach(section => {
             section.classList.remove('active-section');
             section.classList.add('hidden-section');
@@ -93,16 +91,20 @@ document.addEventListener('DOMContentLoaded', () => {
             targetSectionElement.classList.remove('hidden-section');
             targetSectionElement.classList.add('active-section');
             console.log(`UI: Sección ${sectionId} activada.`);
+            // DEBUG: Confirmar visibilidad de la sección de perfiles
+            if (sectionId === 'shared-profiles-section') {
+                console.log(`DEBUG: 'shared-profiles-section' display style: ${targetSectionElement.style.display}`);
+                console.log(`DEBUG: 'shared-profiles-section' class list: ${targetSectionElement.classList}`);
+            }
         } else {
             console.error(`UI: Sección con ID ${sectionId} no encontrada.`);
             return;
         }
 
         // Lógica de visibilidad de elementos globales (header, footer, whatsapp panel)
-        // El modal de cambio de contraseña es una excepción, no oculta el header/footer si está activo
         const isChangePasswordModalActive = document.getElementById('change-password-modal').classList.contains('show');
 
-        if (sectionId === 'auth-section' && !isChangePasswordModalActive) { // Solo ocultar si no es el modal de cambio de contraseña
+        if (sectionId === 'auth-section' && !isChangePasswordModalActive) {
             console.log("UI: Ocultando elementos para auth-section.");
             headerElement.classList.add('hidden-on-auth');
             footerElement.classList.add('hidden-on-auth');
@@ -110,17 +112,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 whatsappPanelElement.classList.add('hidden-on-auth');
             }
             logoutLink.classList.add('hidden-on-auth');
-            clientsPanelNavLink.classList.add('hidden-on-auth'); // Siempre ocultar en la sección de autenticación
-            clearTimeout(homeSlideTimer); // Detener el carrusel de la sección Home
+            clientsPanelNavLink.classList.add('hidden-on-auth');
+            clearTimeout(homeSlideTimer);
             
-            // Al ir a la sección de autenticación, desuscribir el listener de clientes si está activo
             if (window.unsubscribeClientsListener) {
                 window.unsubscribeClientsListener();
                 window.unsubscribeClientsListener = null;
                 console.log("UI: Listener de clientes desuscrito al ir a auth-section.");
             }
 
-        } else if (sectionId !== 'auth-section') { // Mostrar elementos si no es la sección de autenticación
+        } else if (sectionId !== 'auth-section') {
             console.log("UI: Mostrando elementos para secciones de contenido.");
             headerElement.classList.remove('hidden-on-auth');
             footerElement.classList.remove('hidden-on-auth');
@@ -128,21 +129,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 whatsappPanelElement.classList.remove('hidden-on-auth');
             }
             logoutLink.classList.remove('hidden-on-auth');
-            authSection.classList.add('hidden-section'); // Asegurarse de ocultar auth
+            authSection.classList.add('hidden-section');
 
-            // Control de visibilidad del enlace "Clientes" y activación del listener
             if (window.currentUserRole === 'admin') {
                 clientsPanelNavLink.classList.remove('hidden-on-auth');
                 console.log("UI: Enlace 'Clientes' visible (admin).");
                 if (sectionId === 'clients-panel-section') {
                     console.log("UI: En 'clients-panel-section', activando listener de clientes.");
                     if (window.setupClientsRealtimeListener) {
-                        window.setupClientsRealtimeListener(); // Llama a la función global de index.html
+                        window.setupClientsRealtimeListener();
                     } else {
                         console.error("UI: window.setupClientsRealtimeListener no está definido.");
                     }
                 } else {
-                    // Si no estamos en la sección de clientes pero somos admin, desuscribir el listener si estaba activo
                     if (window.unsubscribeClientsListener) {
                         window.unsubscribeClientsListener();
                         window.unsubscribeClientsListener = null;
@@ -152,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 clientsPanelNavLink.classList.add('hidden-on-auth');
                 console.log("UI: Enlace 'Clientes' oculto (no admin).");
-                // Si no somos admin, asegurarnos de que el listener de clientes no esté activo
                 if (window.unsubscribeClientsListener) {
                     window.unsubscribeClientsListener();
                     window.unsubscribeClientsListener = null;
@@ -168,9 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Actualizar el estado activo de los enlaces de navegación
         navLinks.forEach(link => link.classList.remove('active'));
-        // Solo activa el enlace si no estamos en el modal de cambio de contraseña
         if (sectionId !== 'change-password-modal') {
             const activeNavLink = document.querySelector(`.nav ul li a[data-section="${sectionId.replace('-section', '')}"]`);
             if (activeNavLink) {
@@ -179,12 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Manejar el éxito de autenticación para actualizar la UI
     window.handleAuthSuccess = async (role, userUid) => {
         console.log("Auth: handleAuthSuccess llamado con rol:", role, "y UID:", userUid);
 
         if (role === 'client') {
-            // Para clientes, verificar si la contraseña en Firestore es la temporal
             const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('uid', '==', userUid));
             const querySnapshot = await window.getDocs(q);
@@ -192,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
                 const clientData = clientDoc.data();
-                // Si la contraseña en Firestore coincide con la temporal, forzar el cambio
                 if (clientData.password === TEMPORARY_PASSWORD) {
                     document.getElementById('current-user-email-display').value = clientData.email;
                     document.getElementById('change-password-modal').style.display = 'flex';
@@ -200,16 +193,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('change-password-message').style.display = 'none';
                     document.getElementById('change-password-form').reset();
                     console.log("Auth: Contraseña temporal detectada en Firestore. Redirigiendo a cambio de contraseña.");
-                    return; // Detener el flujo normal, el modal se encargará
+                    return;
                 }
             }
         }
         
-        // Si no es cliente con contraseña temporal, o es admin, proceder con la redirección normal
         if (role === 'admin') {
-            window.showSection('clients-panel-section'); // Ir al panel de clientes si es admin
+            window.showSection('clients-panel-section');
         } else {
-            window.showSection('home-section'); // Ir a la sección de inicio si es cliente normal
+            window.showSection('home-section');
         }
     };
 
@@ -312,16 +304,21 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     function renderAllServiceCards() {
-        console.log("Services: Renderizando todas las tarjetas de servicio.");
+        console.log("Services: Iniciando renderizado de todas las tarjetas de servicio.");
         const fullAccountsCarousel = document.getElementById('full-accounts-carousel');
         const sharedProfilesCarousel = document.getElementById('shared-profiles-carousel');
         
-        // Añadir comprobación de nulidad antes de usar innerHTML
+        // DEBUG: Verificar si los elementos del carrusel son encontrados
+        console.log("DEBUG: fullAccountsCarousel element:", fullAccountsCarousel);
+        console.log("DEBUG: sharedProfilesCarousel element:", sharedProfilesCarousel);
+        console.log("DEBUG: sharedProfilesData content:", sharedProfilesData);
+
         if (fullAccountsCarousel) {
             fullAccountsCarousel.innerHTML = '';
             fullAccountsData.forEach(service => {
                 fullAccountsCarousel.appendChild(createServiceCard(service));
             });
+            console.log(`Services: ${fullAccountsData.length} tarjetas de cuentas completas renderizadas.`);
         } else {
             console.warn("Services: Elemento 'full-accounts-carousel' no encontrado. No se pudieron renderizar las tarjetas de cuentas completas.");
         }
@@ -331,11 +328,12 @@ document.addEventListener('DOMContentLoaded', () => {
             sharedProfilesData.forEach(service => {
                 sharedProfilesCarousel.appendChild(createServiceCard(service));
             });
+            console.log(`Services: ${sharedProfilesData.length} tarjetas de perfiles compartidos renderizadas.`);
         } else {
             console.warn("Services: Elemento 'shared-profiles-carousel' no encontrado. No se pudieron renderizar las tarjetas de perfiles compartidos.");
         }
     }
-    renderAllServiceCards();
+    renderAllServiceCards(); // Llama a la función para renderizar al cargar el DOM
 
     // --- Panel de Clientes (con Firestore y gestión de contraseña) ---
     const clientDataBody = document.getElementById('client-data-body');
@@ -387,8 +385,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Clients Panel: Renderizando clientes. Datos recibidos:", clientsData);
         clientDataBody.innerHTML = '';
         if (clientsData.length === 0) {
-            // Ajustar colspan a 7 (Correo, Nombre y Apellido, WhatsApp, Contraseña, Activación, Corte, Acciones)
-            clientDataBody.innerHTML = '<tr><td colspan="7"><p class="no-clients-message">No hay clientes registrados aún.</p></td></tr>';
+            // Ajustado colspan de 7 a 6 porque se eliminó la columna 'Corte'
+            clientDataBody.innerHTML = '<tr><td colspan="6"><p class="no-clients-message">No hay clientes registrados aún.</p></td></tr>';
             return;
         }
         clientsData.forEach(client => {
@@ -397,11 +395,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                      ? new Date(client.registrationDate.toDate()).toLocaleDateString() 
                                      : 'N/A';
             
-            // Determinar el nombre completo
             const fullName = (client.name || '') + (client.lastName ? ' ' + client.lastName : '');
             const displayFullName = fullName.trim() === '' ? 'N/A' : fullName;
 
-            // Formatear el número de WhatsApp
             const displayWhatsapp = (client.whatsappCountryCode || '') + (client.whatsappNumber || '');
             const formattedWhatsapp = displayWhatsapp.trim() === '' ? 'N/A' : displayWhatsapp;
 
@@ -416,7 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </button>
                 </td>
                 <td>${registrationDate}</td>
-                <td>N/A</td>
                 <td class="actions-cell">
                     <button type="button" class="reset-password-btn" data-client-uid="${client.uid}" data-client-email="${client.email}">Restablecer Contraseña</button>
                     <button type="button" class="delete-client-btn" data-client-id="${client.id}" data-client-uid="${client.uid}" data-client-email="${client.email}">Eliminar</button>
@@ -425,13 +420,12 @@ document.addEventListener('DOMContentLoaded', () => {
             clientDataBody.appendChild(row);
         });
 
-        // Event listeners para botones dinámicamente creados
         document.querySelectorAll('.reset-password-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const clientUid = e.target.dataset.clientUid;
                 const clientEmail = e.target.dataset.clientEmail;
-                resetClientEmailInput.value = clientEmail; // Mostrar el email del cliente
-                resetPasswordForm.dataset.clientUid = clientUid; // Guardar el UID en el formulario
+                resetClientEmailInput.value = clientEmail;
+                resetPasswordForm.dataset.clientUid = clientUid;
                 resetPasswordModal.style.display = 'flex';
                 resetPasswordModal.classList.add('show');
                 resetPasswordMessage.style.display = 'none';
@@ -445,17 +439,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const clientUid = e.target.dataset.clientUid;
                 const clientEmail = e.target.dataset.clientEmail;
 
-                clientToDeleteEmailDisplay.textContent = clientEmail; // Display email in confirmation modal
-                confirmDeleteBtn.dataset.clientId = clientId; // Store Firestore doc ID
-                confirmDeleteBtn.dataset.clientUid = clientUid; // Store Firebase Auth UID (if needed for future Admin SDK use)
+                clientToDeleteEmailDisplay.textContent = clientEmail;
+                confirmDeleteBtn.dataset.clientId = clientId;
+                confirmDeleteBtn.dataset.clientUid = clientUid;
 
                 deleteConfirmModal.style.display = 'flex';
                 deleteConfirmModal.classList.add('show');
-                deleteMessage.style.display = 'none'; // Hide previous messages
+                deleteMessage.style.display = 'none';
             });
         });
 
-        // Lógica para mostrar/ocultar contraseña en el panel de clientes
         document.querySelectorAll('.toggle-password-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const passwordDisplay = e.target.closest('.password-cell').querySelector('.password-display');
@@ -480,7 +473,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Firebase Readiness Check y Inicialización ---
     const registerSubmitBtn = document.getElementById('register-submit-btn');
-    // Deshabilita el botón de registro inicialmente para evitar interacciones antes de que Firebase esté listo.
     if (registerSubmitBtn) {
         registerSubmitBtn.disabled = true; 
         console.log("UI: Botón de registro inicialmente deshabilitado.");
@@ -500,14 +492,14 @@ document.addEventListener('DOMContentLoaded', () => {
         paymentProofForm.reset();
         paymentMessage.style.display = 'none';
         resetImagePreview();
-        resetPasswordForm.reset(); // Reset admin reset form
-        resetPasswordMessage.style.display = 'none'; // Hide admin reset message
-        forgotPasswordCodeForm.reset(); // Reset client code reset form
-        forgotPasswordCodeMessage.style.display = 'none'; // Hide client code reset message
-        deleteMessage.style.display = 'none'; // Clear delete message
-        changePasswordForm.reset(); // Reset client change password form
-        changePasswordMessage.style.display = 'none'; // Hide client change password message
-        showLoginForm(); // Siempre volver al formulario de login
+        resetPasswordForm.reset();
+        resetPasswordMessage.style.display = 'none';
+        forgotPasswordCodeForm.reset();
+        forgotPasswordCodeMessage.style.display = 'none';
+        deleteMessage.style.display = 'none';
+        changePasswordForm.reset();
+        changePasswordMessage.style.display = 'none';
+        showLoginForm();
     }
 
     closeButtons.forEach(button => {
@@ -516,9 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
-            // No cerrar el modal de cambio de contraseña si está activo y no se hace clic en el botón de cerrar
             if (e.target.id === 'change-password-modal' && changePasswordModal.classList.contains('show')) {
-                // Solo cerrar si se hace clic en el botón de cerrar dentro del modal
                 if (!e.target.classList.contains('close-button')) {
                     return; 
                 }
@@ -752,13 +742,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginMessage = document.getElementById('login-message');
 
     const registerForm = document.getElementById('register-form');
-    const registerNameInput = document.getElementById('register-name'); // Nuevo: Nombre
-    const registerLastNameInput = document.getElementById('register-lastname'); // Nuevo: Apellido
+    const registerNameInput = document.getElementById('register-name');
+    const registerLastNameInput = document.getElementById('register-lastname');
     const registerEmailInput = document.getElementById('register-email');
     const registerPasswordInput = document.getElementById('register-password');
     const confirmPasswordInput = document.getElementById('confirm-password');
-    const registerWhatsappCodeSelect = document.getElementById('register-whatsapp-code'); // Nuevo: Selector de código
-    const registerWhatsappNumberInput = document.getElementById('register-whatsapp-number'); // Nuevo: Número de WhatsApp
+    const registerWhatsappCodeSelect = document.getElementById('register-whatsapp-code');
+    const registerWhatsappNumberInput = document.getElementById('register-whatsapp-number');
     const registerMessage = document.getElementById('register-message');
 
     const forgotPasswordCodeForm = document.getElementById('forgot-password-code-form');
@@ -811,7 +801,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoginForm();
     });
 
-    // Maneja el clic en el enlace de "Olvidé mi contraseña" (para el cliente que olvidó su contraseña)
     showForgotPasswordLink.addEventListener('click', async (e) => {
         e.preventDefault();
         console.log("Auth: Clicked 'Olvidé mi contraseña' link.");
@@ -857,7 +846,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Maneja el envío del formulario de Login
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = loginEmailInput.value;
@@ -888,7 +876,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loginMessage.style.display = 'block';
             
             setTimeout(() => {
-                window.handleAuthSuccess(role, user.uid); // Pasamos el UID aquí
+                window.handleAuthSuccess(role, user.uid);
                 loginMessage.style.display = 'none';
             }, 1000);
 
@@ -911,16 +899,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Manejar el envío del formulario de Registro
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const name = registerNameInput.value; // Captura el nombre
-        const lastName = registerLastNameInput.value; // Captura el apellido
+        const name = registerNameInput.value;
+        const lastName = registerLastNameInput.value;
         const email = registerEmailInput.value;
         const password = registerPasswordInput.value;
         const confirmPassword = confirmPasswordInput.value;
-        const whatsappCountryCode = registerWhatsappCodeSelect.value; // Captura el código de país
-        const whatsappNumber = registerWhatsappNumberInput.value; // Captura el número de WhatsApp
+        const whatsappCountryCode = registerWhatsappCodeSelect.value;
+        const whatsappNumber = registerWhatsappNumberInput.value;
 
         if (password !== confirmPassword) {
             registerMessage.textContent = 'Las contraseñas no coinciden.';
@@ -939,7 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const userDocRef = window.doc(window.firebaseDb, `artifacts/${window.__app_id}/users`, user.uid);
             await window.setDoc(userDocRef, {
                 email: email,
-                role: 'client', // Por defecto, todos los nuevos registros son 'cliente'
+                role: 'client',
                 registrationDate: new Date(),
             });
             console.log("Firestore: Rol de usuario y metadatos guardados.");
@@ -947,12 +934,12 @@ document.addEventListener('DOMContentLoaded', () => {
             await window.addDoc(window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`), {
                 uid: user.uid,
                 email: email,
-                password: password, // ¡¡¡ADVERTENCIA DE SEGURIDAD: NO HACER ESTO EN PRODUCCIÓN!!!
+                password: password,
                 registrationDate: new Date(),
-                name: name, // Guarda el nombre
-                lastName: lastName, // Guarda el apellido
-                whatsappCountryCode: whatsappCountryCode, // Guarda el código de país de WhatsApp
-                whatsappNumber: whatsappNumber // Guarda el número de WhatsApp
+                name: name,
+                lastName: lastName,
+                whatsappCountryCode: whatsappCountryCode,
+                whatsappNumber: whatsappNumber
             });
             console.log("Firestore: Detalles del usuario guardados en 'registered_clients'.");
 
@@ -983,12 +970,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Lógica para Restablecer Contraseña del Cliente (por Admin) ---
-    // Este evento ahora establecerá una contraseña temporal en Firestore
     resetPasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const clientUid = resetPasswordForm.dataset.clientUid;
-        const newPassword = document.getElementById('new-password').value; // Nueva contraseña temporal
+        const newPassword = document.getElementById('new-password').value;
         const confirmNewPassword = document.getElementById('confirm-new-password').value;
 
         if (newPassword !== confirmNewPassword) {
@@ -1015,9 +1000,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
-                // ¡¡¡ADVERTENCIA DE SEGURIDAD: ALMACENANDO CONTRASEÑA EN TEXTO PLANO!!!
                 await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
-                    password: newPassword // Contraseña temporal
+                    password: newPassword
                 });
 
                 resetPasswordMessage.textContent = `¡Contraseña temporal "${newPassword}" establecida en el panel! Ahora, DEBES CAMBIAR MANUALMENTE LA CONTRASEÑA DE ESTE USUARIO EN LA CONSOLA DE FIREBASE AUTHENTICATION a esta misma contraseña temporal.`;
@@ -1029,7 +1013,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 setTimeout(() => {
                     closeAllModals();
-                }, 8000); // Dar más tiempo para leer el mensaje importante
+                }, 8000);
 
             } else {
                 resetPasswordMessage.textContent = 'Error: Cliente no encontrado en la base de datos de clientes.';
@@ -1048,7 +1032,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Lógica para el formulario de restablecimiento de contraseña con código (para el cliente) ---
     forgotPasswordCodeForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const oobCode = oobCodeInput.value;
@@ -1076,7 +1059,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Auth: Intentando confirmar restablecimiento de contraseña para ${emailToReset} con oobCode: ${oobCode}`);
             await window.confirmPasswordReset(window.firebaseAuth, oobCode, newPassword);
 
-            // Actualizar la contraseña en la colección 'registered_clients'
             const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('email', '==', emailToReset));
             const querySnapshot = await window.getDocs(q);
@@ -1084,7 +1066,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
                 await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
-                    password: newPassword // Actualiza la contraseña en Firestore
+                    password: newPassword
                 });
                 console.log(`Firestore: Contraseña actualizada en 'registered_clients' para ${emailToReset}.`);
             } else {
@@ -1121,12 +1103,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- NUEVA Lógica para que el Cliente Cambie su Contraseña Temporal ---
     changePasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const newPassword = newPasswordClientInput.value;
         const confirmNewPassword = confirmNewPasswordClientInput.value;
-        const currentUser = window.firebaseAuth.currentUser; // Obtener el usuario actualmente logueado
+        const currentUser = window.firebaseAuth.currentUser;
 
         if (!currentUser) {
             changePasswordMessage.textContent = 'Error: No hay usuario autenticado.';
@@ -1147,16 +1128,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (newPassword.length < 6) {
             changePasswordMessage.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
             changePasswordMessage.classList.remove('success-message');
-            changePasswordMessage.classList.add('error-message'); // CORRECCIÓN: Cambiado de 'error-error' a 'error-message'
+            changePasswordMessage.classList.add('error-message');
             changePasswordMessage.style.display = 'block';
             return;
         }
 
         try {
             console.log(`Client: Intentando actualizar contraseña en Firebase Auth para ${currentUser.email}`);
-            await window.updatePassword(currentUser, newPassword); // Actualiza la contraseña en Firebase Auth
+            await window.updatePassword(currentUser, newPassword);
 
-            // También actualiza la contraseña en la colección 'registered_clients'
             const clientsCollectionRef = window.collection(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`);
             const q = window.query(clientsCollectionRef, window.where('uid', '==', currentUser.uid));
             const querySnapshot = await window.getDocs(q);
@@ -1164,7 +1144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!querySnapshot.empty) {
                 const clientDoc = querySnapshot.docs[0];
                 await window.updateDoc(window.doc(window.firebaseDb, `artifacts/${window.__app_id}/public/data/registered_clients`, clientDoc.id), {
-                    password: newPassword // Actualiza la contraseña en Firestore
+                    password: newPassword
                 });
                 console.log(`Firestore: Contraseña actualizada en 'registered_clients' para ${currentUser.email}.`);
             } else {
@@ -1177,8 +1157,8 @@ document.addEventListener('DOMContentLoaded', () => {
             changePasswordMessage.style.display = 'block';
 
             setTimeout(() => {
-                closeAllModals(); // Cierra el modal de cambio de contraseña
-                window.showSection('home-section'); // Redirige al cliente a la sección de inicio
+                closeAllModals();
+                window.showSection('home-section');
             }, 2000);
 
         } catch (error) {
@@ -1196,8 +1176,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
-    // --- Lógica para Eliminar Cliente (por Admin) ---
     confirmDeleteBtn.addEventListener('click', async () => {
         const clientId = confirmDeleteBtn.dataset.clientId;
         const clientUid = confirmDeleteBtn.dataset.clientUid;
@@ -1229,12 +1207,8 @@ document.addEventListener('DOMContentLoaded', () => {
         closeAllModals();
     });
 
-    // Lógica de autenticación inicial al cargar la página
-    // Mueve esta sección al final del DOMContentLoaded para asegurar que todos los elementos estén cargados
-    // y las funciones como showSection y handleAuthSuccess estén definidas.
     window.onAuthStateChanged(window.firebaseAuth, async (user) => {
         console.log("Auth: onAuthStateChanged disparado.");
-        // Habilita el botón de registro tan pronto como el estado de autenticación de Firebase sea determinado.
         if (registerSubmitBtn) {
             registerSubmitBtn.disabled = false;
             console.log("UI: Botón de registro habilitado (Firebase Auth listo).");
