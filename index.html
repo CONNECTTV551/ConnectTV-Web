@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamWave - Inicio de Sesión</title>
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/colors.css">
+</head>
+<body>
+    <header>
+        <img src="img/logo.png" alt="StreamWave Logo" class="logo">
+        <h1>Bienvenido a StreamWave</h1>
+    </header>
+
+    <main>
+        <section id="auth-section">
+            <h2>Iniciar Sesión / Registrarse</h2>
+            <div id="message-box" class="message-box" style="display:none;"></div>
+            <form id="login-form">
+                <input type="email" id="email" placeholder="Correo Electrónico" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+            <p>¿No tienes cuenta? <a href="#" id="register-link">Regístrate aquí</a></p>
+            <form id="register-form" style="display:none;">
+                <input type="text" id="reg-name" placeholder="Nombre" required>
+                <input type="text" id="reg-lastname" placeholder="Apellido" required>
+                <input type="email" id="reg-email" placeholder="Correo Electrónico" required>
+                <input type="password" id="reg-password" placeholder="Contraseña" required>
+                <input type="text" id="reg-whatsapp" placeholder="Número de WhatsApp (opcional)">
+                <button type="submit">Registrarse</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 StreamWave. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Custom Modal for Alerts/Confirms -->
+    <div id="custom-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" id="modal-close-button">&times;</span>
+            <p id="modal-message"></p>
+            <div id="modal-actions" style="text-align: center; margin-top: 20px;">
+                <button id="modal-ok-button" style="display:none;">OK</button>
+                <button id="modal-confirm-button" style="display:none;">Confirmar</button>
+                <button id="modal-cancel-button" style="display:none;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Initialization Module -->
+    <script type="module" src="script/firebase-init.js"></script>
+    <!-- Main application logic module -->
+    <script type="module" src="script/main.js"></script>
+</body>
+</html>
