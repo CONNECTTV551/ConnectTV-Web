@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectTV - Acceso</title>
+    <!-- CSS de intl-tel-input para el campo de WhatsApp -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/css/intlTelInput.min.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/colors.css">
+    <!-- Fuentes de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="auth-header">
+            <!-- Asegúrate de que la ruta a tu logo sea correcta. Aquí asumo 'img/ConnectTV Logo.png' -->
+            <img src="img/ConnectTV Logo.png" alt="ConnectTV Logo" class="header-logo">
+            <h1>Bienvenido a ConnectTV</h1>
+        </header>
+
+        <main class="auth-main">
+            <!-- Caja de mensajes para notificaciones (éxito, error, info) -->
+            <div id="message-box" class="message-box" style="display:none;"></div>
+
+            <div class="auth-form-card">
+                <h2>Iniciar Sesión / Registrarse</h2>
+                
+                <!-- Formulario de Inicio de Sesión -->
+                <form id="login-form">
+                    <input type="email" id="email" placeholder="Correo Electrónico" required>
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                    <button type="submit" class="primary-button">Iniciar Sesión</button>
+                    <p class="form-switch-text">¿No tienes cuenta? <a href="#" id="register-link">Regístrate aquí</a></p>
+                </form>
+
+                <!-- Formulario de Registro (inicialmente oculto) -->
+                <form id="register-form" style="display:none;">
+                    <input type="text" id="reg-name" placeholder="Nombre" required>
+                    <input type="text" id="reg-lastname" placeholder="Apellido" required>
+                    <input type="email" id="reg-email" placeholder="Correo Electrónico" required>
+                    <input type="password" id="reg-password" placeholder="Contraseña" required>
+                    <!-- Campo de WhatsApp con intl-tel-input -->
+                    <input type="text" id="reg-whatsapp" placeholder="Número de WhatsApp (opcional)">
+                    <button type="submit" class="primary-button">Registrarse</button>
+                    <p class="form-switch-text">¿Ya tienes cuenta? <a href="#" id="login-link">Inicia Sesión</a></p>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal personalizado para alertas y confirmaciones -->
+    <div id="custom-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" id="modal-close-button">&times;</span>
+            <p id="modal-message"></p>
+            <div id="modal-actions">
+                <button id="modal-ok-button" class="primary-button" style="display:none;">OK</button>
+                <button id="modal-confirm-button" class="primary-button" style="display:none;">Confirmar</button>
+                <button id="modal-cancel-button" class="secondary-button" style="display:none;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 ConnectTV. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Scripts JavaScript -->
+    <!-- Script de intl-tel-input -->
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/intlTelInput.min.js"></script>
+    <!-- Módulos de Firebase y lógica de la aplicación (en este orden) -->
+    <script type="module" src="script/firebase-init.js"></script>
+    <script type="module" src="script/main.js"></script>
+    <script type="module" src="script/admin.js"></script> 
+</body>
+</html>

@@ -1,0 +1,46 @@
+/* style/colors.css */
+:root {
+    /* Colores principales para plataforma de streaming */
+    --primary-color: #1A202C;       /* Azul Oscuro Profundo (fondo de encabezado, footer, elementos oscuros) */
+    --secondary-color: #6366F1;     /* Índigo Vibrante (botones principales, acentos) */
+    --accent-color: #4F46E5;        /* Índigo Más Oscuro (hover de botones, acentos secundarios) */
+
+    /* Colores de texto */
+    --text-color: #334155;          /* Gris Pizarra Oscuro (texto general en fondos claros) */
+    --header-text-color: #E2E8F0;   /* Gris Claro (texto en encabezado oscuro) */
+    --nav-link-color: #CBD5E1;      /* Gris Azulado (links de navegación) */
+    --footer-text-color: #A0AEC0;   /* Gris Medio (texto del footer) */
+    --link-text-color: #6366F1;     /* Índigo Vibrante (enlaces en formularios, etc.) */
+
+    /* Colores de fondo */
+    --background-color: #F8FAFC;    /* Blanco Suave (fondo general del body) */
+    --card-background-color: #FFFFFF; /* Blanco Puro (tarjetas y secciones) */
+    --section-background-color: #FFFFFF; /* Blanco Puro (secciones de contenido) */
+    --form-background-color: #FFFFFF; /* Blanco Puro (fondo de formularios) */
+    --modal-background-color: #FFFFFF; /* Blanco Puro (modales) */
+
+    /* Bordes y líneas */
+    --border-color: #E2E8F0;        /* Gris Muy Claro (bordes) */
+    --input-border-color: #CBD5E1;  /* Gris Azulado (bordes de input) */
+    --table-border-color: #EDF2F7;  /* Gris Casi Blanco (bordes de tabla) */
+    --modal-border-color: #A0AEC0;  /* Gris Medio (bordes de modal) */
+
+    /* Botones */
+    --button-background-color: var(--secondary-color); /* Botones Índigo Vibrante */
+    --button-hover-color: var(--accent-color); /* Índigo Más Oscuro al pasar el ratón */
+    --button-text-color: #FFFFFF;  /* Texto blanco en botones */
+
+    /* Botones de eliminación */
+    --delete-button-color: #EF4444; /* Rojo para eliminar */
+    --delete-button-hover-color: #DC2626; /* Rojo más oscuro para eliminar */
+
+    /* Colores para mensajes (mantenerlos distintivos) */
+    --info-background: #E0F7FA; /* Cyan claro */
+    --info-color: #00796B;     /* Teal oscuro */
+    --success-background: #E8F5E9; /* Verde claro */
+    --success-color: #2E7D32;   /* Verde oscuro */
+    --error-background: #FFEBEE; /* Rojo claro */
+    --error-color: #C62828;     /* Rojo oscuro */
+    --warning-background: #FFFDE7; /* Amarillo claro */
+    --warning-color: #F9A825;   /* Naranja oscuro */
+}

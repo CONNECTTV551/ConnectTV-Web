@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectTV - Panel</title>
+    <!-- CSS de intl-tel-input, si es necesario también en el dashboard para el perfil -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/css/intlTelInput.min.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/colors.css">
+    <!-- Fuentes de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <img src="img/logo.png" alt="ConnectTV Logo" class="header-logo">
+            <h1>Panel de ConnectTV</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+                    <li><a href="#servicios" class="nav-link">Nuestros Servicios</a></li>
+                    <li><a href="#mis-suscripciones" class="nav-link">Mis Suscripciones</a></li>
+                    <!-- Elementos de navegación solo para administradores (ocultos por defecto) -->
+                    <li id="admin-clientes-nav" style="display:none;"><a href="#administrador-clientes" class="nav-link">Administración de Clientes</a></li>
+                    <li id="editar-pagina-nav" style="display:none;"><a href="#editar-pagina" class="nav-link">Editar Página</a></li>
+                    <li><button id="logout-btn" class="secondary-button">Cerrar Sesión</button></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="dashboard-main">
+            <!-- Caja de mensajes para notificaciones (éxito, error, info) -->
+            <div id="message-box" class="message-box" style="display:none;"></div>
+
+            <!-- Sección de Inicio del Panel de Usuario -->
+            <section id="inicio" class="card-section content-section">
+                <h2>Bienvenido a tu panel, <span id="user-display-name">Usuario</span>!</h2>
+                <p id="inicio-dynamic-content">Aquí encontrarás información relevante sobre tus suscripciones y novedades.</p>
+                <button id="edit-profile-btn" class="primary-button small-button">Editar Perfil</button>
+                
+                <!-- Formulario de Edición de Perfil (inicialmente oculto) -->
+                <form id="profile-edit-form" class="edit-form" style="display:none;">
+                    <h3>Editar Mi Perfil</h3>
+                    <input type="text" id="profile-name" placeholder="Nombre">
+                    <input type="text" id="profile-lastname" placeholder="Apellido">
+                    <input type="text" id="profile-whatsapp" placeholder="Número de WhatsApp">
+                    <button type="button" id="save-profile-btn" class="primary-button">Guardar Cambios</button>
+                </form>
+            </section>
+
+            <!-- Sección de Nuestros Servicios -->
+            <section id="servicios" class="card-section content-section" style="display:none;">
+                <h2>Nuestros Servicios</h2>
+                <div id="services-list" class="services-grid">
+                    <!-- Los servicios se cargarán aquí dinámicamente -->
+                    <p>Cargando servicios...</p>
+                </div>
+            </section>
+
+            <!-- Sección de Mis Suscripciones (anteriormente Mis Cuentas de Streaming) -->
+            <section id="mis-suscripciones" class="card-section content-section" style="display:none;">
+                <h2>Mis Suscripciones</h2>
+                <div id="purchased-services-list">
+                    <!-- Las suscripciones compradas se cargarán aquí dinámicamente -->
+                    <p>No tienes suscripciones activas.</p>
+                </div>
+                <!-- El botón de añadir cuenta ha sido eliminado de aquí, ya que la compra se hace desde "Nuestros Servicios" -->
+            </section>
+
+            <!-- Sección de Administración de Clientes (Solo para Admin - inicialmente oculta) -->
+            <section id="administrador-clientes" class="card-section content-section" style="display:none;">
+                <h2>Administrador de Clientes</h2>
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Email</th>
+                            <th>WhatsApp</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clients-table-body">
+                        <!-- Los clientes se cargarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Modal de Edición de Cliente (Solo para Admin - inicialmente oculto) -->
+            <div id="edit-client-modal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <span class="close-button" id="edit-client-modal-close">&times;</span>
+                    <h3>Editar Cliente</h3>
+                    <form id="edit-client-form">
+                        <input type="text" id="edit-client-name" placeholder="Nombre" required>
+                        <input type="text" id="edit-client-lastname" placeholder="Apellido" required>
+                        <input type="email" id="edit-client-email" placeholder="Correo Electrónico" disabled> <!-- Email no editable -->
+                        <input type="text" id="edit-client-whatsapp" placeholder="Número de WhatsApp">
+                        <select id="edit-role">
+                            <option value="user">Usuario</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                        <button type="submit" class="primary-button">Guardar Cambios</button>
+                        <button type="button" id="reset-password-btn" class="secondary-button">Restablecer Contraseña</button>
+                        <button type="button" id="delete-client-btn" class="delete-button">Eliminar Cliente</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sección de Edición de Contenido de la Página (Solo para Admin - inicialmente oculta) -->
+            <section id="editar-pagina" class="card-section content-section" style="display:none;">
+                <h2>Editar Contenido de la Página</h2>
+                <h3>Contenido de la sección de Inicio</h3>
+                <textarea id="edit-inicio-text" rows="10" cols="50" placeholder="Contenido de la sección de Inicio"></textarea>
+                <button id="save-inicio-text" class="primary-button">Guardar Contenido de Inicio</button>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2025 ConnectTV. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <!-- Custom Modal for Alerts/Confirms (compartido con index.html) -->
+    <div id="custom-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" id="modal-close-button">&times;</span>
+            <p id="modal-message"></p>
+            <div id="modal-actions">
+                <button id="modal-ok-button" class="primary-button" style="display:none;">OK</button>
+                <button id="modal-confirm-button" class="primary-button" style="display:none;">Confirmar</button>
+                <button id="modal-cancel-button" class="secondary-button" style="display:none;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Detalles del Servicio (con botón de compra) -->
+    <div id="service-detail-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" id="service-detail-modal-close">&times;</span>
+            <h3 id="service-detail-name"></h3>
+            <img id="service-detail-image" src="" alt="Imagen del Servicio" class="service-detail-image">
+            <p id="service-detail-price"></p>
+            <p id="service-detail-description"></p>
+            <button id="buy-service-btn" class="primary-button">Comprar Servicio</button>
+            <button id="close-service-detail-modal" class="secondary-button">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Botón flotante de WhatsApp para el panel -->
+    <a href="https://walink.co/9fd827" target="_blank" class="whatsapp-float">
+        <i class="fab fa-whatsapp whatsapp-icon"></i> <!-- Icono de Font Awesome -->
+    </a>
+
+    <!-- Scripts JavaScript -->
+    <!-- Script de intl-tel-input -->
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/intlTelInput.min.js"></script>
+    <!-- Módulos de Firebase y lógica de la aplicación (en este orden) -->
+    <script type="module" src="script/firebase-init.js"></script>
+    <script type="module" src="script/admin.js"></script> <!-- admin.js DEBE CARGARSE ANTES QUE main.js -->
+    <script type="module" src="script/main.js"></script>
+</body>
+</html>
