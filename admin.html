@@ -1,0 +1,53 @@
+<!-- admin.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Administrador - ConnectTV</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="login-body">
+  <div class="login-container">
+    <img src="assets/logo.png" alt="ConnectTV Logo" class="logo" />
+    <h2>Panel del Administrador</h2>
+    <p id="adminEmail">Cargando datos...</p>
+    <button id="logoutBtn" class="btn-login">Cerrar sesión</button>
+  </div>
+
+  <script type="module">
+    import { account, databases, config } from './js/appwrite-init.js';
+
+    async function validarSesionAdmin() {
+      try {
+        const user = await account.get();
+
+        const res = await databases.listDocuments(
+          config.databaseId,
+          config.collectionUsuariosId,
+          [`equal("user_id", "${user.$id}")`]
+        );
+
+        if (res.total === 0 || res.documents[0].rol !== 'admin') {
+          alert('Acceso restringido. Solo administradores.');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        document.getElementById('adminEmail').textContent = 'Admin: ' + user.email;
+
+      } catch (error) {
+        console.error(error);
+        window.location.href = 'login.html';
+      }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await account.deleteSession('current');
+      window.location.href = 'login.html';
+    });
+
+    validarSesionAdmin();
+  </script>
+</body>
+</html>
