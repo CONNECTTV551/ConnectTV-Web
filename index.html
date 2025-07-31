@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectTV - Tu Mejor Opción en Streaming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d4a2d 100%);
+            color: white;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo h1 {
+            color: #00ff00;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: #00ff00;
+            color: black;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        /* Hero Section - Más compacta */
+        .hero {
+            text-align: center;
+            padding: 2rem 0;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #00ff00;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .hero-features {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(0,255,0,0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0,255,0,0.3);
+        }
+
+        .hero-features h3 {
+            color: #00ff00;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.8rem;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        /* Services Tabs */
+        .services-tabs {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: black;
+            border-color: #00ff00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+        }
+
+        /* Services Grid - Responsive */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+        }
+
+        .services-container {
+            display: none;
+        }
+
+        .services-container.active {
+            display: block;
+        }
+
+        /* Sections - Más compactas */
+        .section {
+            padding: 2rem 0;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            color: #00ff00;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Service Cards - Más compactas con imágenes pequeñas */
+        .service-card {
+            background: linear-gradient(145deg, rgba(0, 0, 0, 0.8), rgba(45, 74, 45, 0.3));
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .service-card:hover {
+            transform: translateY(-3px);
+            border-color: #00ff00;
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.3);
+        }
+
+        .service-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin: 0 auto 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+        }
+
+        .service-card h3 {
+            color: #00ff00;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            line-height: 1.2;
+        }
+
+        .service-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .service-details {
+            font-size: 0.8rem;
+            margin: 0.3rem 0;
+            opacity: 0.9;
+        }
+
+        .service-card .price {
+            font-size: 1.3rem;
+            color: white;
+            margin: 0.5rem 0;
+            font-weight: bold;
+        }
+
+        .alt-price {
+            font-size: 0.85rem;
+            color: #00cc00;
+            margin: 0.3rem 0;
+        }
+
+        .full-price {
+            font-size: 0.75rem;
+            color: #cccccc;
+            margin: 0.3rem 0;
+        }
+
+        .buy-btn {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: black;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .buy-btn:hover {
+            background: linear-gradient(45deg, #00cc00, #009900);
+            transform: scale(1.05);
+        }
+
+        /* Modal Mejorado */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1a1a1a, #2d4a2d);
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            border: 2px solid #00ff00;
+            box-shadow: 0 20px 60px rgba(0, 255, 0, 0.3);
+            animation: slideIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: black;
+            padding: 1.5rem;
+            border-radius: 18px 18px 0 0;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .close {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: black;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            background: rgba(255,255,255,0.4);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .purchase-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        /* Form Groups Mejorados */
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #00ff00;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        /* File Upload Estilizado */
+        .file-upload-container {
+            position: relative;
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px dashed rgba(0, 255, 0, 0.5);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-container:hover {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #00ff00;
+        }
+
+        .file-upload-container.dragover {
+            background: rgba(0, 255, 0, 0.3);
+            border-color: #00ff00;
+            transform: scale(1.02);
+        }
+
+        #paymentProofFile {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-text {
+            color: #00ff00;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: #00ff00;
+            margin-bottom: 1rem;
+        }
+
+        .file-info {
+            background: rgba(0, 255, 0, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid #00ff00;
+        }
+
+        .file-preview {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .file-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 10px;
+            border: 2px solid #00ff00;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .payment-method {
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover,
+        .payment-method.selected {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .payment-method-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Submit Button Mejorado */
+        .submit-btn {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: black;
+            border: none;
+            padding: 1.2rem 2rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(45deg, #00cc00, #009900);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-50px) scale(0.8);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25D366;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            color: #00ff00;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+                padding: 1rem 0;
+            }
+
+            .service-card {
+                min-height: 280px;
+                padding: 0.8rem;
+            }
+
+            .service-card img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .service-card h3 {
+                font-size: 0.9rem;
+            }
+
+            .service-card .price {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 1.5rem 0;
+            }
+
+            .section h2 {
+                font-size: 1.6rem;
+            }
+
+            .section-content {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            .hero-features {
+                padding: 0.8rem;
+            }
+
+            .services-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tab-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Tablet Design */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 1.2rem;
+            }
+
+            .service-card {
+                min-height: 300px;
+            }
+
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Desktop Design */
+        @media (min-width: 1025px) {
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+                gap: 1.5rem;
+                justify-content: center;
+            }
+
+            .service-card {
+                min-height: 340px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Menu móvil mejorado */
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 1rem;
+            border-radius: 0 0 10px 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .mobile-menu a:hover {
+            background: #00ff00;
+            color: black;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .mobile-menu.active {
+                display: flex;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+                max-height: 85vh;
+            }
+
+            .modal-header {
+                padding: 1rem;
+            }
+
+            .modal-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .file-upload-container {
+                padding: 1.5rem;
+            }
+
+            .file-upload-icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <img src="img/logo.png" alt="ConnectTV Logo">
+                <h1>ConnectTV</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('home')">Inicio</a></li>
+                <li><a href="#" onclick="showSection('about')">Quiénes Somos</a></li>
+                <li><a href="#" onclick="showSection('why-us')">Por Qué Elegirnos</a></li>
+                <li><a href="#" onclick="showSection('recommendations')">Recomendaciones</a></li>
+                <li><a href="#" onclick="showSection('support')">Soporte</a></li>
+            </ul>
+            <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="#" onclick="showSection('home')">Inicio</a>
+                <a href="#" onclick="showSection('about')">Quiénes Somos</a>
+                <a href="#" onclick="showSection('why-us')">Por Qué Elegirnos</a>
+                <a href="#" onclick="showSection('recommendations')">Recomendaciones</a>
+                <a href="#" onclick="showSection('support')">Soporte</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h2>🍿 Bienvenido a ConnectTV 🍟</h2>
+                <p>Tu mejor opción en servicios de streaming premium</p>
+                <div class="hero-features">
+                    <h3>🎯 Características de nuestros servicios:</h3>
+                    <div class="features-grid">
+                        <div>✅ <strong>Entrega Inmediata</strong></div>
+                        <div>✅ <strong>Precios Accesibles</strong></div>
+                        <div>✅ <strong>Garantía Incluida</strong></div>
+                        <div>✅ <strong>Soporte 24/7</strong></div>
+                    </div>
+                    <p style="margin-top: 1rem; color: #00ff00; font-size: 1rem;"><strong>🥳 Pagos al BCV 🇻🇪</strong></p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>👉🏻 Precios especiales para distribuidores 🤝🏻</strong></p>
+                </div>
+            </div>
+
+            <!-- Services Tabs -->
+            <div class="services-tabs">
+                <button class="tab-btn active" onclick="showServicesTab('perfiles')">👤 PERFILES</button>
+                <button class="tab-btn" onclick="showServicesTab('cuentas')">🏠 CUENTAS COMPLETAS</button>
+                <button class="tab-btn" onclick="showServicesTab('otros')">🔧 OTROS SERVICIOS</button>
+            </div>
+
+            <!-- Profiles Services -->
+            <div id="perfiles" class="services-container active">
+                <div class="services-grid" id="perfilesGrid">
+                    <!-- Los perfiles se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Full Accounts Services -->
+            <div id="cuentas" class="services-container">
+                <div class="services-grid" id="cuentasGrid">
+                    <!-- Las cuentas completas se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Other Services -->
+            <div id="otros" class="services-container">
+                <div class="services-grid" id="otrosGrid">
+                    <!-- Los otros servicios se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <h2>Quiénes Somos</h2>
+            <div class="section-content">
+                <p>ConnectTV es tu proveedor de confianza para servicios de streaming premium en Venezuela. Nos especializamos en ofrecer acceso a las mejores plataformas de entretenimiento con la más alta calidad y el mejor soporte técnico.</p>
+                <br>
+                <p>Con años de experiencia en el mercado venezolano, garantizamos un servicio confiable, seguro y de calidad superior para toda tu familia. Trabajamos con <strong>pagos al BCV 🇻🇪</strong> para tu comodidad.</p>
+                <br>
+                <div style="background: rgba(0,255,0,0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <h4 style="color: #00ff00; margin-bottom: 0.5rem;">🤝 Para Distribuidores:</h4>
+                    <p>Ofrecemos excelentes precios mayoristas con tu panel personal, incluyendo usuario y contraseña personalizados. ¡Contáctanos para más información!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Us Section -->
+        <section id="why-us" class="section">
+            <h2>Por Qué Elegirnos</h2>
+            <div class="section-content">
+                <h3 style="color: #00ff00; margin-bottom: 1rem;">✅ Entrega Inmediata</h3>
+                <p>Activamos tu servicio de forma inmediata una vez verificado el pago. No esperas, ¡empiezas a disfrutar al instante!</p>
+                
+                <h3 style="color: #00ff00; margin: 2rem 0 1rem;">✅ Precios Accesibles</h3>
+                <p>Los mejores precios del mercado venezolano con pagos al BCV 🇻🇪. Calidad premium a precios que se ajustan a tu presupuesto.</p>
+                
+                <h3 style="color: #00ff00; margin: 2rem 0 1rem;">✅ Garantía Total</h3>
+                <p>Todos nuestros servicios incluyen garantía completa. Si tienes algún problema, lo solucionamos inmediatamente.</p>
+                
+                <h3 style="color: #00ff00; margin: 2rem 0 1rem;">✅ Soporte 24/7</h3>
+                <p>Nuestro equipo de soporte está disponible las 24 horas por WhatsApp para ayudarte con cualquier consulta o problema técnico.</p>
+
+                <h3 style="color: #00ff00; margin: 2rem 0 1rem;">🤝 Distribuidores Bienvenidos</h3>
+                <p>Ofrecemos excelentes condiciones para distribuidores con panel personal, usuario y contraseña exclusivos para tu negocio.</p>
+            </div>
+        </section>
+
+        <!-- Recommendations Section -->
+        <section id="recommendations" class="section">
+            <h2>Recomendaciones</h2>
+            <div class="section-content">
+                <h3 style="color: #00ff00; margin-bottom: 1rem;">Panel de Servicios Disponibles:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 1rem 0; padding: 1rem; background: rgba(0,255,0,0.1); border-radius: 8px;">
+                        <strong>🔹 Perfiles:</strong> Acceso individual con perfil personalizado (1 dispositivo)
+                    </li>
+                    <li style="margin: 1rem 0; padding: 1rem; background: rgba(0,255,0,0.1); border-radius: 8px;">
+                        <strong>🔹 Cuentas Completas:</strong> Acceso total con múltiples perfiles y dispositivos
+                    </li>
+                    <li style="margin: 1rem 0; padding: 1rem; background: rgba(0,255,0,0.1); border-radius: 8px;">
+                        <strong>🔹 Otros Servicios:</strong> Servicios adicionales y complementarios
+                    </li>
+                </ul>
+                <br>
+                <p><strong>Recomendación:</strong> Para la mejor experiencia, recomendamos mantener un máximo de 2-3 dispositivos conectados simultáneamente por servicio.</p>
+            </div>
+        </section>
+
+        <!-- Support Section -->
+        <section id="support" class="section">
+            <h2>Soporte</h2>
+            <div class="section-content">
+                <h3 style="color: #00ff00; margin-bottom: 1rem;">Contacto de Soporte</h3>
+                <p><strong>WhatsApp:</strong> <a href="https://wa.me/584242357804" style="color: #00ff00;">+584242357804</a></p>
+                <p><strong>Email:</strong> <a href="mailto:davidstreaming78@gmail.com" style="color: #00ff00;">davidstreaming78@gmail.com</a></p>
+                <br>
+                <div style="background: rgba(0,255,0,0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <h4 style="color: #00ff00; margin-bottom: 0.5rem;">📱 Enlaces Rápidos:</h4>
+                    <p><a href="https://walink.co/9fd827" target="_blank" style="color: #00ff00; text-decoration: underline;">🔗 walink.co/9fd827</a></p>
+                    <p><a href="https://wa.link/3q0heb" target="_blank" style="color: #00ff00; text-decoration: underline;">🔗 wa.link/3q0heb</a></p>
+                </div>
+                <p>Nuestro equipo de soporte está disponible para ayudarte con:</p>
+                <ul style="margin-top: 1rem;">
+                    <li>✅ Activación inmediata de servicios</li>
+                    <li>✅ Problemas técnicos</li>
+                    <li>✅ Configuración de dispositivos</li>
+                    <li>✅ Renovaciones y actualizaciones</li>
+                    <li>✅ Consultas sobre precios para distribuidores</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Purchase Modal Mejorado -->
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🛒 Completar tu Compra</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="purchaseForm" class="purchase-form">
+                    <div class="form-group">
+                        <label>🎬 Servicio Seleccionado:</label>
+                        <input type="text" id="selectedService" readonly style="background: rgba(0, 255, 0, 0.1); border-color: #00ff00;">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>👤 Nombre:</label>
+                            <input type="text" id="firstName" required placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label>👤 Apellido:</label>
+                            <input type="text" id="lastName" required placeholder="Tu apellido">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📱 WhatsApp:</label>
+                        <input type="tel" id="whatsapp" required placeholder="+58 424 123 4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label>💳 Método de Pago:</label>
+                        <div class="payment-methods">
+                            <div class="payment-method" onclick="selectPaymentMethod('pago_movil')">
+                                <div class="payment-method-icon">📱</div>
+                                <div>Pago Móvil</div>
+                            </div>
+                            <div class="payment-method" onclick="selectPaymentMethod('transferencia')">
+                                <div class="payment-method-icon">🏦</div>
+                                <div>Transferencia</div>
+                            </div>
+                            <div class="payment-method" onclick="selectPaymentMethod('binance')">
+                                <div class="payment-method-icon">₿</div>
+                                <div>Binance</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="paymentMethod" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🆔 ID/Referencia de Pago:</label>
+                        <input type="text" id="paymentId" required placeholder="Número de referencia del pago">
+                    </div>
+
+                    <div class="form-group">
+                        <label>📄 Comprobante de Pago:</label>
+                        <div class="file-upload-container" onclick="document.getElementById('paymentProofFile').click()">
+                            <div class="file-upload-icon">📤</div>
+                            <div class="file-upload-text">Haz clic aquí o arrastra tu comprobante</div>
+                            <div style="font-size: 0.9rem; color: #cccccc;">Formatos: JPG, PNG, PDF (Máx. 5MB)</div>
+                            <input type="file" id="paymentProofFile" accept="image/*,.pdf" style="display: none;">
+                        </div>
+                        <div id="fileInfo" class="file-info" style="display: none;">
+                            <div id="fileName"></div>
+                            <div id="fileSize"></div>
+                            <div id="filePreview" class="file-preview"></div>
+                        </div>
+                        <textarea id="paymentProofText" rows="3" placeholder="O describe aquí los detalles del comprobante (opcional)" style="margin-top: 1rem;"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        🚀 Enviar Orden de Compra
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Support Button -->
+    <a href="https://wa.me/584242357804" class="whatsapp-btn" target="_blank">📞</a>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 ConnectTV. Todos los derechos reservados.</p>
+                <p>Email: davidstreaming78@gmail.com | WhatsApp: +584242357804</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================
+        // CONFIGURACIÓN DE SERVICIOS - EDITA AQUÍ
+        // ============================================
+
+        // PERFILES (1 dispositivo, perfil individual)
+        const perfiles = [
+            { 
+                name: "NETFLIX PERFIL", 
+                price: "450,00 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/netflix.png",
+                type: "perfil"
+            },
+            { 
+                name: "NETFLIX PERFIL 15 DÍAS", 
+                price: "300,00 Bs", 
+                duration: "15 DÍAS", 
+                devices: "1 DISPOSITIVO",
+                image: "img/netflix.png",
+                type: "perfil"
+            },
+            { 
+                name: "JELLYFIN PERFIL", 
+                price: "380 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/jellyfin.png",
+                type: "perfil"
+            },
+            { 
+                name: "DISNEY ESTÁNDAR", 
+                price: "320 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/disney.png",
+                type: "perfil"
+            },
+            { 
+                name: "PRIME VIDEO PERFIL", 
+                price: "320 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/primevideo.png",
+                type: "perfil"
+            },
+            { 
+                name: "FLUJO TV PERFIL", 
+                price: "380 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/flujotv.png",
+                type: "perfil"
+            },
+            { 
+                name: "TELE LATINO PERFIL", 
+                price: "380 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/telelatino.png",
+                altPrice: "659 Bs (2 MESES)",
+                type: "perfil"
+            },
+            { 
+                name: "STELLA TV PERFIL", 
+                price: "380 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/stellatv.png",
+                altPrice: "659 Bs (2 MESES)",
+                type: "perfil"
+            },
+            { 
+                name: "CRUNCHYROLL PERFIL", 
+                price: "297 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/crunchyroll.png",
+                type: "perfil"
+            },
+            { 
+                name: "VIX PERFIL", 
+                price: "295 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/vix.png",
+                type: "perfil"
+            },
+            { 
+                name: "MAX PERFIL", 
+                price: "290 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/max.png",
+                type: "perfil"
+            },
+            { 
+                name: "PARAMOUNT PERFIL", 
+                price: "285 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/paramount.png",
+                type: "perfil"
+            }
+        ];
+
+        // CUENTAS COMPLETAS (múltiples dispositivos y perfiles)
+        const cuentas = [
+            { 
+                name: "NETFLIX CUENTA COMPLETA", 
+                price: "1800,00 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "4 DISPOSITIVOS",
+                image: "img/netflixcuenta.png",
+                type: "cuenta"
+            },
+            { 
+                name: "JELLYFIN CUENTA COMPLETA", 
+                price: "700 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "3 DISPOSITIVOS",
+                image: "img/jellyfincuenta.png",
+                type: "cuenta"
+            },
+            { 
+                name: "DISNEY CUENTA COMPLETA", 
+                price: "783 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "4 DISPOSITIVOS",
+                image: "img/disney.png",
+                type: "cuenta"
+            },
+            { 
+                name: "PRIME VIDEO CUENTA COMPLETA", 
+                price: "540 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "3 DISPOSITIVOS",
+                image: "img/primevideo.png",
+                type: "cuenta"
+            },
+            { 
+                name: "FLUJO TV CUENTA COMPLETA", 
+                price: "875 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "4 DISPOSITIVOS",
+                image: "img/flujotv.png",
+                type: "cuenta"
+            },
+            { 
+                name: "TELE LATINO CUENTA COMPLETA", 
+                price: "780 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "3 DISPOSITIVOS",
+                image: "img/telelatino.png",
+                type: "cuenta"
+            },
+            { 
+                name: "STELLA TV CUENTA COMPLETA", 
+                price: "780 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "3 DISPOSITIVOS",
+                image: "img/stellatv.png",
+                type: "cuenta"
+            },
+            { 
+                name: "CRUNCHYROLL CUENTA COMPLETA", 
+                price: "430 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "2 DISPOSITIVOS",
+                image: "img/crunchyroll.png",
+                type: "cuenta"
+            },
+            { 
+                name: "VIX CUENTA COMPLETA", 
+                price: "436 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "2 DISPOSITIVOS",
+                image: "img/vix.png",
+                type: "cuenta"
+            },
+            { 
+                name: "MAX CUENTA COMPLETA", 
+                price: "544 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "3 DISPOSITIVOS",
+                image: "img/max.png",
+                type: "cuenta"
+            },
+            { 
+                name: "PARAMOUNT CUENTA COMPLETA", 
+                price: "527 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "2 DISPOSITIVOS",
+                image: "img/paramount.png",
+                type: "cuenta"
+            }
+        ];
+
+        // OTROS SERVICIOS (servicios especiales, múltiples planes, etc.)
+        const otros = [
+            { 
+                name: "PLEX", 
+                price: "710 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "3 DISPOSITIVOS",
+                image: "img/plex.png",
+                type: "otro"
+            },
+            { 
+                name: "DEEZER", 
+                price: "392 Bs", 
+                duration: "1 MES (30 DÍAS)", 
+                devices: "1 DISPOSITIVO",
+                image: "img/deezer.png",
+                type: "otro"
+            },
+            { 
+                name: "CANVA", 
+                price: "Ver Planes", 
+                duration: "MÚLTIPLES OPCIONES", 
+                devices: "1 DISPOSITIVO",
+                image: "img/canva.png",
+                plans: [
+                    { duration: "1 MES", price: "392 Bs" },
+                    { duration: "3 MESES", price: "702 Bs" },
+                    { duration: "12 MESES", price: "1.688 Bs" }
+                ],
+                type: "otro"
+            }
+        ];
+
+        // ============================================
+        // CONFIGURACIÓN DE CONTACTO - EDITA AQUÍ
+        // ============================================
+        const contactInfo = {
+            whatsapp: "+584242357804",
+            email: "davidstreaming78@gmail.com"
+        };
+
+        // Variables globales
+        let selectedFile = null;
+        let selectedPaymentMethod = '';
+
+        // Función para crear una tarjeta de servicio
+        function createServiceCard(service) {
+            const card = document.createElement('div');
+            card.className = 'service-card';
+            
+            // Price information
+            let priceInfo = '';
+            if (service.plans) {
+                // Special handling for services with multiple plans (like CANVA)
+                let plansHtml = '<div style="margin: 0.5rem 0;">';
+                service.plans.forEach((plan, index) => {
+                    plansHtml += `<div style="margin: 0.2rem 0; font-size: 0.8rem; color: ${index === 0 ? '#00ff00' : '#cccccc'};">${plan.duration}: <strong>${plan.price}</strong></div>`;
+                });
+                plansHtml += '</div>';
+                priceInfo = plansHtml;
+            } else {
+                priceInfo = `<div class="price">${service.price}</div>`;
+                if (service.altPrice) {
+                    priceInfo += `<div class="alt-price">${service.altPrice}</div>`;
+                }
+            }
+            
+            // Service details
+            let detailsHtml = '';
+            if (service.duration) {
+                detailsHtml += `<div class="service-details">📆 ${service.duration}</div>`;
+            }
+            if (service.devices) {
+                detailsHtml += `<div class="service-details">📴 ${service.devices}</div>`;
+            }
+            
+            card.innerHTML = `
+                <div>
+                    <img src="${service.image}" alt="${service.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZmYwMCIgZm9udC1zaXplPSI4Ij4ke3NlcnZpY2UubmFtZS5zcGxpdCgnICcpWzBdfTwvdGV4dD4KPHN2Zz4K'">
+                    <h3>${service.name}</h3>
+                </div>
+                <div class="service-info">
+                    <div>
+                        ${detailsHtml}
+                        ${priceInfo}
+                    </div>
+                    <button class="buy-btn" onclick="openPurchaseModal('${service.name}', '${service.price}')">🛒 Comprar Ahora</button>
+                </div>
+            `;
+            return card;
+        }
+
+        // Load services in their respective grids
+        function loadServices() {
+            const perfilesGrid = document.getElementById('perfilesGrid');
+            const cuentasGrid = document.getElementById('cuentasGrid');
+            const otrosGrid = document.getElementById('otrosGrid');
+            
+            // Clear grids
+            perfilesGrid.innerHTML = '';
+            cuentasGrid.innerHTML = '';
+            otrosGrid.innerHTML = '';
+            
+            // Load perfiles
+            perfiles.forEach(service => {
+                perfilesGrid.appendChild(createServiceCard(service));
+            });
+            
+            // Load cuentas
+            cuentas.forEach(service => {
+                cuentasGrid.appendChild(createServiceCard(service));
+            });
+            
+            // Load otros
+            otros.forEach(service => {
+                otrosGrid.appendChild(createServiceCard(service));
+            });
+        }
+
+        // Tab switching functionality
+        function showServicesTab(tabName) {
+            // Hide all service containers
+            document.querySelectorAll('.services-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected container
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Close mobile menu if open
+            document.getElementById('mobileMenu').classList.remove('active');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        // Modal functions mejoradas
+        function openPurchaseModal(serviceName, price) {
+            document.getElementById('selectedService').value = `${serviceName} - ${price}`;
+            document.getElementById('purchaseModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevenir scroll del fondo
+        }
+
+        function closeModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaurar scroll
+            resetForm();
+        }
+
+        function resetForm() {
+            document.getElementById('purchaseForm').reset();
+            selectedFile = null;
+            selectedPaymentMethod = '';
+            document.getElementById('fileInfo').style.display = 'none';
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.classList.remove('selected');
+            });
+        }
+
+        // Selección de método de pago
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            document.getElementById('paymentMethod').value = method;
+            
+            // Actualizar UI
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.target.closest('.payment-method').classList.add('selected');
+        }
+
+        // Manejo de archivos
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('paymentProofFile');
+            const fileContainer = document.querySelector('.file-upload-container');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const filePreview = document.getElementById('filePreview');
+
+            // Click en el contenedor
+            fileContainer.addEventListener('click', () => fileInput.click());
+
+            // Drag and drop
+            fileContainer.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileContainer.classList.add('dragover');
+            });
+
+            fileContainer.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                fileContainer.classList.remove('dragover');
+            });
+
+            fileContainer.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileContainer.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+
+            // Selección de archivo
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+
+            function handleFile(file) {
+                // Validar tamaño (5MB máximo)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('El archivo es demasiado grande. Máximo 5MB.');
+                    return;
+                }
+
+                // Validar tipo
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Tipo de archivo no permitido. Solo JPG, PNG o PDF.');
+                    return;
+                }
+
+                selectedFile = file;
+                
+                // Mostrar información del archivo
+                fileName.textContent = `📄 ${file.name}`;
+                fileSize.textContent = `📊 ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+                fileInfo.style.display = 'block';
+
+                // Mostrar preview si es imagen
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        filePreview.innerHTML = `<img src="${e.target.result}" alt="Preview del comprobante">`;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    filePreview.innerHTML = `<div style="color: #00ff00; font-size: 3rem;">📄</div><div>Archivo PDF seleccionado</div>`;
+                }
+
+                // Actualizar el contenedor visual
+                fileContainer.style.background = 'rgba(0, 255, 0, 0.2)';
+                fileContainer.style.borderColor = '#00ff00';
+                document.querySelector('.file-upload-text').textContent = '✅ Comprobante cargado correctamente';
+            }
+
+            // Load services on page load
+            loadServices();
+        });
+
+        // Form submission mejorado
+        document.getElementById('purchaseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ Enviando...';
+
+            const formData = {
+                service: document.getElementById('selectedService').value,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                paymentMethod: selectedPaymentMethod,
+                paymentId: document.getElementById('paymentId').value,
+                paymentProofText: document.getElementById('paymentProofText').value,
+                hasFile: selectedFile ? 'Sí' : 'No',
+                fileName: selectedFile ? selectedFile.name : 'Ninguno'
+            };
+
+            // Validaciones
+            if (!selectedPaymentMethod) {
+                alert('Por favor selecciona un método de pago');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '🚀 Enviar Orden de Compra';
+                return;
+            }
+
+            if (!selectedFile && !formData.paymentProofText.trim()) {
+                alert('Por favor sube un comprobante o describe los detalles del pago');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '🚀 Enviar Orden de Compra';
+                return;
+            }
+
+            // Nombres de métodos de pago
+            const paymentMethodNames = {
+                'pago_movil': '📱 Pago Móvil',
+                'transferencia': '🏦 Transferencia Bancaria', 
+                'binance': '₿ Binance Pay'
+            };
+
+            // Crear mensaje para WhatsApp
+            const message = `🛒 *NUEVA ORDEN - ConnectTV*\n\n` +
+                `👤 *Cliente:* ${formData.firstName} ${formData.lastName}\n` +
+                `📱 *WhatsApp:* ${formData.whatsapp}\n` +
+                `🎬 *Servicio:* ${formData.service}\n` +
+                `💳 *Método de Pago:* ${paymentMethodNames[formData.paymentMethod]}\n` +
+                `🆔 *ID/Referencia:* ${formData.paymentId}\n` +
+                `📄 *Comprobante:* ${formData.hasFile}\n` +
+                `📁 *Archivo:* ${formData.fileName}\n` +
+                `💬 *Detalles:* ${formData.paymentProofText || 'Ver archivo adjunto'}\n\n` +
+                `✅ *Orden enviada desde ConnectTV*\n` +
+                `⏰ *${new Date().toLocaleString('es-VE')}*`;
+
+            // Enviar a WhatsApp
+            const whatsappUrl = `https://wa.me/${contactInfo.whatsapp.replace('+', '')}?text=${encodeURIComponent(message)}`;
+            
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+                
+                // Mostrar mensaje de éxito
+                submitBtn.innerHTML = '✅ ¡Orden Enviada!';
+                submitBtn.style.background = 'linear-gradient(45deg, #00ff00, #00cc00)';
+                
+                setTimeout(() => {
+                    closeModal();
+                    alert('¡Orden enviada exitosamente! 🎉\n\nTe contactaremos pronto para confirmar tu compra.\n\n' +
+                          'Si subiste un comprobante, no olvides enviarlo también por WhatsApp.');
+                }, 1500);
+            }, 1000);
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('purchaseModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
