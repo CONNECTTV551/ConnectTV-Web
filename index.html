@@ -475,7 +475,7 @@
             }
         }
 
-        /* Service Cards - Más compactas con imágenes pequeñas */
+        /* Service Cards - Más compactas con imágenes más grandes */
         .service-card {
             background: linear-gradient(145deg, rgba(0, 0, 0, 0.8), rgba(45, 74, 45, 0.3));
             border-radius: 12px;
@@ -484,7 +484,7 @@
             border: 2px solid rgba(0, 255, 0, 0.3);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
-            min-height: 320px;
+            min-height: 380px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -527,13 +527,13 @@
         }
 
         .service-card img {
-            width: 80px;
-            height: 80px;
+            width: 120px;
+            height: 120px;
             object-fit: contain;
-            border-radius: 8px;
-            margin: 0 auto 0.8rem;
+            border-radius: 12px;
+            margin: 0 auto 1rem;
             background: rgba(255, 255, 255, 0.1);
-            padding: 8px;
+            padding: 12px;
             transition: transform 0.3s ease;
         }
 
@@ -1026,13 +1026,13 @@
             }
 
             .service-card {
-                min-height: 280px;
+                min-height: 320px;
                 padding: 0.8rem;
             }
 
             .service-card img {
-                width: 60px;
-                height: 60px;
+                width: 90px;
+                height: 90px;
             }
 
             .service-card h3 {
@@ -1101,7 +1101,7 @@
             }
 
             .service-card {
-                min-height: 300px;
+                min-height: 360px;
             }
 
             .hero h2 {
@@ -1122,7 +1122,7 @@
             }
 
             .service-card {
-                min-height: 340px;
+                min-height: 400px;
             }
 
             .features-grid {
@@ -1269,31 +1269,31 @@
                 <h3 class="carousel-title">🎬 Últimos Estrenos y Contenido Popular</h3>
                 <div class="carousel">
                     <div class="carousel-track">
-                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1489599807088-5baacb94f7bb?w=800&h=400&fit=crop');">
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('img/estreno1.jpg');">
                             <div class="carousel-overlay">
                                 <div class="carousel-title-item">Netflix Originals</div>
                                 <div class="carousel-description">Series y películas exclusivas de Netflix</div>
                             </div>
                         </div>
-                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=800&h=400&fit=crop');">
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('img/estreno2.jpg');">
                             <div class="carousel-overlay">
                                 <div class="carousel-title-item">Disney+ Magic</div>
                                 <div class="carousel-description">Marvel, Star Wars y contenido familiar</div>
                             </div>
                         </div>
-                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&h=400&fit=crop');">
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('img/primevideoca.png');">
                             <div class="carousel-overlay">
                                 <div class="carousel-title-item">Prime Video</div>
                                 <div class="carousel-description">Películas taquilleras y series originales</div>
                             </div>
                         </div>
-                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1518991669997-6ba6b6b67e55?w=800&h=400&fit=crop');">
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('img/maxca.png');">
                             <div class="carousel-overlay">
                                 <div class="carousel-title-item">HBO Max</div>
                                 <div class="carousel-description">Contenido premium y blockbusters</div>
                             </div>
                         </div>
-                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1489599807088-5baacb94f7bb?w=800&h=400&fit=crop');">
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('img/crunchyrollcu.png');">
                             <div class="carousel-overlay">
                                 <div class="carousel-title-item">Anime & Más</div>
                                 <div class="carousel-description">Crunchyroll y contenido especializado</div>
@@ -1522,8 +1522,9 @@
                     "✅ Acceso completo a todo el catálogo de Netflix",
                     "🎬 Películas y series en HD y 4K",
                     "📱 Compatible con todos los dispositivos",
-                    "🔄 Renovación automática disponible",
+                    "🔄 No renovable 🕒1 mes ",
                     "👤 Perfil personalizado exclusivo"
+                    
                 ]
             },
             { 
@@ -1747,7 +1748,7 @@
             },
             { 
                 name: "PRIME VIDEO CUENTA COMPLETA", 
-                price: "540 Bs", 
+                price: "545,00 Bs", 
                 duration: "1 MES (30 DÍAS)", 
                 devices: "5 DISPOSITIVOS",
                 image: "img/primevideocuenta.png",
@@ -2005,7 +2006,7 @@
             
             card.innerHTML = `
                 <div>
-                    <img src="${service.image}" alt="${service.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZmYwMCIgZm9udC1zaXplPSI4Ij4ke3NlcnZpY2UubmFtZS5zcGxpdCgnICcpWzBdfTwvdGV4dD4KPHN2Zz4K'">
+                    <img src="${service.image}" alt="${service.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZmYwMCIgZm9udC1zaXplPSIxMiI+JHtzZXJ2aWNlLm5hbWUuc3BsaXQoJyAnKVswXX08L3RleHQ+Cjwvc3ZnPgo='">
                     <h3>${service.name}</h3>
                 </div>
                 <div class="service-info">
