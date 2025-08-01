@@ -16,12 +16,50 @@
             background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d4a2d 100%);
             color: white;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+        }
+
+        /* Floating particles animation */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 255, 0, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         /* Header */
@@ -33,6 +71,19 @@
             top: 0;
             z-index: 1000;
             backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         nav {
@@ -45,16 +96,32 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .logo img {
             height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: rotate(360deg);
         }
 
         .logo h1 {
             color: #00ff00;
             font-size: 1.8rem;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
         }
 
         .nav-links {
@@ -69,17 +136,38 @@
             padding: 0.5rem 1rem;
             border-radius: 5px;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
         }
 
         .nav-links a:hover {
             background: #00ff00;
             color: black;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
         }
 
         /* Main Content */
         main {
             margin-top: 80px;
             padding: 2rem 0;
+            position: relative;
+            z-index: 2;
         }
 
         /* Hero Section - Más compacta */
@@ -87,18 +175,47 @@
             text-align: center;
             padding: 2rem 0;
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .hero h2 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
             color: #00ff00;
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.6);
+            }
         }
 
         .hero p {
             font-size: 1.1rem;
             margin-bottom: 1.5rem;
             opacity: 0.9;
+            animation: fadeIn 1.2s ease 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .hero-features {
@@ -107,6 +224,19 @@
             background: rgba(0,255,0,0.1);
             border-radius: 10px;
             border: 1px solid rgba(0,255,0,0.3);
+            backdrop-filter: blur(5px);
+            animation: slideInLeft 1s ease 0.5s both;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         .hero-features h3 {
@@ -123,6 +253,99 @@
             font-size: 0.9rem;
         }
 
+        .features-grid div {
+            animation: bounceIn 0.8s ease;
+            animation-delay: calc(var(--i) * 0.1s);
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-title {
+            text-align: center;
+            color: #00ff00;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .carousel-track {
+            display: flex;
+            width: 500%;
+            height: 100%;
+            animation: slide 20s infinite;
+        }
+
+        .carousel-slide {
+            width: 20%;
+            height: 100%;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 1rem;
+            color: white;
+        }
+
+        .carousel-title-item {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #00ff00;
+        }
+
+        .carousel-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @keyframes slide {
+            0%, 20% { transform: translateX(0); }
+            25%, 40% { transform: translateX(-20%); }
+            45%, 60% { transform: translateX(-40%); }
+            65%, 80% { transform: translateX(-60%); }
+            85%, 100% { transform: translateX(-80%); }
+        }
+
         /* Services Tabs */
         .services-tabs {
             display: flex;
@@ -130,6 +353,18 @@
             margin: 2rem 0;
             gap: 1rem;
             flex-wrap: wrap;
+            animation: slideInUp 1s ease 0.8s both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .tab-btn {
@@ -143,6 +378,23 @@
             font-size: 1rem;
             font-weight: bold;
             text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .tab-btn:hover::before {
+            left: 100%;
         }
 
         .tab-btn.active,
@@ -150,7 +402,7 @@
             background: linear-gradient(45deg, #00ff00, #00cc00);
             color: black;
             border-color: #00ff00;
-            transform: translateY(-2px);
+            transform: translateY(-2px) scale(1.05);
             box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
         }
 
@@ -164,10 +416,22 @@
 
         .services-container {
             display: none;
+            animation: fadeInScale 0.6s ease;
         }
 
         .services-container.active {
             display: block;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         /* Sections - Más compactas */
@@ -178,6 +442,7 @@
 
         .section.active {
             display: block;
+            animation: fadeInUp 0.8s ease;
         }
 
         .section h2 {
@@ -185,6 +450,7 @@
             font-size: 2rem;
             text-align: center;
             margin-bottom: 1.5rem;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
 
         .section-content {
@@ -195,6 +461,18 @@
             border: 1px solid rgba(0, 255, 0, 0.3);
             font-size: 0.95rem;
             line-height: 1.6;
+            animation: slideInRight 0.8s ease 0.2s both;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* Service Cards - Más compactas con imágenes pequeñas */
@@ -204,18 +482,48 @@
             padding: 1rem;
             text-align: center;
             border: 2px solid rgba(0, 255, 0, 0.3);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             min-height: 320px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            animation: cardSlideIn 0.8s ease;
+            animation-delay: calc(var(--card-index) * 0.1s);
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                transform: translateY(50px) rotateX(-15deg);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) rotateX(0);
+                opacity: 1;
+            }
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
         }
 
         .service-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-10px) scale(1.05);
             border-color: #00ff00;
-            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 255, 0, 0.4);
         }
 
         .service-card img {
@@ -226,6 +534,11 @@
             margin: 0 auto 0.8rem;
             background: rgba(255, 255, 255, 0.1);
             padding: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover img {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .service-card h3 {
@@ -233,6 +546,7 @@
             margin-bottom: 0.5rem;
             font-size: 1rem;
             line-height: 1.2;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
         }
 
         .service-info {
@@ -253,6 +567,7 @@
             color: white;
             margin: 0.5rem 0;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         .alt-price {
@@ -267,6 +582,55 @@
             margin: 0.3rem 0;
         }
 
+        /* Details Toggle */
+        .details-toggle {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #00ff00;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0.5rem 0;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .details-toggle:hover {
+            background: rgba(0, 255, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .service-details-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .service-details-content.active {
+            max-height: 200px;
+            padding: 1rem;
+        }
+
+        .service-details-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .service-details-content li {
+            padding: 0.3rem 0;
+            font-size: 0.8rem;
+            color: #cccccc;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+        }
+
+        .service-details-content li:last-child {
+            border-bottom: none;
+        }
+
         .buy-btn {
             background: linear-gradient(45deg, #00ff00, #00cc00);
             color: black;
@@ -277,11 +641,29 @@
             cursor: pointer;
             transition: all 0.3s ease;
             width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .buy-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .buy-btn:hover::before {
+            left: 100%;
         }
 
         .buy-btn:hover {
             background: linear-gradient(45deg, #00cc00, #009900);
             transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
         }
 
         /* Modal Mejorado */
@@ -307,9 +689,20 @@
             max-width: 600px;
             border: 2px solid #00ff00;
             box-shadow: 0 20px 60px rgba(0, 255, 0, 0.3);
-            animation: slideIn 0.3s ease;
+            animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             max-height: 90vh;
             overflow-y: auto;
+        }
+
+        @keyframes modalSlideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-50px) scale(0.8) rotateX(-15deg);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0);
+            }
         }
 
         .modal-header {
@@ -347,7 +740,7 @@
 
         .close:hover {
             background: rgba(255,255,255,0.4);
-            transform: translateY(-50%) scale(1.1);
+            transform: translateY(-50%) scale(1.1) rotate(90deg);
         }
 
         .modal-body {
@@ -392,6 +785,7 @@
             border-color: #00ff00;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
             background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.02);
         }
 
         /* File Upload Estilizado */
@@ -409,12 +803,13 @@
         .file-upload-container:hover {
             background: rgba(0, 255, 0, 0.2);
             border-color: #00ff00;
+            transform: scale(1.02);
         }
 
         .file-upload-container.dragover {
             background: rgba(0, 255, 0, 0.3);
             border-color: #00ff00;
-            transform: scale(1.02);
+            transform: scale(1.05);
         }
 
         #paymentProofFile {
@@ -435,6 +830,16 @@
             font-size: 3rem;
             color: #00ff00;
             margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .file-info {
@@ -455,6 +860,11 @@
             max-height: 200px;
             border-radius: 10px;
             border: 2px solid #00ff00;
+            transition: transform 0.3s ease;
+        }
+
+        .file-preview img:hover {
+            transform: scale(1.1);
         }
 
         /* Payment Methods */
@@ -473,18 +883,37 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-method::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .payment-method:hover::before {
+            left: 100%;
         }
 
         .payment-method:hover,
         .payment-method.selected {
             border-color: #00ff00;
             background: rgba(0, 255, 0, 0.2);
-            transform: translateY(-2px);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 255, 0, 0.3);
         }
 
         .payment-method-icon {
             font-size: 2rem;
             margin-bottom: 0.5rem;
+            animation: pulse 2s infinite;
         }
 
         /* Submit Button Mejorado */
@@ -504,37 +933,35 @@
             overflow: hidden;
         }
 
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
         .submit-btn:hover {
             background: linear-gradient(45deg, #00cc00, #009900);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 255, 0, 0.5);
         }
 
         .submit-btn:active {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
         }
 
         .submit-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { 
-                opacity: 0;
-                transform: translateY(-50px) scale(0.8);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
         }
 
         /* WhatsApp Button */
@@ -551,11 +978,12 @@
             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
             z-index: 1000;
             transition: all 0.3s ease;
+            animation: float 3s ease-in-out infinite;
         }
 
         .whatsapp-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+            transform: scale(1.2) rotate(15deg);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
         }
 
         /* Footer */
@@ -564,10 +992,13 @@
             text-align: center;
             padding: 2rem 0;
             margin-top: 4rem;
+            border-top: 1px solid rgba(0, 255, 0, 0.3);
+            animation: slideInUp 1s ease;
         }
 
         .footer-content {
             color: #00ff00;
+            animation: pulse 2s infinite;
         }
 
         /* Responsive Design */
@@ -652,6 +1083,14 @@
                 width: 100%;
                 max-width: 300px;
             }
+
+            .carousel {
+                height: 200px;
+            }
+
+            .carousel-title {
+                font-size: 1.2rem;
+            }
         }
 
         /* Tablet Design */
@@ -704,6 +1143,7 @@
             padding: 1rem;
             border-radius: 0 0 10px 10px;
             backdrop-filter: blur(10px);
+            animation: slideDown 0.3s ease;
         }
 
         .mobile-menu a {
@@ -718,6 +1158,7 @@
         .mobile-menu a:hover {
             background: #00ff00;
             color: black;
+            transform: translateX(10px);
         }
 
         .menu-toggle {
@@ -728,6 +1169,11 @@
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            transform: scale(1.2) rotate(90deg);
         }
 
         @media (max-width: 768px) {
@@ -772,6 +1218,9 @@
     </style>
 </head>
 <body>
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
     <header>
         <nav class="container">
             <div class="logo">
@@ -805,13 +1254,52 @@
                 <div class="hero-features">
                     <h3>🎯 Características de nuestros servicios:</h3>
                     <div class="features-grid">
-                        <div>✅ <strong>Entrega Inmediata</strong></div>
-                        <div>✅ <strong>Precios Accesibles</strong></div>
-                        <div>✅ <strong>Garantía Incluida</strong></div>
-                        <div>✅ <strong>Soporte 24/7</strong></div>
+                        <div style="--i: 0">✅ <strong>Entrega Inmediata</strong></div>
+                        <div style="--i: 1">✅ <strong>Precios Accesibles</strong></div>
+                        <div style="--i: 2">✅ <strong>Garantía Incluida</strong></div>
+                        <div style="--i: 3">✅ <strong>Soporte 24/7</strong></div>
                     </div>
                     <p style="margin-top: 1rem; color: #00ff00; font-size: 1rem;"><strong>🥳 Pagos al BCV 🇻🇪</strong></p>
                     <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>👉🏻 Precios especiales para distribuidores 🤝🏻</strong></p>
+                </div>
+            </div>
+
+            <!-- Carousel de Estrenos -->
+            <div class="carousel-container">
+                <h3 class="carousel-title">🎬 Últimos Estrenos y Contenido Popular</h3>
+                <div class="carousel">
+                    <div class="carousel-track">
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1489599807088-5baacb94f7bb?w=800&h=400&fit=crop');">
+                            <div class="carousel-overlay">
+                                <div class="carousel-title-item">Netflix Originals</div>
+                                <div class="carousel-description">Series y películas exclusivas de Netflix</div>
+                            </div>
+                        </div>
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=800&h=400&fit=crop');">
+                            <div class="carousel-overlay">
+                                <div class="carousel-title-item">Disney+ Magic</div>
+                                <div class="carousel-description">Marvel, Star Wars y contenido familiar</div>
+                            </div>
+                        </div>
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&h=400&fit=crop');">
+                            <div class="carousel-overlay">
+                                <div class="carousel-title-item">Prime Video</div>
+                                <div class="carousel-description">Películas taquilleras y series originales</div>
+                            </div>
+                        </div>
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1518991669997-6ba6b6b67e55?w=800&h=400&fit=crop');">
+                            <div class="carousel-overlay">
+                                <div class="carousel-title-item">HBO Max</div>
+                                <div class="carousel-description">Contenido premium y blockbusters</div>
+                            </div>
+                        </div>
+                        <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1489599807088-5baacb94f7bb?w=800&h=400&fit=crop');">
+                            <div class="carousel-overlay">
+                                <div class="carousel-title-item">Anime & Más</div>
+                                <div class="carousel-description">Crunchyroll y contenido especializado</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1029,7 +1517,14 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/netflix.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "✅ Acceso completo a todo el catálogo de Netflix",
+                    "🎬 Películas y series en HD y 4K",
+                    "📱 Compatible con todos los dispositivos",
+                    "🔄 Renovación automática disponible",
+                    "👤 Perfil personalizado exclusivo"
+                ]
             },
             { 
                 name: "NETFLIX PERFIL 15 DÍAS", 
@@ -1037,7 +1532,14 @@
                 duration: "15 DÍAS", 
                 devices: "1 DISPOSITIVO",
                 image: "img/netflix.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "✅ Acceso completo por 15 días",
+                    "🎬 Películas y series en HD",
+                    "📱 Compatible con móviles y tablets",
+                    "⚡ Activación inmediata",
+                    "💰 Opción económica para prueba"
+                ]
             },
             { 
                 name: "JELLYFIN PERFIL", 
@@ -1045,7 +1547,14 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/jellyfin.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "🎥 Amplio catálogo de películas y series",
+                    "🌟 Contenido actualizado constantemente",
+                    "📺 Calidad HD y 4K disponible",
+                    "🔒 Servidor privado y seguro",
+                    "⚡ Sin publicidad ni interrupciones"
+                ]
             },
             { 
                 name: "DISNEY ESTÁNDAR", 
@@ -1053,7 +1562,14 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/disney.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "🏰 Todo el contenido de Disney+",
+                    "⭐ Marvel, Star Wars y Pixar",
+                    "👨‍👩‍👧‍👦 Perfecto para toda la familia",
+                    "🎬 Estrenos exclusivos de Disney",
+                    "📱 Descarga para ver sin conexión"
+                ]
             },
             { 
                 name: "PRIME VIDEO PERFIL", 
@@ -1061,7 +1577,14 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/primevideo.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "🎭 Series originales de Amazon",
+                    "🎬 Películas taquilleras recientes",
+                    "🌍 Contenido internacional variado",
+                    "⚡ Streaming en alta calidad",
+                    "🎵 Acceso limitado a Prime Music"
+                ]
             },
             { 
                 name: "FLUJO TV PERFIL", 
@@ -1069,7 +1592,14 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/flujotv.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "📺 Canales de TV en vivo",
+                    "🎬 Películas y series on-demand",
+                    "⚽ Deportes y eventos en vivo",
+                    "🌎 Contenido latino y internacional",
+                    "💡 Interfaz fácil de usar"
+                ]
             },
             { 
                 name: "TELE LATINO PERFIL", 
@@ -1078,7 +1608,14 @@
                 devices: "1 DISPOSITIVO",
                 image: "img/telelatino.png",
                 altPrice: "659 Bs (2 MESES)",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "📺 Canales latinos en vivo",
+                    "🎬 Películas y series latinas",
+                    "📰 Noticias en español",
+                    "⚽ Deportes latinos",
+                    "🎵 Música y entretenimiento"
+                ]
             },
             { 
                 name: "STELLA TV PERFIL", 
@@ -1087,7 +1624,14 @@
                 devices: "1 DISPOSITIVO",
                 image: "img/stellatv.png",
                 altPrice: "659 Bs (2 MESES)",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "🌟 Contenido premium latino",
+                    "📺 Canales de TV variados",
+                    "🎬 Películas en español",
+                    "👨‍👩‍👧‍👦 Programación familiar",
+                    "⚽ Deportes y entretenimiento"
+                ]
             },
             { 
                 name: "CRUNCHYROLL PERFIL", 
@@ -1095,7 +1639,14 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/crunchyroll.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "🎌 Anime exclusivo y simulcast",
+                    "📚 Manga digital incluido",
+                    "🎬 Series anime en HD",
+                    "⚡ Episodios nuevos cada semana",
+                    "🌟 Sin publicidad en contenido premium"
+                ]
             },
             { 
                 name: "VIX PERFIL", 
@@ -1103,7 +1654,14 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/vix.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "🎭 Contenido original de ViX",
+                    "📺 Telenovelas y series latinas",
+                    "⚽ Deportes en vivo",
+                    "📰 Noticias en español",
+                    "🎬 Películas mexicanas y latinas"
+                ]
             },
             { 
                 name: "MAX PERFIL", 
@@ -1111,7 +1669,14 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/max.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "🎬 Contenido HBO Max premium",
+                    "⚡ Estrenos simultáneos con cines",
+                    "🎭 Series originales de HBO",
+                    "🎨 Documentales y especiales",
+                    "👨‍👩‍👧‍👦 Contenido Warner Bros"
+                ]
             },
             { 
                 name: "PARAMOUNT PERFIL", 
@@ -1119,7 +1684,14 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/paramount.png",
-                type: "perfil"
+                type: "perfil",
+                details: [
+                    "🎬 Películas de Paramount Pictures",
+                    "📺 Shows de Comedy Central y MTV",
+                    "⚽ Deportes CBS Sports",
+                    "👶 Contenido Nickelodeon",
+                    "🎭 Series originales exclusivas"
+                ]
             }
         ];
 
@@ -1131,7 +1703,15 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "4 DISPOSITIVOS",
                 image: "img/netflixcuenta.png",
-                type: "cuenta"
+                type: "cuenta",
+                details: [
+                    "👥 Hasta 4 perfiles simultáneos",
+                    "📱 4 dispositivos conectados",
+                    "🎬 Catálogo completo en 4K",
+                    "💾 Descargas ilimitadas",
+                    "🌍 Contenido de todas las regiones",
+                    "👨‍👩‍👧‍👦 Control parental incluido"
+                ]
             },
             { 
                 name: "JELLYFIN CUENTA COMPLETA", 
@@ -1139,39 +1719,79 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "3 DISPOSITIVOS",
                 image: "img/jellyfincuenta.png",
-                type: "cuenta"
+                type: "cuenta",
+                details: [
+                    "👥 Hasta 3 usuarios simultáneos",
+                    "🎬 Biblioteca completa HD/4K",
+                    "📱 Multi-dispositivo",
+                    "🔒 Servidor privado dedicado",
+                    "⚡ Sin límites de ancho de banda",
+                    "🎵 Música y audiolibros incluidos"
+                ]
             },
             { 
                 name: "DISNEY CUENTA COMPLETA", 
                 price: "783 Bs", 
                 duration: "1 MES (30 DÍAS)", 
-                devices: "4 DISPOSITIVOS",
-                image: "img/disney.png",
-                type: "cuenta"
+                devices: "6 DISPOSITIVOS",
+                image: "img/disneycuentas.png",
+                type: "cuenta",
+                details: [
+                    "👥 4 perfiles familiares",
+                    "🏰 Todo Disney, Marvel, Star Wars",
+                    "📱 4 dispositivos simultáneos",
+                    "💾 Descargas offline",
+                    "🎬 Contenido 4K HDR",
+                    "👶 Configuración infantil segura"
+                ]
             },
             { 
                 name: "PRIME VIDEO CUENTA COMPLETA", 
                 price: "540 Bs", 
                 duration: "1 MES (30 DÍAS)", 
-                devices: "3 DISPOSITIVOS",
-                image: "img/primevideo.png",
-                type: "cuenta"
+                devices: "5 DISPOSITIVOS",
+                image: "img/primevideocuenta.png",
+                type: "cuenta",
+                details: [
+                    "👥 3 streams simultáneos",
+                    "🎬 Biblioteca completa de Amazon",
+                    "📱 Multi-dispositivo",
+                    "💾 Descargas para móviles",
+                    "🎵 Prime Music incluido",
+                    "📦 Beneficios Prime parciales"
+                ]
             },
             { 
                 name: "FLUJO TV CUENTA COMPLETA", 
                 price: "875 Bs", 
                 duration: "1 MES (30 DÍAS)", 
-                devices: "4 DISPOSITIVOS",
-                image: "img/flujotv.png",
-                type: "cuenta"
+                devices: "3 DISPOSITIVOS",
+                image: "img/flujotvcuenta.png",
+                type: "cuenta",
+                details: [
+                    "👥 4 usuarios simultáneos",
+                    "📺 Canales TV en vivo",
+                    "🎬 VOD completo",
+                    "⚽ Deportes en vivo",
+                    "📱 Apps móviles incluidas",
+                    "🔄 Grabación en la nube"
+                ]
             },
             { 
                 name: "TELE LATINO CUENTA COMPLETA", 
                 price: "780 Bs", 
                 duration: "1 MES (30 DÍAS)", 
-                devices: "3 DISPOSITIVOS",
-                image: "img/telelatino.png",
-                type: "cuenta"
+                devices: "4 DISPOSITIVOS",
+                image: "img/telelatinocuenta.png",
+                type: "cuenta",
+                details: [
+                    "👥 3 conexiones simultáneas",
+                    "📺 Todos los canales latinos",
+                    "🎬 Películas y series completas",
+                    "📰 Noticias 24/7",
+                    "⚽ Deportes premium",
+                    "🎵 Canales musicales"
+                ]
             },
             { 
                 name: "STELLA TV CUENTA COMPLETA", 
@@ -1179,23 +1799,47 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "3 DISPOSITIVOS",
                 image: "img/stellatv.png",
-                type: "cuenta"
+                type: "cuenta",
+                details: [
+                    "👥 3 perfiles de usuario",
+                    "🌟 Contenido premium completo",
+                    "📺 Canales variados",
+                    "🎬 Biblioteca de películas",
+                    "👨‍👩‍👧‍👦 Programación familiar",
+                    "📱 Compatible con Smart TV"
+                ]
             },
             { 
                 name: "CRUNCHYROLL CUENTA COMPLETA", 
                 price: "430 Bs", 
                 duration: "1 MES (30 DÍAS)", 
-                devices: "2 DISPOSITIVOS",
+                devices: "4 DISPOSITIVOS",
                 image: "img/crunchyroll.png",
-                type: "cuenta"
+                type: "cuenta",
+                details: [
+                    "👥 2 streams simultáneos",
+                    "🎌 Anime completo sin ads",
+                    "📚 Manga ilimitado",
+                    "🎬 Simulcast de Japón",
+                    "📱 Apps móviles premium",
+                    "🌟 Calidad HD sin interrupciones"
+                ]
             },
             { 
                 name: "VIX CUENTA COMPLETA", 
                 price: "436 Bs", 
                 duration: "1 MES (30 DÍAS)", 
-                devices: "2 DISPOSITIVOS",
+                devices: "4 DISPOSITIVOS",
                 image: "img/vix.png",
-                type: "cuenta"
+                type: "cuenta",
+                details: [
+                    "👥 2 dispositivos simultáneos",
+                    "🎭 Contenido ViX+ completo",
+                    "📺 Canales en vivo",
+                    "⚽ Deportes premium",
+                    "🎬 Originales exclusivos",
+                    "📰 Noticias Univision"
+                ]
             },
             { 
                 name: "MAX CUENTA COMPLETA", 
@@ -1203,7 +1847,15 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "3 DISPOSITIVOS",
                 image: "img/max.png",
-                type: "cuenta"
+                type: "cuenta",
+                details: [
+                    "👥 3 streams simultáneos",
+                    "🎬 HBO Max completo",
+                    "⚡ Estrenos día y fecha",
+                    "🎭 Series HBO originales",
+                    "🎨 Documentales premium",
+                    "👨‍👩‍👧‍👦 Contenido para toda la familia"
+                ]
             },
             { 
                 name: "PARAMOUNT CUENTA COMPLETA", 
@@ -1211,7 +1863,15 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "2 DISPOSITIVOS",
                 image: "img/paramount.png",
-                type: "cuenta"
+                type: "cuenta",
+                details: [
+                    "👥 2 streams simultáneos",
+                    "🎬 Biblioteca Paramount completa",
+                    "📺 CBS, MTV, Comedy Central",
+                    "⚽ CBS Sports incluido",
+                    "👶 Nickelodeon completo",
+                    "🎭 Originales de Paramount+"
+                ]
             }
         ];
 
@@ -1223,7 +1883,15 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "3 DISPOSITIVOS",
                 image: "img/plex.png",
-                type: "otro"
+                type: "otro",
+                details: [
+                    "🎬 Servidor multimedia personal",
+                    "👥 Hasta 3 usuarios",
+                    "📱 Sincronización móvil",
+                    "🎵 Música y fotos incluidas",
+                    "📺 Canales gratuitos adicionales",
+                    "☁️ Almacenamiento en la nube"
+                ]
             },
             { 
                 name: "DEEZER", 
@@ -1231,7 +1899,15 @@
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/deezer.png",
-                type: "otro"
+                type: "otro",
+                details: [
+                    "🎵 90 millones de canciones",
+                    "🎧 Audio de alta calidad",
+                    "📱 Descargas offline",
+                    "🎼 Playlists personalizadas",
+                    "🎙️ Podcasts incluidos",
+                    "⚡ Sin publicidad"
+                ]
             },
             { 
                 name: "CANVA", 
@@ -1244,7 +1920,15 @@
                     { duration: "3 MESES", price: "702 Bs" },
                     { duration: "12 MESES", price: "1.688 Bs" }
                 ],
-                type: "otro"
+                type: "otro",
+                details: [
+                    "🎨 Diseño gráfico profesional",
+                    "📱 Templates premium ilimitados",
+                    "☁️ Almacenamiento en la nube",
+                    "👥 Colaboración en equipo",
+                    "📊 Elementos gráficos premium",
+                    "🖼️ Banco de imágenes incluido"
+                ]
             }
         ];
 
@@ -1260,10 +1944,26 @@
         let selectedFile = null;
         let selectedPaymentMethod = '';
 
-        // Función para crear una tarjeta de servicio
-        function createServiceCard(service) {
+        // Crear partículas flotantes
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            const particleCount = 15;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particles.appendChild(particle);
+            }
+        }
+
+        // Función para crear una tarjeta de servicio con detalles desplegables
+        function createServiceCard(service, index) {
             const card = document.createElement('div');
             card.className = 'service-card';
+            card.style.setProperty('--card-index', index);
             
             // Price information
             let priceInfo = '';
@@ -1290,6 +1990,18 @@
             if (service.devices) {
                 detailsHtml += `<div class="service-details">📴 ${service.devices}</div>`;
             }
+
+            // Details content for toggle
+            let detailsContent = '';
+            if (service.details && service.details.length > 0) {
+                detailsContent = `
+                    <div class="service-details-content" id="details-${service.name.replace(/\s+/g, '-')}">
+                        <ul>
+                            ${service.details.map(detail => `<li>${detail}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
             
             card.innerHTML = `
                 <div>
@@ -1300,11 +2012,35 @@
                     <div>
                         ${detailsHtml}
                         ${priceInfo}
+                        ${service.details ? `<div class="details-toggle" onclick="toggleDetails('${service.name.replace(/\s+/g, '-')}')">ℹ️ Ver Detalles</div>` : ''}
+                        ${detailsContent}
                     </div>
                     <button class="buy-btn" onclick="openPurchaseModal('${service.name}', '${service.price}')">🛒 Comprar Ahora</button>
                 </div>
             `;
             return card;
+        }
+
+        // Función para alternar detalles
+        function toggleDetails(serviceId) {
+            const detailsElement = document.getElementById(`details-${serviceId}`);
+            const toggleButton = event.target;
+            
+            if (detailsElement.classList.contains('active')) {
+                detailsElement.classList.remove('active');
+                toggleButton.innerHTML = 'ℹ️ Ver Detalles';
+            } else {
+                // Cerrar otros detalles abiertos
+                document.querySelectorAll('.service-details-content.active').forEach(el => {
+                    el.classList.remove('active');
+                });
+                document.querySelectorAll('.details-toggle').forEach(btn => {
+                    btn.innerHTML = 'ℹ️ Ver Detalles';
+                });
+                
+                detailsElement.classList.add('active');
+                toggleButton.innerHTML = '❌ Cerrar Detalles';
+            }
         }
 
         // Load services in their respective grids
@@ -1319,18 +2055,18 @@
             otrosGrid.innerHTML = '';
             
             // Load perfiles
-            perfiles.forEach(service => {
-                perfilesGrid.appendChild(createServiceCard(service));
+            perfiles.forEach((service, index) => {
+                perfilesGrid.appendChild(createServiceCard(service, index));
             });
             
             // Load cuentas
-            cuentas.forEach(service => {
-                cuentasGrid.appendChild(createServiceCard(service));
+            cuentas.forEach((service, index) => {
+                cuentasGrid.appendChild(createServiceCard(service, index));
             });
             
             // Load otros
-            otros.forEach(service => {
-                otrosGrid.appendChild(createServiceCard(service));
+            otros.forEach((service, index) => {
+                otrosGrid.appendChild(createServiceCard(service, index));
             });
         }
 
@@ -1351,6 +2087,14 @@
             
             // Add active class to clicked button
             event.target.classList.add('active');
+
+            // Cerrar todos los detalles abiertos al cambiar de tab
+            document.querySelectorAll('.service-details-content.active').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.details-toggle').forEach(btn => {
+                btn.innerHTML = 'ℹ️ Ver Detalles';
+            });
         }
 
         // Navigation
@@ -1405,6 +2149,9 @@
 
         // Manejo de archivos
         document.addEventListener('DOMContentLoaded', function() {
+            // Crear partículas
+            createParticles();
+
             const fileInput = document.getElementById('paymentProofFile');
             const fileContainer = document.querySelector('.file-upload-container');
             const fileInfo = document.getElementById('fileInfo');
@@ -1564,6 +2311,9 @@
                 closeModal();
             }
         }
+
+        // Hacer toggleDetails global
+        window.toggleDetails = toggleDetails;
     </script>
 </body>
 </html>
