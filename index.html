@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConnectTV - Tu Mejor OpciÃ³n en Streaming</title>
+    <title>ConnectTV - Tu Mejor Opción en Streaming</title>
     <style>
         * {
             margin: 0;
@@ -1105,9 +1105,55 @@
             to { transform: translateX(100%); opacity: 0; }
         }
     </style>
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJpY29ucyI6W3sic3JjIjoiaW1nL2xvZ28ucG5nIiwic2l6ZXMiOiI1MTJ4NTEyIiwiZm9ybWF0IjoicG5nIn0seyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjRlUzl2Y21WemRHRm5aWFF1YVc1blgxTm9hWE5sYm1SeVpXNWtYMWxrYzJwMVlteHBibk13Y0hCemFXRjBjbXhsQ3hOMGNtbHpaWEpoYkRGaWJHbGpaU0JuY21Wa1pHbHpZWEp2Y21VdVkybHRjMjlrSWc9PSIsInNpemVzIjoiMTQ0eDE0NCIsImZvcm1hdCI6InN2ZyJ9XSwibmFtZSI6IkNvbm5lY3RUViIsInNob3J0X25hbWUiOiJDb25uZWN0VFYiLCJzdGFydF91cmwiOiIuL2luZGV4Lmh0bWwiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMDAwMDAwIiwidGhlbWVfY29sb3IiOiIjMDBmZjAwIn0=">
+    <script>
+        // Service Worker y Manifest para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // Service Worker Script
+                const swCode = `
+const CACHE_NAME = 'connecttv-cache-v1';
+const urlsToCache = [
+    './',
+    './index.html',
+    './img/logo.png',
+    './img/netflix.png',
+    './img/netflixcuenta.png',
+    './img/youtubeper.png'
+];
+
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+        .then(cache => {
+            return cache.addAll(urlsToCache);
+        })
+    );
+});
+
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request)
+        .then(response => {
+            return response || fetch(event.request);
+        })
+    );
+});
+`;
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(swBlob);
+                navigator.serviceWorker.register(swUrl)
+                    .then(registration => {
+                        console.log('Service Worker registrado con éxito:', registration);
+                    })
+                    .catch(error => {
+                        console.error('Fallo el registro del Service Worker:', error);
+                    });
+            });
+        }
+    </script>
 </head>
 <body>
-    <!-- Floating Particles -->
     <div class="particles" id="particles"></div>
 
     <header>
@@ -1139,7 +1185,6 @@
     </header>
 
     <main class="container">
-        <!-- Home Section -->
         <section id="home" class="section active">
             <div class="hero">
                 <h2>🍿 Bienvenido a ConnectTV 🟢</h2>
@@ -1157,7 +1202,6 @@
                 </div>
             </div>
 
-            <!-- Services Tabs with Navigation -->
             <div class="services-tabs">
                 <div class="tab-navigation">
                     <button class="nav-btn" id="prevBtn" onclick="previousTab()" disabled>
@@ -1176,29 +1220,22 @@
                 </div>
             </div>
 
-            <!-- Profiles Services -->
             <div id="perfiles" class="services-container active">
                 <div class="services-grid" id="perfilesGrid">
-                    <!-- Los perfiles se cargarán aquí dinámicamente -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Full Accounts Services -->
             <div id="cuentas" class="services-container">
                 <div class="services-grid" id="cuentasGrid">
-                    <!-- Las cuentas completas se cargarán aquí dinámicamente -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Other Services -->
             <div id="otros" class="services-container">
                 <div class="services-grid" id="otrosGrid">
-                    <!-- Los otros servicios se cargarán aquí dinámicamente -->
-                </div>
+                    </div>
             </div>
         </section>
 
-        <!-- About Section -->
         <section id="about" class="section">
             <h2>Quienes Somos</h2>
             <div class="section-content">
@@ -1213,7 +1250,6 @@
             </div>
         </section>
 
-        <!-- Why Us Section -->
         <section id="why-us" class="section">
             <h2>Por Que Elegirnos</h2>
             <div class="section-content">
@@ -1234,7 +1270,6 @@
             </div>
         </section>
 
-        <!-- Support Section -->
         <section id="support" class="section">
             <h2>Soporte</h2>
             <div class="section-content">
@@ -1259,7 +1294,6 @@
         </section>
     </main>
 
-    <!-- Shopping Cart Modal -->
     <div id="cartModal" class="cart-modal">
         <div class="cart-content">
             <div class="cart-header">
@@ -1268,8 +1302,7 @@
             </div>
             <div class="cart-body">
                 <div class="cart-items" id="cartItems">
-                    <!-- Los productos del carrito se mostrarán aquí -->
-                </div>
+                    </div>
                 
                 <div class="cart-total" id="cartTotalSection">
                     <h3>💰 Total a Pagar:</h3>
@@ -1288,7 +1321,6 @@
         </div>
     </div>
 
-    <!-- WhatsApp Support Button -->
     <a href="https://wa.me/584242357804" class="whatsapp-btn" target="_blank">📞</a>
 
     <footer>
@@ -1325,245 +1357,7 @@
                 ]
             
             
-           },
-            { 
-                name: "NETFLIX PERFIL 15 DÍAS", 
-                price: "350,00 Bs", 
-                numericPrice: 350.00,
-                duration: "15 DÍAS", 
-                devices: "1 DISPOSITIVO",
-                image: "img/netflix.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                    "✅ Acceso completo por 15 días",
-                    "🎬 Películas y series en HD",
-                    "📱 Compatible con móviles y tablets",
-                    "⚡ Activación inmediata",
-                    "💰 Opción económica para prueba"
-                ]
-             
-            
-           },
-            { 
-                name: "Universal + 1 perfil", 
-                price: "437,00 Bs", 
-                numericPrice: 437.00,
-                duration: "30 DÍAS", 
-                devices: "1 DISPOSITIVO",
-                image: "img/universalper.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                    "✅ ofrece una amplia variedad de contenido de televisión y cine, incluyendo series de estreno, películas de Hollywood, comedia, crímenes reales y reality shows.",
-                    "🎬 Películas y series en HD",
-                    "📱 Compatible con móviles y tablets",
-                    "⚡ Activación inmediata",
-                    "💰 Opción económica para prueba"
-                ]
-    
-             },
-            { 
-                name: "Jellyfin perfil",
-                price: "437,00 Bs", 
-                numericPrice: 437.00,
-                duration: "30 DÍAS", 
-                devices: "1 DISPOSITIVO",
-                image: "img/jellyfin.png",
-                type: "perfil",
-                available: false, // Cambia a false para marcar como agotado
-                details: [
-                    "🎥 Amplio catálogo de películas y series",
-                    "🌟 Contenido actualizado constantemente",
-                    "📺 Calidad HD y 4K disponible",
-                    "🔒 Servidor privado y seguro",
-                    "⚡ Sin publicidad ni interrupciones"
-                ]   
-
-           },
-            { 
-                name: "DISNEY ESTÁNDAR",
-                price: "437,00 Bs", 
-                numericPrice: 437.00,
-                duration: "30 DÍAS", 
-                devices: "1 DISPOSITIVO",
-                image: "img/disney.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                    "🏰 Todo el contenido de Disney+",
-                    "⭐ Marvel, Star Wars y Pixar",
-                    "👨‍👩‍👧‍👦 Perfecto para toda la familia",
-                    "🎬 Estrenos exclusivos de Disney",
-                    "📱 Descarga para ver sin conexión"
-                ]   
-
-
-           },
-            { 
-                 name: "PRIME VIDEO PERFIL", 
-                price: "437,00 Bs", 
-                numericPrice: 437.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/primevideo.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                    "🎭 Series originales de Amazon",
-                    "🎬 Películas taquilleras recientes",
-                    "🌍 Contenido internacional variado",
-                    "⚡ Streaming en alta calidad",
-                ]   
-
-
-           },
-            { 
-                 name: "FLUJO TV PERFIL", 
-                price: "420,00 Bs", 
-                numericPrice: 420.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/flujotv.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                    "📺 Canales de TV en vivo",
-                    "🎬 Películas y series on-demand",
-                    "⚽ Deportes y eventos en vivo",
-                    "🌎 Contenido latino e internacional",
-                    "💡 Interfaz fácil de usar"
-                ]   
-
-           },
-            { 
-                name: "TELE LATINO PERFIL", 
-                price: "400,00 Bs", 
-                numericPrice: 400.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/telelatino.png",
-                altPrice: "670,00 Bs (2 MESES)",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                    "📺 Canales latinos en vivo",
-                    "🎬 Películas y series latinas",
-                    "📰 Noticias en español",
-                    "⚽ Deportes latinos",
-                    "🎵 Música y entretenimiento"
-                ]   
-
-           },
-            { 
-                name: "STELLA TV PERFIL", 
-                price: "400,00 Bs", 
-                numericPrice: 400.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/stellatv.png",
-                altPrice: "700,00 Bs (2 MESES)",
-                type: "perfil",
-                available: false, // Cambia a false para marcar como agotado
-                details: [
-                    "🌟 Contenido premium latino",
-                    "📺 Canales de TV variados",
-                    "🎬 Películas en español",
-                    "👨‍👩‍👧‍👦 Programación familiar",
-                    "⚽ Deportes y entretenimiento"
-                ]   
-
-           },
-            { 
-                name: "CRUNCHYROLL PERFIL", 
-                price: "358,00 Bs", 
-                numericPrice: 358.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/crunchyroll.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                    "🎌 Anime exclusivo y simulcast",
-                    "📚 Manga digital incluido",
-                    "🎬 Series anime en HD",
-                    "⚡ Episodios nuevos cada semana",
-                    "🌟 Sin publicidad en contenido premium"
-                ]   
-
-           },
-            { 
-                name: "VIX PERFIL", 
-                price: "400,00 Bs", 
-                numericPrice: 400.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/vix.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                    "🎭 Contenido original de ViX",
-                    "📺 Telenovelas y series latinas",
-                    "⚽ Deportes en vivo",
-                    "📰 Noticias en español",
-                    "🎬 Películas mexicanas y latinas"
-                ]   
-
-
-           },
-            { 
-                 name: "MAX PERFIL", 
-                price: "464,00 Bs", 
-                numericPrice: 464.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/max.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "🎬 Contenido HBO Max premium",
-                    "⚡ Estrenos simultáneos con cines",
-                    "🎭 Series originales de HBO",
-                    "🎨 Documentales y especiales",
-                    "👨‍👩‍👧‍👦 Contenido Warner Bros"
-                ]   
-           },
-            { 
-                name: "PARAMOUNT PERFIL", 
-                price: "385,00 Bs", 
-                numericPrice: 385.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/paramount.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "🎬 Películas de Paramount Pictures",
-                    "📺 Shows de Comedy Central y MTV",
-                    "⚽ Deportes CBS Sports",
-                    "👶 Contenido Nickelodeon",
-                    "🎭 Series originales exclusivas"
-                ]   
-
-           },
-            { 
-                name: "perfil IPTV Mi Entretenimiento", 
-                price: "550,00 Bs", 
-                numericPrice: 550.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/IPtvEntretenimiento.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "🎬 Disfruta series, películas y canales en vivo 🎬📡",
-                    "📺 Con la interfaz más increíble 🤩 y fácil de usar 🖥️",
-                    "⚽ Deportes en vivo",
-                    "✨ ¡El mejor entretenimiento está aquí y al mejor precio! 💥💸",
-                    "🎭 Series originales exclusivas"
-                ]   
-
-
+           
             }
         ];
 
@@ -1587,222 +1381,8 @@
                     "👨‍👩‍👧‍👦 Control parental incluido"
                 ]
             
-            },
-            { 
-                name: "cuenta IPTV Mi Entretenimiento", 
-                price: "937,00 Bs", 
-                numericPrice: 937.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "3 DISPOSITIVO",
-                image: "img/IPtvcuenta.png",
-                type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "🎬 Disfruta series, películas y canales en vivo 🎬📡",
-                    "📺 Con la interfaz más increíble 🤩 y fácil de usar 🖥️",
-                    "⚽ Deportes en vivo",
-                    "✨ ¡El mejor entretenimiento está aquí y al mejor precio! 💥💸",
-                    "🎭 Series originales exclusivas"
-                ]   
             
-
-            },
-            { 
-                name: "JELLYFIN CUENTA COMPLETA", 
-                price: "995,00 Bs", 
-                numericPrice: 995.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "4 DISPOSITIVOS",
-                image: "img/jellyfincuenta.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "👥 Hasta 4 usuarios simultáneos",
-                    "🎬 Biblioteca completa HD/4K",
-                    "📱 Multi-dispositivo",
-                    "🔒 Servidor privado dedicado",
-                    "⚡ Sin límites de ancho de banda",
-                ]       
-            
-           },
-            { 
-                 name: "DISNEY ESTANDAR", 
-                price: "1.069,00 Bs", 
-                numericPrice: 1069.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "6 DISPOSITIVOS",
-                image: "img/disneycuentas.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "👥 6 perfiles familiares",
-                    "🏰 Todo Disney, Marvel, Star Wars",
-                    "📱 4 dispositivos simultáneos",
-                    "💾 Descargas offline",
-                    "🎬 Contenido 4K HDR",
-                    "👶 Configuración infantil segura"
-                ]       
-
-           },
-            { 
-                 name: "PRIME VIDEO CUENTA", 
-                price: "755,00 Bs", 
-                numericPrice: 755.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "5 DISPOSITIVOS",
-                image: "img/primevideocuenta.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "👥 5 streams simultáneos",
-                    "🎬 Biblioteca completa de Amazon",
-                    "📱 Multi-dispositivo",
-                    "💾 Descargas para móviles",
-                    "🎵 Prime Music incluido",
-                    "📦 Beneficios Prime parciales"
-                ]       
-
-
-            },
-            { 
-                  name: "FLUJO TV CUENTA", 
-                price: "910,00 Bs", 
-                numericPrice: 910.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "3 DISPOSITIVOS",
-                image: "img/flujotvcuenta.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "👥 3 usuarios simultáneos",
-                    "📺 Canales TV en vivo",
-                    "🎬 VOD completo",
-                    "⚽ Deportes en vivo",
-                    "📱 Apps móviles incluidas",
-                    "📄 Grabación en la nube"
-                ]       
-
-
-
-           },
-            { 
-                 name: "TELE LATINO CUENTA", 
-                price: "885,00 Bs", 
-                numericPrice: 885.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "4 DISPOSITIVOS",
-                image: "img/telelatinocuenta.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "👥 4 conexiones simultáneas",
-                    "📺 Todos los canales latinos",
-                    "🎬 Películas y series completas",
-                    "📰 Noticias 24/7",
-                    "⚽ Deportes premium",
-                    "🎵 Canales musicales"
-                ]       
-
-            },
-            { 
-                name: "STELLA TV CUENTA COMPLETA", 
-                price: "937,00 Bs", 
-                numericPrice: 937.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "3 DISPOSITIVOS",
-                image: "img/stellatvcuenta.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "👥 3 perfiles de usuario",
-                    "🌟 Contenido premium completo",
-                    "📺 Canales variados",
-                    "🎬 Biblioteca de películas",
-                    "👨‍👩‍👧‍👦 Programación familiar",
-                    "📱 Compatible con Smart TV"
-                ]       
-
-
-
-            },
-            { 
-                 name: "CRUNCHYROLL CUENTA", 
-                price: "569,00 Bs", 
-                numericPrice: 569.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "5 DISPOSITIVOS",
-                image: "img/crunchyrollcuenta.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                     "👥 4 streams simultáneos",
-                    "🎌 Anime completo sin ads",
-                    "📚 Manga ilimitado",
-                    "🎬 Simulcast de Japón",
-                    "📱 Apps móviles premium",
-                    "🌟 Calidad HD sin interrupciones"
-                ]       
-            },
-            { 
-                 name: "VIX CUENTA", 
-                price: "622,00 Bs", 
-                numericPrice: 622.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "5 DISPOSITIVOS",
-                image: "img/vixcuenta.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                      "👥 4 dispositivos simultáneos",
-                    "🎭 Contenido ViX+ completo",
-                    "📺 Canales en vivo",
-                    "⚽ Deportes premium",
-                    "🎬 Originales exclusivos",
-                    "📰 Noticias Univision"
-               ] 
-
-           },
-            { 
-                  name: "MAX CUENTA COMPLETA", 
-                price: "754,00 Bs", 
-                numericPrice: 754.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "4 DISPOSITIVOS",
-                image: "img/maxcuenta.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                      "👥 4 streams simultáneos",
-                    "🎬 HBO Max completo",
-                    "⚡ Estrenos día y fecha",
-                    "🎭 Series HBO originales",
-                    "🎨 Documentales premium",
-                    "👨‍👩‍👧‍👦 Contenido para toda la familia"
-               ] 
-
-             },
-            { 
-                   name: "PARAMOUNT CUENTA", 
-                price: "615,00 Bs", 
-                numericPrice: 615.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "6 DISPOSITIVOS",
-                image: "img/paramountcuenta.png",
-                type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
-                details: [
-                    "👥 5 streams simultáneos",
-                    "🎬 Biblioteca Paramount completa",
-                    "📺 CBS, MTV, Comedy Central",
-                    "⚽ CBS Sports incluido",
-                    "👶 Nickelodeon completo",
-                    "🎭 Originales de Paramount+"
-               ] 
-
-
-
-
-
+        
             }
         ];
 
