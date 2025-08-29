@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConnectTV - Tu Mejor Opción en Streaming</title>
+    <title>ConnectTV - Tu Mejor OpciÃ³n en Streaming</title>
     <style>
         * {
             margin: 0;
@@ -474,6 +474,12 @@
             animation-delay: calc(var(--card-index) * 0.1s);
         }
 
+        .service-card.out-of-stock {
+            opacity: 0.6;
+            filter: grayscale(70%);
+            border-color: rgba(255, 0, 0, 0.3);
+        }
+
         @keyframes cardSlideIn {
             from {
                 transform: translateY(50px) rotateX(-15deg);
@@ -496,11 +502,15 @@
             transition: left 0.6s;
         }
 
+        .service-card.out-of-stock::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+        }
+
         .service-card:hover::before {
             left: 100%;
         }
 
-        .service-card:hover {
+        .service-card:hover:not(.out-of-stock) {
             transform: translateY(-10px) scale(1.05);
             border-color: #00ff00;
             box-shadow: 0 15px 35px rgba(0, 255, 0, 0.4);
@@ -517,7 +527,7 @@
             transition: transform 0.3s ease;
         }
 
-        .service-card:hover img {
+        .service-card:hover:not(.out-of-stock) img {
             transform: scale(1.1) rotate(5deg);
         }
 
@@ -527,6 +537,10 @@
             font-size: 1rem;
             line-height: 1.2;
             text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+        }
+
+        .service-card.out-of-stock h3 {
+            color: #ff6666;
         }
 
         .service-info {
@@ -554,6 +568,21 @@
             font-size: 0.85rem;
             color: #00cc00;
             margin: 0.3rem 0;
+        }
+
+        /* Out of stock badge */
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff4444, #cc0000);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
         }
 
         /* Details Toggle */
@@ -619,6 +648,13 @@
             overflow: hidden;
         }
 
+        .add-to-cart-btn.out-of-stock {
+            background: linear-gradient(45deg, #666666, #444444);
+            color: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
         .add-to-cart-btn::before {
             content: '';
             position: absolute;
@@ -630,11 +666,11 @@
             transition: left 0.5s;
         }
 
-        .add-to-cart-btn:hover::before {
+        .add-to-cart-btn:hover:not(.out-of-stock)::before {
             left: 100%;
         }
 
-        .add-to-cart-btn:hover {
+        .add-to-cart-btn:hover:not(.out-of-stock) {
             background: linear-gradient(45deg, #00cc00, #009900);
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
@@ -1058,6 +1094,16 @@
                 display: flex;
             }
         }
+
+        /* Animation for cart notifications */
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -1264,212 +1310,23 @@
             { 
                 name: "NETFLIX PERFIL", 
                 price: "500,00 Bs", 
-                numericPrice: 450.00,
+                numericPrice: 500.00,
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/netflix.png",
                 type: "perfil",
+                available: true, // Cambia a false para marcar como agotado
                 details: [
                     "✅ Acceso completo a todo el catálogo de Netflix",
                     "🎬 Películas y series en HD y 4K",
                     "📱 Compatible con todos los dispositivos",
-                    "🔄 No renovable 🕒1 mes ",
+                    "🔄 No renovable 🕐1 mes ",
                     "👤 Perfil personalizado exclusivo"
                 ]
-            },
-            { 
-                name: "NETFLIX PERFIL 15 DÍAS", 
-                price: "350,00 Bs", 
-                numericPrice: 300.00,
-                duration: "15 DÍAS", 
-                devices: "1 DISPOSITIVO",
-                image: "img/netflix.png",
-                type: "perfil",
-                details: [
-                    "✅ Acceso completo por 15 días",
-                    "🎬 Películas y series en HD",
-                    "📱 Compatible con móviles y tablets",
-                    "⚡ Activación inmediata",
-                    "💰 Opción económica para prueba"
-                ]
-           },
-            { 
-                name: "Universal + 1 perfil", 
-                price: "437,00 Bs", 
-                numericPrice: 350.00,
-                duration: "30 DÍAS", 
-                devices: "1 DISPOSITIVO",
-                image: "img/universalper.png",
-                type: "perfil",
-                details: [
-                    "✅ ofrece una amplia variedad de contenido de televisión y cine, incluyendo series de estreno, películas de Hollywood, comedia, crímenes reales y reality shows.",
-                    "🎬 Películas y series en HD",
-                    "📱 Compatible con móviles y tablets",
-                    "⚡ Activación inmediata",
-                    "💰 Opción económica para prueba"
-                   ]
-            },
-            { 
-                name: "Jellyfin perfil", 
-                price: "437,00 Bs", 
-                numericPrice: 380.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/jellyfin.png",
-                type: "perfil",
-                details: [
-                    "🎥 Amplio catálogo de películas y series",
-                    "🌟 Contenido actualizado constantemente",
-                    "📺 Calidad HD y 4K disponible",
-                    "🔒 Servidor privado y seguro",
-                    "⚡ Sin publicidad ni interrupciones"
-                ]
-            },
-            { 
-                name: "DISNEY ESTÁNDAR", 
-                price: "437,00 Bs", 
-                numericPrice: 350.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/disney.png",
-                type: "perfil",
-                details: [
-                    "🏰 Todo el contenido de Disney+",
-                    "⭐ Marvel, Star Wars y Pixar",
-                    "👨‍👩‍👧‍👦 Perfecto para toda la familia",
-                    "🎬 Estrenos exclusivos de Disney",
-                    "📱 Descarga para ver sin conexión"
-                ]
-            },
-            { 
-                name: "PRIME VIDEO PERFIL", 
-                price: "320,00 Bs", 
-                numericPrice: 320.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/primevideo.png",
-                type: "perfil",
-                details: [
-                    "🎭 Series originales de Amazon",
-                    "🎬 Películas taquilleras recientes",
-                    "🌍 Contenido internacional variado",
-                    "⚡ Streaming en alta calidad",
-                    "🎵 Acceso limitado a Prime Music"
-                ]
-            },
-            { 
-                name: "FLUJO TV PERFIL", 
-                price: "380,00 Bs", 
-                numericPrice: 380.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/flujotv.png",
-                type: "perfil",
-                details: [
-                    "📺 Canales de TV en vivo",
-                    "🎬 Películas y series on-demand",
-                    "⚽ Deportes y eventos en vivo",
-                    "🌎 Contenido latino e internacional",
-                    "💡 Interfaz fácil de usar"
-                ]
-            },
-            { 
-                name: "TELE LATINO PERFIL", 
-                price: "380,00 Bs", 
-                numericPrice: 380.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/telelatino.png",
-                altPrice: "659 Bs (2 MESES)",
-                type: "perfil",
-                details: [
-                    "📺 Canales latinos en vivo",
-                    "🎬 Películas y series latinas",
-                    "📰 Noticias en español",
-                    "⚽ Deportes latinos",
-                    "🎵 Música y entretenimiento"
-                ]
-            },
-            { 
-                name: "STELLA TV PERFIL", 
-                price: "380,00 Bs", 
-                numericPrice: 380.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/stellatv.png",
-                altPrice: "659 Bs (2 MESES)",
-                type: "perfil",
-                details: [
-                    "🌟 Contenido premium latino",
-                    "📺 Canales de TV variados",
-                    "🎬 Películas en español",
-                    "👨‍👩‍👧‍👦 Programación familiar",
-                    "⚽ Deportes y entretenimiento"
-                ]
-            },
-            { 
-                name: "CRUNCHYROLL PERFIL", 
-                price: "297,00 Bs", 
-                numericPrice: 297.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/crunchyroll.png",
-                type: "perfil",
-                details: [
-                    "🎌 Anime exclusivo y simulcast",
-                    "📚 Manga digital incluido",
-                    "🎬 Series anime en HD",
-                    "⚡ Episodios nuevos cada semana",
-                    "🌟 Sin publicidad en contenido premium"
-                ]
-            },
-            { 
-                name: "VIX PERFIL", 
-                price: "300,00 Bs", 
-                numericPrice: 300.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/vix.png",
-                type: "perfil",
-                details: [
-                    "🎭 Contenido original de ViX",
-                    "📺 Telenovelas y series latinas",
-                    "⚽ Deportes en vivo",
-                    "📰 Noticias en español",
-                    "🎬 Películas mexicanas y latinas"
-                ]
-            },
-            { 
-                name: "MAX PERFIL", 
-                price: "300,00 Bs", 
-                numericPrice: 300.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/max.png",
-                type: "perfil",
-                details: [
-                    "🎬 Contenido HBO Max premium",
-                    "⚡ Estrenos simultáneos con cines",
-                    "🎭 Series originales de HBO",
-                    "🎨 Documentales y especiales",
-                    "👨‍👩‍👧‍👦 Contenido Warner Bros"
-                ]
-            },
-            { 
-                name: "PARAMOUNT PERFIL", 
-                price: "300,00 Bs", 
-                numericPrice: 300.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/paramount.png",
-                type: "perfil",
-                details: [
-                    "🎬 Películas de Paramount Pictures",
-                    "📺 Shows de Comedy Central y MTV",
-                    "⚽ Deportes CBS Sports",
-                    "👶 Contenido Nickelodeon",
-                    "🎭 Series originales exclusivas"
-                ]
+            
+            
+           
+
             }
         ];
 
@@ -1477,12 +1334,13 @@
         const cuentas = [
             { 
                 name: "NETFLIX CUENTA COMPLETA", 
-                price: "1800,00 Bs", 
-                numericPrice: 1800.00,
+                price: "2000,00 Bs", 
+                numericPrice: 2000.00,
                 duration: "1 MES (30 DÍAS)", 
                 devices: "4 DISPOSITIVOS",
                 image: "img/netflixcuenta.png",
                 type: "cuenta",
+                available: true, // Cambia a false para marcar como agotado
                 details: [
                     "👥 Hasta 4 perfiles simultáneos",
                     "📱 4 dispositivos conectados",
@@ -1491,176 +1349,10 @@
                     "🌍 Contenido de todas las regiones",
                     "👨‍👩‍👧‍👦 Control parental incluido"
                 ]
-            },
-            { 
-                name: "JELLYFIN CUENTA COMPLETA", 
-                price: "700,00 Bs", 
-                numericPrice: 700.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "3 DISPOSITIVOS",
-                image: "img/jellyfincuenta.png",
-                type: "cuenta",
-                details: [
-                    "👥 Hasta 3 usuarios simultáneos",
-                    "🎬 Biblioteca completa HD/4K",
-                    "📱 Multi-dispositivo",
-                    "🔒 Servidor privado dedicado",
-                    "⚡ Sin límites de ancho de banda",
-                    "🎵 Música y audiolibros incluidos"
-                ]
-            },
-            { 
-                name: "DISNEY CUENTA COMPLETA", 
-                price: "783,00 Bs", 
-                numericPrice: 783.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "6 DISPOSITIVOS",
-                image: "img/disneycuentas.png",
-                type: "cuenta",
-                details: [
-                    "👥 4 perfiles familiares",
-                    "🏰 Todo Disney, Marvel, Star Wars",
-                    "📱 4 dispositivos simultáneos",
-                    "💾 Descargas offline",
-                    "🎬 Contenido 4K HDR",
-                    "👶 Configuración infantil segura"
-                ]
-            },
-            { 
-                name: "PRIME VIDEO CUENTA COMPLETA", 
-                price: "550,00 Bs", 
-                numericPrice: 550.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "5 DISPOSITIVOS",
-                image: "img/primevideocuenta.png",
-                type: "cuenta",
-                details: [
-                    "👥 3 streams simultáneos",
-                    "🎬 Biblioteca completa de Amazon",
-                    "📱 Multi-dispositivo",
-                    "💾 Descargas para móviles",
-                    "🎵 Prime Music incluido",
-                    "📦 Beneficios Prime parciales"
-                ]
-            },
-            { 
-                name: "FLUJO TV CUENTA COMPLETA", 
-                price: "875,00 Bs", 
-                numericPrice: 875.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "3 DISPOSITIVOS",
-                image: "img/flujotvcuenta.png",
-                type: "cuenta",
-                details: [
-                    "👥 3 usuarios simultáneos",
-                    "📺 Canales TV en vivo",
-                    "🎬 VOD completo",
-                    "⚽ Deportes en vivo",
-                    "📱 Apps móviles incluidas",
-                    "📄 Grabación en la nube"
-                ]
-            },
-            { 
-                name: "TELE LATINO CUENTA COMPLETA", 
-                price: "780,00 Bs", 
-                numericPrice: 780.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "4 DISPOSITIVOS",
-                image: "img/telelatinocuenta.png",
-                type: "cuenta",
-                details: [
-                    "👥 4 conexiones simultáneas",
-                    "📺 Todos los canales latinos",
-                    "🎬 Películas y series completas",
-                    "📰 Noticias 24/7",
-                    "⚽ Deportes premium",
-                    "🎵 Canales musicales"
-                ]
-            },
-            { 
-                name: "STELLA TV CUENTA COMPLETA", 
-                price: "780,00 Bs", 
-                numericPrice: 780.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "3 DISPOSITIVOS",
-                image: "img/stellatvcuenta.png",
-                type: "cuenta",
-                details: [
-                    "👥 3 perfiles de usuario",
-                    "🌟 Contenido premium completo",
-                    "📺 Canales variados",
-                    "🎬 Biblioteca de películas",
-                    "👨‍👩‍👧‍👦 Programación familiar",
-                    "📱 Compatible con Smart TV"
-                ]
-            },
-            { 
-                name: "CRUNCHYROLL CUENTA COMPLETA", 
-                price: "430,00 Bs", 
-                numericPrice: 430.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "5 DISPOSITIVOS",
-                image: "img/crunchyrollcuenta.png",
-                type: "cuenta",
-                details: [
-                    "👥 4 streams simultáneos",
-                    "🎌 Anime completo sin ads",
-                    "📚 Manga ilimitado",
-                    "🎬 Simulcast de Japón",
-                    "📱 Apps móviles premium",
-                    "🌟 Calidad HD sin interrupciones"
-                ]
-            },
-            { 
-                name: "VIX CUENTA COMPLETA", 
-                price: "436,00 Bs", 
-                numericPrice: 436.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "5 DISPOSITIVOS",
-                image: "img/vixcuenta.png",
-                type: "cuenta",
-                details: [
-                    "👥 4 dispositivos simultáneos",
-                    "🎭 Contenido ViX+ completo",
-                    "📺 Canales en vivo",
-                    "⚽ Deportes premium",
-                    "🎬 Originales exclusivos",
-                    "📰 Noticias Univision"
-                ]
-            },
-            { 
-                name: "MAX CUENTA COMPLETA", 
-                price: "544,00 Bs", 
-                numericPrice: 544.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "5 DISPOSITIVOS",
-                image: "img/maxcuenta.png",
-                type: "cuenta",
-                details: [
-                    "👥 4 streams simultáneos",
-                    "🎬 HBO Max completo",
-                    "⚡ Estrenos día y fecha",
-                    "🎭 Series HBO originales",
-                    "🎨 Documentales premium",
-                    "👨‍👩‍👧‍👦 Contenido para toda la familia"
-                ]
-            },
-            { 
-                name: "PARAMOUNT CUENTA COMPLETA", 
-                price: "527,00 Bs", 
-                numericPrice: 527.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "6 DISPOSITIVOS",
-                image: "img/paramountcuenta.png",
-                type: "cuenta",
-                details: [
-                    "👥 5 streams simultáneos",
-                    "🎬 Biblioteca Paramount completa",
-                    "📺 CBS, MTV, Comedy Central",
-                    "⚽ CBS Sports incluido",
-                    "👶 Nickelodeon completo",
-                    "🎭 Originales de Paramount+"
-                ]
+            
+           
+
+
             }
         ];
 
@@ -1668,108 +1360,19 @@
         const otros = [
             { 
                 name: "YOUTUBE PREMIUM", 
-                price: "470,00 Bs", 
+                price: "520,00 Bs", 
                 numericPrice: 470.00,
                 duration: "30 DÍAS", 
                 devices: "1 DISPOSITIVO",
                 image: "img/youtubeper.png",
                 type: "otro",
+                available: true, // Ejemplo de servicio agotado
                 details: [
                     "✅ YouTube y YouTube Music sin anuncios",
                     "🎬 Mira videos sin interrupciones",
                     "📱 Compatible con móviles y tablets",
                     "⚡ Activación inmediata",
                     "💰 Perfil individual exclusivo"
-                ]
-            },
-            { 
-                name: "DEEZER", 
-                price: "392,00 Bs", 
-                numericPrice: 392.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/deezer.png",
-                type: "otro",
-                details: [
-                    "🎵 90 millones de canciones",
-                    "🎧 Audio de alta calidad",
-                    "📱 Descargas offline",
-                    "🎼 Playlists personalizadas",
-                    "🎙️ Podcasts incluidos",
-                    "⚡ Sin publicidad"
-                ]
-            },
-            { 
-                name: "CANVA", 
-                price: "Ver Planes", 
-                numericPrice: 392.00,
-                duration: "MÚLTIPLES OPCIONES", 
-                devices: "1 DISPOSITIVO",
-                image: "img/canva.png",
-                plans: [
-                    { duration: "1 MES", price: "392,00 Bs", numericPrice: 392.00 },
-                    { duration: "3 MESES", price: "702,00 Bs", numericPrice: 702.00 },
-                    { duration: "12 MESES", price: "1.700,00 Bs", numericPrice: 1700.00 }
-                ],
-                type: "otro",
-                details: [
-                    "🎨 Diseño gráfico profesional",
-                    "📱 Templates premium ilimitados",
-                    "☁️ Almacenamiento en la nube",
-                    "👥 Colaboración en equipo",
-                    "📊 Elementos gráficos premium",
-                    "🖼️ Banco de imágenes incluido"
-                ]
-            },
-            { 
-                name: "SPOTIFY PREMIUM", 
-                price: "400,00 Bs", 
-                numericPrice: 400.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "1 DISPOSITIVO",
-                image: "img/spotify.png",
-                type: "otro",
-                details: [
-                    "🎵 80 millones de canciones",
-                    "🎧 Calidad de audio superior",
-                    "📱 Descargas offline ilimitadas",
-                    "⚡ Sin anuncios publicitarios",
-                    "🎼 Playlists personalizadas",
-                    "🎙️ Podcasts exclusivos"
-                ]
-            },
-            { 
-                name: "MICROSOFT OFFICE 365", 
-                price: "450,00 Bs", 
-                numericPrice: 450.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "5 DISPOSITIVOS",
-                image: "img/office365.png",
-                type: "otro",
-                details: [
-                    "💼 Word, Excel, PowerPoint completos",
-                    "☁️ 1TB almacenamiento OneDrive",
-                    "📱 Apps móviles incluidas",
-                    "👥 Colaboración en tiempo real",
-                    "📧 Outlook premium",
-                    "🛡️ Seguridad avanzada"
-                ]
-            },
-            { 
-                name: "NORD VPN", 
-                price: "350,00 Bs", 
-                numericPrice: 350.00,
-                duration: "1 MES (30 DÍAS)", 
-                devices: "6 DISPOSITIVOS",
-                image: "img/nordvpn.png",
-                type: "otro",
-                details: [
-                    "🔒 Conexión segura y privada",
-                    "🌍 Servidores en 60 países",
-                    "📱 Apps para todos los dispositivos",
-                    "⚡ Velocidad ultra rápida",
-                    "🛡️ Protección contra malware",
-                    "🔐 Sin registro de actividad"
                 ]
             }
         ];
@@ -1797,7 +1400,7 @@
         // Función para crear una tarjeta de servicio
         function createServiceCard(service, index) {
             const card = document.createElement('div');
-            card.className = 'service-card';
+            card.className = `service-card ${!service.available ? 'out-of-stock' : ''}`;
             card.style.setProperty('--card-index', index);
             
             // Price information
@@ -1836,8 +1439,15 @@
                     </div>
                 `;
             }
+
+            // Stock badge and button
+            const stockBadge = !service.available ? '<div class="stock-badge">Agotado</div>' : '';
+            const buttonContent = service.available ? 
+                `<button class="add-to-cart-btn" onclick="addToCart('${service.name}', ${service.numericPrice}, '${service.price}')">🛒 Agregar al Carrito</button>` :
+                `<button class="add-to-cart-btn out-of-stock" disabled>❌ Agotado</button>`;
             
             card.innerHTML = `
+                ${stockBadge}
                 <div>
                     <img src="${service.image}" alt="${service.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZmYwMCIgZm9udC1zaXplPSIxMiI+JHtzZXJ2aWNlLm5hbWUuc3BsaXQoJyAnKVswXX08L3RleHQ+Cjwvc3ZnPgo='">
                     <h3>${service.name}</h3>
@@ -1849,7 +1459,7 @@
                         ${service.details ? `<div class="details-toggle" onclick="toggleDetails('${service.name.replace(/\s+/g, '-')}')">ℹ️ Ver Detalles</div>` : ''}
                         ${detailsContent}
                     </div>
-                    <button class="add-to-cart-btn" onclick="addToCart('${service.name}', ${service.numericPrice}, '${service.price}')">🛒 Agregar al Carrito</button>
+                    ${buttonContent}
                 </div>
             `;
             return card;
@@ -1877,14 +1487,17 @@
             }
         }
 
-        // Funciones del carrito de compras
+        // Funciones del carrito de compras - CORREGIDAS
         function addToCart(serviceName, numericPrice, displayPrice) {
-            const existingItem = cart.find(item => item.name === serviceName);
+            // Buscar si el servicio ya existe en el carrito
+            const existingItemIndex = cart.findIndex(item => item.name === serviceName);
             
-            if (existingItem) {
-                existingItem.quantity += 1;
-                existingItem.total = existingItem.price * existingItem.quantity;
+            if (existingItemIndex !== -1) {
+                // Si existe, incrementar la cantidad y recalcular el total
+                cart[existingItemIndex].quantity += 1;
+                cart[existingItemIndex].total = cart[existingItemIndex].price * cart[existingItemIndex].quantity;
             } else {
+                // Si no existe, agregar nuevo item
                 cart.push({
                     name: serviceName,
                     price: numericPrice,
@@ -1904,15 +1517,16 @@
         }
 
         function updateQuantity(serviceName, change) {
-            const item = cart.find(item => item.name === serviceName);
-            if (item) {
-                item.quantity += change;
-                if (item.quantity <= 0) {
-                    removeFromCart(serviceName);
+            const itemIndex = cart.findIndex(item => item.name === serviceName);
+            if (itemIndex !== -1) {
+                cart[itemIndex].quantity += change;
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1); // Remover el item del array
                 } else {
-                    item.total = item.price * item.quantity;
-                    updateCartDisplay();
+                    // Recalcular el total del item
+                    cart[itemIndex].total = cart[itemIndex].price * cart[itemIndex].quantity;
                 }
+                updateCartDisplay();
             }
         }
 
@@ -1924,8 +1538,10 @@
             const cartTotalSection = document.getElementById('cartTotalSection');
             const checkoutBtn = document.getElementById('checkoutBtn');
 
-            // Actualizar contador del carrito
+            // Calcular el total de items en el carrito
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            // Actualizar contador del carrito
             if (totalItems > 0) {
                 cartCount.textContent = totalItems;
                 cartCount.style.display = 'flex';
@@ -1962,8 +1578,8 @@
                     </div>
                 `).join('');
 
-                // Calcular total
-                const total = cart.reduce((sum, item) => sum + item.total, 0);
+                // Calcular y mostrar el total correcto
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 totalAmount.textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
             }
         }
@@ -2007,16 +1623,16 @@
         function checkout() {
             if (cart.length === 0) return;
 
-            const total = cart.reduce((sum, item) => sum + item.total, 0);
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const itemsList = cart.map(item => 
-                `• ${item.name} x${item.quantity} = ${(item.total).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`
+                `• ${item.name} x${item.quantity} = ${(item.price * item.quantity).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`
             ).join('\n');
 
             const message = `🛒 *NUEVA ORDEN - ConnectTV*\n\n` +
                 `📋 *SERVICIOS SOLICITADOS:*\n${itemsList}\n\n` +
                 `💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n` +
                 `✅ *Orden generada desde ConnectTV*\n` +
-                `🕒 *${new Date().toLocaleString('es-VE')}*\n\n` +
+                `🕐 *${new Date().toLocaleString('es-VE')}*\n\n` +
                 `Por favor confirme la orden y proporcione los datos de pago.`;
 
             const whatsappUrl = `https://wa.me/584242357804?text=${encodeURIComponent(message)}`;
@@ -2142,23 +1758,6 @@
             updateCartDisplay();
         });
 
-        // Add missing animations
-        if (!document.querySelector('#cartAnimations')) {
-            const style = document.createElement('style');
-            style.id = 'cartAnimations';
-            style.textContent = `
-                @keyframes slideInRight {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOutRight {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
         // Make functions global
         window.toggleDetails = toggleDetails;
         window.addToCart = addToCart;
@@ -2174,6 +1773,34 @@
         window.toggleMobileMenu = toggleMobileMenu;
     </script>
 </body>
-
-</html>
-
+</html><title>ConnectTV - Tu Mejor OpciÃƒÂ³n en Streaming</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#00ff00">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ConnectTV">
+    
+    <!-- Open Graph Tags for better link sharing -->
+    <meta property="og:title" content="ConnectTV - Tu Mejor Opción en Streaming">
+    <meta property="og:description" content="Servicios de streaming premium con entrega inmediata, precios accesibles y garantía incluida. Pagos al BCV Venezuela.">
+    <meta property="og:image" content="https://connecttv551.github.io/ConnectTV-Web/img/logo.png">
+    <meta property="og:url" content="https://connecttv551.github.io/ConnectTV-Web/">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ConnectTV - Streaming Premium">
+    <meta name="twitter:description" content="Servicios de streaming con entrega inmediata y soporte 24/7">
+    <meta name="twitter:image" content="https://connecttv551.github.io/ConnectTV-Web/img/logo.png">
+    
+    <!-- Manifest for PWA -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/logo.png">
+    
+    <style>
