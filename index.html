@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ConnectTV - Tu Mejor Opción en Streaming</title>
-
-    <meta property="og:title" content="ConnectTV - Servicios de Streaming Premium">
-    <meta property="og:description" content="Tu mejor opción en streaming: Netflix, YouTube Premium y más. ¡Entrega inmediata, precios accesibles y garantía!">
-    <meta property="og:image" content="https://tudominio.com/img/logo.png"> <meta property="og:url" content="https://tudominio.com"> <meta property="og:type" content="website">
+    <meta property="og:title" content="ConnectTV - Tu Mejor Opción en Streaming">
+    <meta property="og:description" content="Visita mi página web. Tu mejor opción en streaming: Netflix, YouTube Premium y más. ¡Entrega inmediata, precios accesibles y garantía!">
+    <meta property="og:image" content="http://googleusercontent.com/file_content/4">
+    <meta property="og:url" content="https://connecttv551.github.io/ConnectTV-Web/">
+    <meta property="og:type" content="website">
 
     <style>
         * {
@@ -1110,53 +1111,6 @@
             to { transform: translateX(100%); opacity: 0; }
         }
     </style>
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJpY29ucyI6W3sic3JjIjoiaW1nL2xvZ28ucG5nIiwic2l6ZXMiOiI1MTJ4NTEyIiwiZm9ybWF0IjoicG5nIn0seyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjRlUzl2Y21WemRHRm5aWFF1YVc1blgxTm9hWE5sYm1SeVpXNWtYMWxrYzJwMVlteHBibk13Y0hCemFXRjBjbXhsQ3hOMGNtbHpaWEpoYkRGaWJHbGpaU0JuY21Wa1pHbHpZWEp2Y21VdVkybHRjMjlrSWc9PSIsInNpemVzIjoiMTQ0eDE0NCIsImZvcm1hdCI6InN2ZyJ9XSwibmFtZSI6IkNvbm5lY3RUViIsInNob3J0X25hbWUiOiJDb25uZWN0VFYiLCJzdGFydF91cmwiOiIuL2luZGV4Lmh0bWwiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMDAwMDAwIiwidGhlbWVfY29sb3IiOiIjMDBmZjAwIn0=">
-    <script>
-        // Service Worker y Manifest para PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                // Service Worker Script
-                const swCode = `
-const CACHE_NAME = 'connecttv-cache-v1';
-const urlsToCache = [
-    './',
-    './index.html',
-    './img/logo.png',
-    './img/netflix.png',
-    './img/netflixcuenta.png',
-    './img/youtubeper.png'
-];
-
-self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-        .then(cache => {
-            return cache.addAll(urlsToCache);
-        })
-    );
-});
-
-self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request)
-        .then(response => {
-            return response || fetch(event.request);
-        })
-    );
-});
-`;
-                const swBlob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(swBlob);
-                navigator.serviceWorker.register(swUrl)
-                    .then(registration => {
-                        console.log('Service Worker registrado con éxito:', registration);
-                    })
-                    .catch(error => {
-                        console.error('Fallo el registro del Service Worker:', error);
-                    });
-            });
-        }
-    </script>
 </head>
 <body>
     <div class="particles" id="particles"></div>
