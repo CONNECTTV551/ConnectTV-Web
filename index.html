@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ConnectTV - Tu Mejor Opción en Streaming</title>
     <meta property="og:title" content="ConnectTV - Tu Mejor Opción en Streaming">
-    <meta property="og:description" content="Visita mi página web. Tu mejor opción en streaming: Netflix, YouTube Premium y más. ¡Entrega inmediata, precios accesibles y garantía!">
-    <meta property="og:image" content="https://connecttv551.github.io/ConnectTV-Web/img/og_logo.png">
-    <meta property="og:url" content="https://connecttv551.github.io/ConnectTV-Web/">
+    <meta property="og:description" content="Bienvenido a ConnectTV, tu mejor opción en servicios de streaming premium. Disfruta de películas, series y más con entrega inmediata y precios accesibles.">
+    <meta property="og:image" content="https://tudominio.com/img/logo.png">
+    <meta property="og:url" content="https://tudominio.com">
     <meta property="og:type" content="website">
-
+    <meta property="og:site_name" content="ConnectTV">
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="img/logo.png">
     <style>
         * {
             margin: 0;
@@ -1118,7 +1120,7 @@
     <header>
         <nav class="container">
             <div class="logo">
-                <img src="img/logotipo.png" alt="ConnectTV Logo">
+                <img src="img/logo.png" alt="ConnectTV Logo">
                 <h1>ConnectTV</h1>
             </div>
             <ul class="nav-links">
@@ -1342,6 +1344,7 @@
             
             
         
+
             }
         ];
 
@@ -1421,8 +1424,7 @@
             let detailsContent = '';
             if (service.details && service.details.length > 0) {
                 detailsContent = `
-                    <div class="service-details-content" id="details-${service.name.replace(/\s+/g, '-')}"
->
+                    <div class="service-details-content" id="details-${service.name.replace(/\s+/g, '-')}">
                         <ul>
                             ${service.details.map(detail => `<li>${detail}</li>`).join('')}
                         </ul>
