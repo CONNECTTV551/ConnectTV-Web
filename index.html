@@ -8,8 +8,11 @@
     <meta property="og:image" content="https://connecttv551.github.io/ConnectTV-Web/img/logo.png">
     <meta property="og:url" content="https://connecttv551.github.io/ConnectTV-Web/">
     <meta property="og:type" content="website">
+    <meta name="description" content="ConnectTV te ofrece servicios de streaming premium a precios accesibles en Venezuela, con cuentas completas, perfiles y soporte 24/7. ¡Tu entretenimiento garantizado!">
+    <meta name="keywords" content="ConnectTV, streaming, Netflix, Disney+, Amazon Prime Video, HBO Max, cuentas de streaming, perfiles de streaming, Venezuela, tv, series, películas, entretenimiento">
     
-    <title>ConnectTV - Tu Mejor OpciÃ³n en Streaming</title>
+    <title>ConnectTV - Tu Mejor Opción en Streaming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -298,6 +301,83 @@
             gap: 0.8rem;
             text-align: left;
             font-size: 0.9rem;
+        }
+
+        /* Carousel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
+            border: 2px solid rgba(0, 255, 0, 0.5);
+        }
+
+        .carousel-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .carousel-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .carousel-caption h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #00ff00;
+        }
+
+        .carousel-caption p {
+            margin: 5px 0 0;
+            font-size: 1rem;
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .dot.active {
+            background: #00ff00;
         }
 
         /* Services Tabs */
@@ -936,6 +1016,12 @@
             transform: scale(1.2) rotate(15deg);
             box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
         }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
 
         /* Footer */
         footer {
@@ -950,6 +1036,24 @@
         .footer-content {
             color: #00ff00;
             animation: pulse 2s infinite;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: #00ff00;
+            transform: scale(1.2);
         }
 
         /* Responsive Design */
@@ -1110,6 +1214,89 @@
             from { transform: translateX(0); opacity: 1; }
             to { transform: translateX(100%); opacity: 0; }
         }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .testimonial-card {
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-card h4 {
+            color: #00ff00;
+            margin: 0;
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            padding: 2rem 0;
+        }
+        
+        .faq-item {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .faq-question {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #00ff00;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .faq-question .icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 1rem;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .faq-answer p {
+            padding: 1rem 0;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 200px; /* Adjust as needed */
+            padding: 1rem;
+        }
+        
+        .faq-item.active .faq-question .icon {
+            transform: rotate(180deg);
+        }
+        
     </style>
 </head>
 <body>
@@ -1122,10 +1309,11 @@
                 <h1>ConnectTV</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#" onclick="showSection('home')">Inicio</a></li>
-                <li><a href="#" onclick="showSection('about')">Quienes Somos</a></li>
-                <li><a href="#" onclick="showSection('why-us')">Por Que Elegirnos</a></li>
-                <li><a href="#" onclick="showSection('support')">Soporte</a></li>
+                <li><a href="#" onclick="showSection('home')">🏠 Inicio</a></li>
+                <li><a href="#" onclick="showSection('store')">🛍️ Tienda</a></li>
+                <li><a href="#" onclick="showSection('about')">👥 Quienes Somos</a></li>
+                <li><a href="#" onclick="showSection('why-us')">✅ Por Que Elegirnos</a></li>
+                <li><a href="#" onclick="showSection('support')">📞 Soporte</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <button class="cart-button" onclick="openCart()">
@@ -1135,10 +1323,11 @@
                 <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
             </div>
             <div class="mobile-menu" id="mobileMenu">
-                <a href="#" onclick="showSection('home')">Inicio</a>
-                <a href="#" onclick="showSection('about')">Quienes Somos</a>
-                <a href="#" onclick="showSection('why-us')">Por Que Elegirnos</a>
-                <a href="#" onclick="showSection('support')">Soporte</a>
+                <a href="#" onclick="showSection('home')">🏠 Inicio</a>
+                <a href="#" onclick="showSection('store')">🛍️ Tienda</a>
+                <a href="#" onclick="showSection('about')">👥 Quienes Somos</a>
+                <a href="#" onclick="showSection('why-us')">✅ Por Que Elegirnos</a>
+                <a href="#" onclick="showSection('support')">📞 Soporte</a>
             </div>
         </nav>
     </header>
@@ -1146,6 +1335,7 @@
     <main class="container">
         <section id="home" class="section active">
             <div class="hero">
+                <img src="img/logo.png" alt="ConnectTV Logo" style="height: 100px; margin-bottom: 1rem;">
                 <h2>🍿 Bienvenido a ConnectTV 🟢</h2>
                 <p>Tu mejor opción en servicios de streaming premium</p>
                 <div class="hero-features">
@@ -1161,18 +1351,110 @@
                 </div>
             </div>
 
+            <div class="carousel-container">
+                <div class="carousel-wrapper" id="carouselWrapper">
+                    <div class="carousel-item">
+                        <img src="img/estreno1.jpg" alt="Película o serie de estreno 1">
+                        <div class="carousel-caption">
+                            <h3>AQUÍ VA EL TÍTULO DE TU ESTRENO 1</h3>
+                            <p>Esta es la descripción breve para el estreno uno.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/estreno2.jpg" alt="Película o serie de estreno 2">
+                        <div class="carousel-caption">
+                            <h3>AQUÍ VA EL TÍTULO DE TU ESTRENO 2</h3>
+                            <p>Esta es la descripción breve para el estreno dos.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/estreno3.jpg" alt="Película o serie de estreno 3">
+                        <div class="carousel-caption">
+                            <h3>AQUÍ VA EL TÍTULO DE TU ESTRENO 3</h3>
+                            <p>Esta es la descripción breve para el estreno tres.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+            
+            <hr>
+            
+            <div class="testimonials-section">
+                <h2>🔥 Ofertas Exclusivas</h2>
+                <div class="services-grid" id="featuredOffersGrid"></div>
+            </div>
+            
+            <hr>
+            
+            <div class="testimonials-section">
+                <h2>💬 Lo que dicen nuestros clientes</h2>
+                <div class="testimonial-card">
+                    <p>"¡Excelente servicio! La entrega fue inmediata y la calidad del streaming es perfecta. Muy recomendados."</p>
+                    <h4>- José P.</h4>
+                </div>
+                <div class="testimonial-card">
+                    <p>"Los mejores precios y la atención es de primera. Siempre están disponibles para resolver cualquier duda. ¡Sigan así!"</p>
+                    <h4>- María G.</h4>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="faq-section">
+                <h2>❓ Preguntas Frecuentes</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Cómo es el proceso de compra?</span>
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Simplemente selecciona el servicio que deseas, agrégalo a tu carrito y finaliza la compra por WhatsApp. Un agente te guiará con el pago y la entrega inmediata de tu cuenta.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿En cuánto tiempo recibo mi cuenta?</span>
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Una vez verificado el pago, la entrega es *inmediata*. Recibirás los datos de tu cuenta en pocos minutos.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Qué métodos de pago aceptan?</span>
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Aceptamos pagos al BCV 🇻🇪. Para otros métodos, puedes consultarle a nuestro agente por WhatsApp.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Tienen garantía?</span>
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>¡Sí! Todos nuestros servicios incluyen una garantía completa. Si surge algún problema, lo solucionamos de inmediato.</p>
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+
+        <section id="store" class="section">
+            <h2>Nuestros Servicios de Streaming</h2>
             <div class="services-tabs">
                 <div class="tab-navigation">
-                    <button class="nav-btn" id="prevBtn" onclick="previousTab()" disabled>
+                    <button class="nav-btn" id="prevBtn" onclick="previousTab()">
                         ⬅️ Anterior
                     </button>
-                    
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                         <button class="tab-btn active" data-tab="perfiles" onclick="showServicesTab('perfiles')">👤 PERFILES</button>
                         <button class="tab-btn" data-tab="cuentas" onclick="showServicesTab('cuentas')">🏠 CUENTAS COMPLETAS</button>
                         <button class="tab-btn" data-tab="otros" onclick="showServicesTab('otros')">🔧 OTROS SERVICIOS</button>
                     </div>
-                    
                     <button class="nav-btn" id="nextBtn" onclick="nextTab()">
                         Siguiente ➡️
                     </button>
@@ -1180,18 +1462,15 @@
             </div>
 
             <div id="perfiles" class="services-container active">
-                <div class="services-grid" id="perfilesGrid">
-                    </div>
+                <div class="services-grid" id="perfilesGrid"></div>
             </div>
 
             <div id="cuentas" class="services-container">
-                <div class="services-grid" id="cuentasGrid">
-                    </div>
+                <div class="services-grid" id="cuentasGrid"></div>
             </div>
 
             <div id="otros" class="services-container">
-                <div class="services-grid" id="otrosGrid">
-                    </div>
+                <div class="services-grid" id="otrosGrid"></div>
             </div>
         </section>
 
@@ -1261,7 +1540,7 @@
             </div>
             <div class="cart-body">
                 <div class="cart-items" id="cartItems">
-                    </div>
+                </div>
                 
                 <div class="cart-total" id="cartTotalSection">
                     <h3>💰 Total a Pagar:</h3>
@@ -1287,6 +1566,12 @@
             <div class="footer-content">
                 <p>&copy; 2024 ConnectTV. Todos los derechos reservados.</p>
                 <p>Email: davidstreaming78@gmail.com | WhatsApp: +584242357804</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/connect_tv3?igsh=MTc4bWVkMWlqM2MweA=" target="_blank" aria-label="Instagram de ConnectTV"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/connecttv.connect" target="_blank" aria-label="Facebook de ConnectTV"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://tiktok.com/@connecttv3" target="_blank" aria-label="TikTok de ConnectTV"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://t.me/CONNECT_TV3" target="_blank" aria-label="Telegram de ConnectTV"><i class="fab fa-telegram-plane"></i></a>
+                </div>
             </div>
         </div>
     </footer>
@@ -1554,6 +1839,9 @@
                     "🎭 Series originales exclusivas"
                 ]   
 
+            
+            
+          
 
             }
         ];
@@ -1813,8 +2101,6 @@
 
 
 
-
-
             }
         ];
 
@@ -1896,12 +2182,90 @@
 
 
 
-
-                
-         }
+            
+        }
         ];
-
         
+        // OFERTAS DESTACADAS - Puedes editar este array
+        const featuredOffers = [
+            { 
+                name: "max perfil estandar", 
+                price: "300,00 Bs", 
+                numericPrice: 300.00,
+                duration: "1 MES", 
+                devices: "1 DISPOSITIVO",
+                image: "img/MAXOFERTA.png",
+                type: "oferta",
+                available: true,
+                details: [
+                    "🍿Max 1 perfil,Con esta pantalla disfruta de estrenos",
+                    "✅ permite 1 conexión simultánea",
+                    "📱 disponible para smart tv,celulares,odenadores,",
+                    "🚫No Renovable"
+                ]
+            },
+            { 
+                name: "paramount Estándar perfil", 
+                price: "300,00 Bs", 
+                numericPrice: 300.00,
+                duration: "1 MES", 
+                devices: "1 DISPOSITIVO",
+                image: "img/PARAMOUNTPROMO.png",
+                type: "oferta",
+                available: true,
+                details: [
+                    "🎬 Películas de Paramount Pictures",
+                    "📺 Shows de Comedy Central y MTV",
+                    "⚽ Deportes CBS Sports,",
+                    "👶 Contenido Nickelodeeon",
+                    "🎭 Series originales exclusivas"
+                ]
+           
+           
+            }
+        ];
+        
+        // ============================================
+        // LÓGICA DEL CARRUSEL - NO EDITAR
+        // ============================================
+        const carouselWrapper = document.getElementById('carouselWrapper');
+        const carouselDots = document.getElementById('carouselDots');
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        let currentSlide = 0;
+
+        function createDots() {
+            carouselItems.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => changeSlide(index));
+                carouselDots.appendChild(dot);
+            });
+        }
+
+        function updateCarousel() {
+            carouselWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function changeSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+
+        function autoSlide() {
+            currentSlide = (currentSlide + 1) % carouselItems.length;
+            updateCarousel();
+        }
+
+        // Auto-slide every 5 seconds
+        setInterval(autoSlide, 5000);
+        
+        // ============================================
+        // LÓGICA DE LA TIENDA Y CARRITO - NO EDITAR
+        // ============================================
 
         // Variables globales
         let cart = [];
@@ -1958,7 +2322,7 @@
             let detailsContent = '';
             if (service.details && service.details.length > 0) {
                 detailsContent = `
-                    <div class="service-details-content" id="details-${service.name.replace(/\s+/g, '-')}">
+                    <div class="service-details-content" id="details-${service.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}">
                         <ul>
                             ${service.details.map(detail => `<li>${detail}</li>`).join('')}
                         </ul>
@@ -1969,20 +2333,20 @@
             // Stock badge and button
             const stockBadge = !service.available ? '<div class="stock-badge">Agotado</div>' : '';
             const buttonContent = service.available ? 
-                `<button class="add-to-cart-btn" onclick="addToCart('${service.name}', ${service.numericPrice}, '${service.price}')">🛒 Agregar al Carrito</button>` :
+                `<button class="add-to-cart-btn" onclick="addToCart('${service.name}', ${service.numericPrice}, '${service.displayPrice || service.price}')">🛒 Agregar al Carrito</button>` :
                 `<button class="add-to-cart-btn out-of-stock" disabled>❌ Agotado</button>`;
             
             card.innerHTML = `
                 ${stockBadge}
                 <div>
-                    <img src="${service.image}" alt="${service.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZmYwMCIgZm9udC1zaXplPSIxMiI+JHtzZXJ2aWNlLm5hbWUuc3BsaXQoJyAnKVswXX08L3RleHQ+Cjwvc3ZnPgo='">
+                    <img src="${service.image}" alt="${service.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZmYwMCIgZm9udC1zaXplPSIxMiI+${service.name.replace(/ /g, '%20').split('%20')[0].substring(0,6)}</dGV4dD48L3N2Zz4='}">
                     <h3>${service.name}</h3>
                 </div>
                 <div class="service-info">
                     <div>
                         ${detailsHtml}
                         ${priceInfo}
-                        ${service.details ? `<div class="details-toggle" onclick="toggleDetails('${service.name.replace(/\s+/g, '-')}')">ℹ️ Ver Detalles</div>` : ''}
+                        ${service.details ? `<div class="details-toggle" onclick="toggleDetails('${service.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}')">ℹ️ Ver Detalles</div>` : ''}
                         ${detailsContent}
                     </div>
                     ${buttonContent}
@@ -2198,11 +2562,13 @@
             const perfilesGrid = document.getElementById('perfilesGrid');
             const cuentasGrid = document.getElementById('cuentasGrid');
             const otrosGrid = document.getElementById('otrosGrid');
+            const featuredOffersGrid = document.getElementById('featuredOffersGrid');
             
             // Clear grids
             perfilesGrid.innerHTML = '';
             cuentasGrid.innerHTML = '';
             otrosGrid.innerHTML = '';
+            featuredOffersGrid.innerHTML = '';
             
             // Load perfiles
             perfiles.forEach((service, index) => {
@@ -2217,6 +2583,32 @@
             // Load otros
             otros.forEach((service, index) => {
                 otrosGrid.appendChild(createServiceCard(service, index));
+            });
+
+            // Load featured offers
+            featuredOffers.forEach((service, index) => {
+                featuredOffersGrid.appendChild(createServiceCard(service, index));
+            });
+        }
+        
+        // FAQ Accordion
+        function setupFAQAccordion() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const parentItem = question.parentElement;
+                    const isActive = parentItem.classList.contains('active');
+                    
+                    // Close all open items
+                    document.querySelectorAll('.faq-item.active').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Open the clicked item if it was not already active
+                    if (!isActive) {
+                        parentItem.classList.add('active');
+                    }
+                });
             });
         }
 
@@ -2259,6 +2651,11 @@
                 section.classList.remove('active');
             });
             document.getElementById(sectionId).classList.add('active');
+
+            // Para la sección 'store', mostramos el primer tab por defecto
+            if (sectionId === 'store') {
+                showServicesTab('perfiles');
+            }
             
             // Close mobile menu if open
             document.getElementById('mobileMenu').classList.remove('active');
@@ -2282,6 +2679,9 @@
             loadServices();
             updateNavButtons();
             updateCartDisplay();
+            createDots();
+            showSection('home');
+            setupFAQAccordion();
         });
 
         // Make functions global
@@ -2301,13 +2701,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
