@@ -1656,8 +1656,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         </div>
     </div>
 
-    <a href="https://wa.me/584242357804" class="whatsapp-btn" target="_blank">📞</a>
-
+    <a href="#" onclick="sendSupportMessage()" class="whatsapp-btn" target="_blank">📞</a>
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -2734,6 +2733,28 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         window.previousTab = previousTab;
         window.showServicesTab = showServicesTab;
         window.showSection = showSection;
+        
+        // ===== INICIO DE LA MODIFICACIÓN =====
+        function sendSupportMessage() {
+            const phoneNumber = "584242357804";
+            const message = `👋 ¡Hola ConnectTV! Necesito ayuda con un problema.
+
+*🚨 MI ERROR O PROBLEMA ES:*
+(Por favor, describe aquí tu inconveniente)
+
+*📺 SERVICIO AFECTADO:*
+(Ej: Netflix, Disney+, Prime Video, etc.)
+
+*🔍 YA INTENTÉ:*
+(Ej: Reiniciar la app, cambiar de dispositivo, etc.)
+
+Espero su pronta respuesta. ¡Gracias!`;
+
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+        // ===== FIN DE LA MODIFICACIÓN =====
+        
         window.toggleMobileMenu = toggleMobileMenu;
     </script>
 </body>
