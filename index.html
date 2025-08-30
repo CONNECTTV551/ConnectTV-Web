@@ -136,40 +136,36 @@
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 1rem; /* Reducido para mejor ajuste */
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
+            padding: 0.6rem 1.2rem; /* Aumento de padding para apariencia de botón */
+            border-radius: 8px; /* Bordes redondeados */
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-links a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .nav-links a:hover::before {
-            left: 100%;
+            font-weight: bold;
+            background: rgba(0, 255, 0, 0.1); /* Fondo sutil */
+            border: 1px solid rgba(0, 255, 0, 0.3); /* Borde para definir el botón */
         }
 
         .nav-links a:hover {
             background: #00ff00;
             color: black;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+            transform: translateY(-3px) scale(1.05); /* Efecto al pasar el cursor */
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
         }
+
+        /* Estilo para el botón activo */
+        .nav-links a.active {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: black;
+            border-color: #00ff00;
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
 
         /* Shopping Cart Button */
         .cart-button {
@@ -1214,9 +1210,11 @@
             border-radius: 5px;
             transition: all 0.3s ease;
             text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .mobile-menu a:hover {
+        .mobile-menu a:hover, .mobile-menu a.active {
             background: #00ff00;
             color: black;
             transform: translateX(10px);
@@ -1451,11 +1449,11 @@
                 <h1>ConnectTV</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#" onclick="showSection('home')">🏠 Inicio</a></li>
-                <li><a href="#" onclick="showSection('store')">🛍️ Tienda</a></li>
-                <li><a href="#" onclick="showSection('about')">👥 Quienes Somos</a></li>
-                <li><a href="#" onclick="showSection('why-us')">✅ Por Que Elegirnos</a></li>
-                <li><a href="#" onclick="showSection('support')">📞 Soporte</a></li>
+                <li><a href="#" data-section="home" onclick="showSection('home')">🏠 Inicio</a></li>
+                <li><a href="#" data-section="store" onclick="showSection('store')">🛍️ Tienda</a></li>
+                <li><a href="#" data-section="about" onclick="showSection('about')">👥 Quienes Somos</a></li>
+                <li><a href="#" data-section="why-us" onclick="showSection('why-us')">✅ Por Que Elegirnos</a></li>
+                <li><a href="#" data-section="support" onclick="showSection('support')">📞 Soporte</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <button class="cart-button" onclick="openCart()">
@@ -1465,11 +1463,11 @@
                 <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
             </div>
             <div class="mobile-menu" id="mobileMenu">
-                <a href="#" onclick="showSection('home'); toggleMobileMenu();">🏠 Inicio</a>
-                <a href="#" onclick="showSection('store'); toggleMobileMenu();">🛍️ Tienda</a>
-                <a href="#" onclick="showSection('about'); toggleMobileMenu();">👥 Quienes Somos</a>
-                <a href="#" onclick="showSection('why-us'); toggleMobileMenu();">✅ Por Que Elegirnos</a>
-                <a href="#" onclick="showSection('support'); toggleMobileMenu();">📞 Soporte</a>
+                <a href="#" data-section="home" onclick="showSection('home'); toggleMobileMenu();">🏠 Inicio</a>
+                <a href="#" data-section="store" onclick="showSection('store'); toggleMobileMenu();">🛍️ Tienda</a>
+                <a href="#" data-section="about" onclick="showSection('about'); toggleMobileMenu();">👥 Quienes Somos</a>
+                <a href="#" data-section="why-us" onclick="showSection('why-us'); toggleMobileMenu();">✅ Por Que Elegirnos</a>
+                <a href="#" data-section="support" onclick="showSection('support'); toggleMobileMenu();">📞 Soporte</a>
             </div>
         </nav>
     </header>
@@ -2767,8 +2765,19 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         }
 
         function showSection(sectionId) {
+            // Ocultar todas las secciones
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            // Mostrar la sección seleccionada
             document.getElementById(sectionId).classList.add('active');
+
+            // Actualizar el estado activo de los botones de navegación
+            document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelectorAll(`a[data-section="${sectionId}"]`).forEach(link => {
+                link.classList.add('active');
+            });
+
             if (sectionId === 'store') showServicesTab('perfiles');
         }
 
