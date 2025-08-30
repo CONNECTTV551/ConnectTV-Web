@@ -307,40 +307,41 @@
         .carousel-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px; /* MODIFICADO */
             margin: 2rem auto;
             overflow: hidden;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
             border: 2px solid rgba(0, 255, 0, 0.5);
+            aspect-ratio: 2 / 1; /* MODIFICADO: Hace el carrusel responsivo y compacto */
         }
 
         .carousel-wrapper {
             display: flex;
+            height: 100%; /* MODIFICADO */
             transition: transform 0.5s ease-in-out;
         }
 
         .carousel-item {
             min-width: 100%;
-            height: 400px;
+            height: 100%; /* MODIFICADO */
             position: relative;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: #000; /* MODIFICADO: Fondo para imágenes que no llenan el espacio */
         }
 
         .carousel-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            filter: brightness(0.7);
+            object-fit: contain; /* MODIFICADO: Asegura que toda la imagen sea visible */
+            filter: brightness(0.8); /* MODIFICADO */
         }
 
         .carousel-caption {
             position: absolute;
             bottom: 20px;
             left: 20px;
+            right: 20px; /* NUEVO: para mejor ajuste */
             background: rgba(0, 0, 0, 0.7);
             padding: 10px 20px;
             border-radius: 10px;
@@ -1073,6 +1074,24 @@
             .hero p {
                 font-size: 1rem;
             }
+
+            /* NUEVAS REGLAS PARA CARRUSEL EN MÓVIL */
+            .carousel-container {
+                aspect-ratio: 16 / 9; /* Proporción más estándar para móviles */
+            }
+
+            .carousel-caption h3 {
+                font-size: 1.2rem;
+            }
+
+            .carousel-caption p {
+                font-size: 0.8rem;
+                display: -webkit-box;
+                -webkit-line-clamp: 2; /* Limita el texto a 2 líneas */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            /* FIN DE NUEVAS REGLAS */
             
             .services-grid {
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1734,14 +1753,14 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
            },
             { 
                 name: "STELLA TV PERFIL", 
-                price: "500,00,00 Bs", 
-                numericPrice: 500.00,
+                price: "400,00 Bs", 
+                numericPrice: 400.00,
                 duration: "1 MES (30 DÍAS)", 
                 devices: "1 DISPOSITIVO",
                 image: "img/stellatv.png",
-                altPrice: "820,00 Bs (2 MESES)",
+                altPrice: "700,00 Bs (2 MESES)",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: false, // Cambia a false para marcar como agotado
                 details: [
                     "🌟 Contenido premium latino",
                     "📺 Canales de TV variados",
@@ -2001,7 +2020,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "🎬 Películas y series completas",
                     "📰 Noticias 24/7",
                     "⚽ Deportes premium",
-                    "🎵 Canales musicales"
+                    "🎵 Canales musicais"
                 ]       
 
             },
@@ -2726,5 +2745,3 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
 
 
 </html>
-
-
