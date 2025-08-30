@@ -303,9 +303,7 @@
             font-size: 0.9rem;
         }
 
-        /* ================================== */
-        /* MODIFICADO: Carousel Section       */
-        /* ================================== */
+        /* Carousel Section */
         .carousel-container {
             position: relative;
             width: 100%;
@@ -338,7 +336,7 @@
         .carousel-item img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* <-- ÚNICO CAMBIO REALIZADO AQUÍ */
+            object-fit: contain;
             filter: brightness(0.9);
             transition: transform 0.4s ease;
         }
@@ -399,19 +397,16 @@
 
         /* Services Tabs */
         .services-tabs {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             margin: 2rem 0;
-            gap: 1rem;
-            flex-wrap: wrap;
             animation: slideInUp 1s ease 0.8s both;
         }
 
         .tab-navigation {
             display: flex;
+            justify-content: center;
             align-items: center;
             gap: 1rem;
+            flex-wrap: wrap;
         }
 
         @keyframes slideInUp {
@@ -464,34 +459,7 @@
             box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
         }
 
-        .nav-btn {
-            background: rgba(0, 255, 0, 0.2);
-            border: 2px solid rgba(0, 255, 0, 0.5);
-            color: #00ff00;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-btn:hover {
-            background: rgba(0, 255, 0, 0.3);
-            transform: scale(1.05);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* ================================== */
-        /* NUEVO: Search Bar                  */
-        /* ================================== */
+        /* Search Bar */
         .search-container {
             margin: 1.5rem 0;
             display: flex;
@@ -1131,13 +1099,13 @@
             }
             
             .services-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                grid-template-columns: 1fr;
                 gap: 1rem;
                 padding: 1rem 0;
             }
 
             .service-card {
-                min-height: 320px;
+                min-height: auto;
                 padding: 0.8rem;
             }
 
@@ -1174,8 +1142,9 @@
             }
 
             .cart-content {
-                margin: 10% auto;
+                margin: 5% auto;
                 width: 95%;
+                max-height: 85vh;
             }
 
             .hero-features {
@@ -1186,24 +1155,41 @@
                 flex-direction: column;
                 align-items: center;
             }
+            
+            .tab-navigation {
+                flex-direction: column;
+                width: 100%;
+            }
 
             .tab-btn {
                 padding: 0.8rem 1.5rem;
                 font-size: 0.9rem;
                 width: 100%;
                 max-width: 300px;
+                margin-bottom: 0.5rem;
             }
-
-            .nav-btn {
+        }
+        
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            .cart-button {
                 padding: 0.6rem 1rem;
-                font-size: 0.9rem;
             }
-
-            .tab-navigation {
+            .hero h2 {
+                font-size: 1.6rem;
+            }
+            .section h2 {
+                font-size: 1.4rem;
+            }
+            .cart-item {
                 flex-direction: column;
+                align-items: flex-start;
                 gap: 0.5rem;
             }
         }
+
 
         /* Menu móvil */
         .mobile-menu {
@@ -1255,7 +1241,9 @@
             .menu-toggle {
                 display: block;
             }
-            
+            .nav-links {
+                display: none;
+            }
             .mobile-menu.active {
                 display: flex;
             }
@@ -1412,6 +1400,45 @@
             transform: rotate(180deg);
         }
         
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 2px solid rgba(0, 255, 0, 0.5);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .checkout-instructions {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
     </style>
 </head>
 <body>
@@ -1438,11 +1465,11 @@
                 <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
             </div>
             <div class="mobile-menu" id="mobileMenu">
-                <a href="#" onclick="showSection('home')">🏠 Inicio</a>
-                <a href="#" onclick="showSection('store')">🛍️ Tienda</a>
-                <a href="#" onclick="showSection('about')">👥 Quienes Somos</a>
-                <a href="#" onclick="showSection('why-us')">✅ Por Que Elegirnos</a>
-                <a href="#" onclick="showSection('support')">📞 Soporte</a>
+                <a href="#" onclick="showSection('home'); toggleMobileMenu();">🏠 Inicio</a>
+                <a href="#" onclick="showSection('store'); toggleMobileMenu();">🛍️ Tienda</a>
+                <a href="#" onclick="showSection('about'); toggleMobileMenu();">👥 Quienes Somos</a>
+                <a href="#" onclick="showSection('why-us'); toggleMobileMenu();">✅ Por Que Elegirnos</a>
+                <a href="#" onclick="showSection('support'); toggleMobileMenu();">📞 Soporte</a>
             </div>
         </nav>
     </header>
@@ -1590,17 +1617,10 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             </div>
             <div class="services-tabs">
                 <div class="tab-navigation">
-                    <button class="nav-btn" id="prevBtn" onclick="previousTab()">
-                        ⬅️ Anterior
-                    </button>
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button class="tab-btn active" data-tab="perfiles" onclick="showServicesTab('perfiles')">👤 PERFILES</button>
-                        <button class="tab-btn" data-tab="cuentas" onclick="showServicesTab('cuentas')">🏠 CUENTAS COMPLETAS</button>
-                        <button class="tab-btn" data-tab="otros" onclick="showServicesTab('otros')">🔧 OTROS SERVICIOS</button>
-                    </div>
-                    <button class="nav-btn" id="nextBtn" onclick="nextTab()">
-                        Siguiente ➡️
-                    </button>
+                    <button class="tab-btn active" data-tab="perfiles" onclick="showServicesTab('perfiles')">👤 PERFILES</button>
+                    <button class="tab-btn" data-tab="cuentas" onclick="showServicesTab('cuentas')">🏠 CUENTAS</button>
+                    <button class="tab-btn" data-tab="combos" onclick="showServicesTab('combos')">🧩 COMBOS</button>
+                    <button class="tab-btn" data-tab="otros" onclick="showServicesTab('otros')">🔧 OTROS</button>
                 </div>
             </div>
 
@@ -1610,6 +1630,10 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
 
             <div id="cuentas" class="services-container">
                 <div class="services-grid" id="cuentasGrid"></div>
+            </div>
+            
+            <div id="combos" class="services-container">
+                <div class="services-grid" id="combosGrid"></div>
             </div>
 
             <div id="otros" class="services-container">
@@ -1664,7 +1688,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     <p><a href="https://wa.link/3q0heb" target="_blank" style="color: #00ff00; text-decoration: underline;">🔗 wa.link/3q0heb</a></p>
                 </div>
                 <p>Nuestro equipo de soporte está disponible para ayudarte con:</p>
-                <ul style="margin-top: 1rem;">
+                <ul style="margin-top: 1rem; padding-left: 20px;">
                     <li>✅ Activación inmediata de servicios</li>
                     <li>✅ Problemas técnicos</li>
                     <li>✅ Configuración de dispositivos</li>
@@ -1698,6 +1722,44 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     <h3>🛒 Tu carrito está vacío</h3>
                     <p>¡Agrega algunos servicios para comenzar!</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkoutModal" class="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>📝 Confirmar Pedido</h2>
+                <span class="close" onclick="closeCheckoutModal()">&times;</span>
+            </div>
+            <div class="cart-body">
+                <h3>Resumen Final</h3>
+                <div class="cart-items" id="checkoutSummary">
+                    </div>
+    
+                <div class="cart-total">
+                    <h3>💰 Total a Pagar:</h3>
+                    <div class="total-amount" id="checkoutTotalAmount">0,00 Bs</div>
+                </div>
+    
+                <form id="customerInfoForm" onsubmit="event.preventDefault(); processCheckout();">
+                    <div class="form-group">
+                        <label for="customerName">Tu Nombre (Requerido):</label>
+                        <input type="text" id="customerName" placeholder="Escribe tu nombre y apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Tu Email (Opcional):</label>
+                        <input type="email" id="customerEmail" placeholder="Para recibir una copia del pedido">
+                    </div>
+                </form>
+    
+                <div class="checkout-instructions">
+                    <p><strong>Próximo Paso:</strong> Al hacer clic en "Confirmar", tu pedido se enviará por WhatsApp y un agente te atenderá para coordinar el pago.</p>
+                </div>
+    
+                <button class="checkout-btn" onclick="processCheckout()">
+                    ✅ Confirmar y Enviar Pedido a WhatsApp
+                </button>
             </div>
         </div>
     </div>
@@ -2241,6 +2303,41 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                ] 
             }
         ];
+        
+        const combos = [
+            { 
+                name: "COMBO BÁSICO", 
+                price: "850,00 Bs", 
+                numericPrice: 850.00,
+                duration: "30 DÍAS", 
+                devices: "1 DISPOSITIVO C/U",
+                image: "img/combo-basico.png", // Sugerencia: crea una imagen para este combo
+                type: "combo",
+                available: true,
+                details: [
+                    "✅ 1 Perfil Netflix Estándar",
+                    "✅ 1 Perfil Disney+",
+                    "💰 Ahorra llevando los dos juntos",
+                    "🎬 Acceso a miles de series y películas"
+                ]
+            },
+            { 
+                name: "COMBO FAMILIAR", 
+                price: "900,00 Bs", 
+                numericPrice: 900.00,
+                duration: "30 DÍAS", 
+                devices: "1 DISPOSITIVO C/U",
+                image: "img/combo-familiar.png", // Sugerencia: crea una imagen para este combo
+                type: "combo",
+                available: true,
+                details: [
+                    "✅ 1 Perfil Netflix Estándar",
+                    "✅ 1 Perfil Disney+",
+                    "✅ 1 Perfil Prime Video",
+                    "✨ El entretenimiento completo para la familia"
+                ]
+            }
+        ];
 
         // OTROS SERVICIOS
         const otros = [
@@ -2373,6 +2470,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         }
 
         function updateCarousel() {
+            if (!carouselWrapper) return;
             carouselWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
             document.querySelectorAll('.dot').forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentSlide);
@@ -2385,18 +2483,20 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         }
 
         function autoSlide() {
-            currentSlide = (currentSlide + 1) % carouselItems.length;
-            updateCarousel();
+            if (carouselItems.length > 0) {
+               currentSlide = (currentSlide + 1) % carouselItems.length;
+               updateCarousel();
+            }
         }
 
         setInterval(autoSlide, 5000);
         
         let cart = [];
-        let currentTab = 0;
-        const tabs = ['perfiles', 'cuentas', 'otros'];
+        const tabs = ['perfiles', 'cuentas', 'combos', 'otros'];
 
         function createParticles() {
             const particles = document.getElementById('particles');
+            if(!particles) return;
             const particleCount = 15;
 
             for (let i = 0; i < particleCount; i++) {
@@ -2456,7 +2556,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             return card;
         }
         
-        // ===== INICIO DE LA NUEVA FUNCIÓN DE BÚSQUEDA =====
         function searchServices() {
             const input = document.getElementById('serviceSearch');
             const filter = input.value.toUpperCase();
@@ -2477,7 +2576,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 }
             });
         }
-        // ===== FIN DE LA NUEVA FUNCIÓN DE BÚSQUEDA =====
 
         function toggleDetails(serviceId) {
             const detailsElement = document.getElementById(`details-${serviceId}`);
@@ -2590,41 +2688,63 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
 
         function checkout() {
             if (cart.length === 0) return;
+            openCheckoutModal();
+        }
+
+        function openCheckoutModal() {
+            const summaryContainer = document.getElementById('checkoutSummary');
+            const totalAmount = document.getElementById('checkoutTotalAmount');
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const itemsList = cart.map(item => `• ${item.name} x${item.quantity} = ${(item.price * item.quantity).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`).join('\n');
-            const message = `🛒 *NUEVA ORDEN - ConnectTV*\n\n📋 *SERVICIOS SOLICITADOS:*\n${itemsList}\n\n💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n✅ *Orden generada desde ConnectTV*\n🕐 *${new Date().toLocaleString('es-VE')}*\n\nPor favor confirme la orden y proporcione los datos de pago.`;
+            
+            summaryContainer.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name} (x${item.quantity})</div>
+                        <div class="cart-item-price">${(item.price * item.quantity).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            totalAmount.textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
+            
+            closeCart();
+            document.getElementById('checkoutModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function processCheckout() {
+            const customerNameInput = document.getElementById('customerName');
+            const customerName = customerNameInput.value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+
+            if (!customerName) {
+                alert('Por favor, ingresa tu nombre para continuar.');
+                customerNameInput.focus();
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemsList = cart.map(item => `• ${item.quantity}x ${item.name} - ${(item.price * item.quantity).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`).join('\n');
+            
+            const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n🛒 *Quisiera confirmar el siguiente pedido:*\n\n${itemsList}\n\n💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n${customerEmail ? `✉️ *Mi email:* ${customerEmail}\n` : ''}\n✅ *Pedido generado desde la web.*\n\nQuedo atento a las instrucciones para el pago. ¡Gracias!`;
+            
             const whatsappUrl = `https://wa.me/584242357804?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
+            
             cart = [];
             updateCartDisplay();
-            closeCart();
-        }
-
-        function nextTab() {
-            if (currentTab < tabs.length - 1) {
-                currentTab++;
-                showServicesTab(tabs[currentTab]);
-            }
-        }
-
-        function previousTab() {
-            if (currentTab > 0) {
-                currentTab--;
-                showServicesTab(tabs[currentTab]);
-            }
-        }
-
-        function updateNavButtons() {
-            document.getElementById('prevBtn').disabled = currentTab === 0;
-            document.getElementById('nextBtn').disabled = currentTab === tabs.length - 1;
+            closeCheckoutModal();
         }
 
         function loadServices() {
-            const grids = { perfilesGrid, cuentasGrid, otrosGrid, featuredOffersGrid };
-            const data = { perfiles, cuentas, otros, featuredOffers };
-            
             document.getElementById('perfilesGrid').innerHTML = perfiles.map((s, i) => createServiceCard(s, i).outerHTML).join('');
             document.getElementById('cuentasGrid').innerHTML = cuentas.map((s, i) => createServiceCard(s, i).outerHTML).join('');
+            document.getElementById('combosGrid').innerHTML = combos.map((s, i) => createServiceCard(s, i).outerHTML).join('');
             document.getElementById('otrosGrid').innerHTML = otros.map((s, i) => createServiceCard(s, i).outerHTML).join('');
             document.getElementById('featuredOffersGrid').innerHTML = featuredOffers.map((s, i) => createServiceCard(s, i).outerHTML).join('');
         }
@@ -2641,19 +2761,16 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         }
 
         function showServicesTab(tabName) {
-            currentTab = tabs.indexOf(tabName);
             document.querySelectorAll('.services-container').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-            updateNavButtons();
         }
 
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             if (sectionId === 'store') showServicesTab('perfiles');
-            document.getElementById('mobileMenu').classList.remove('active');
         }
 
         function toggleMobileMenu() {
@@ -2669,12 +2786,12 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
 
         window.onclick = (event) => {
             if (event.target == document.getElementById('cartModal')) closeCart();
+            if (event.target == document.getElementById('checkoutModal')) closeCheckoutModal();
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
             loadServices();
-            updateNavButtons();
             updateCartDisplay();
             createDots();
             showSection('home');
@@ -2684,7 +2801,8 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         // Exposing functions to global scope
         window.toggleDetails = toggleDetails; window.addToCart = addToCart; window.removeFromCart = removeFromCart;
         window.updateQuantity = updateQuantity; window.openCart = openCart; window.closeCart = closeCart;
-        window.checkout = checkout; window.nextTab = nextTab; window.previousTab = previousTab;
+        window.checkout = checkout;
+        window.processCheckout = processCheckout; window.closeCheckoutModal = closeCheckoutModal;
         window.showServicesTab = showServicesTab; window.showSection = showSection; window.toggleMobileMenu = toggleMobileMenu;
         window.sendSupportMessage = sendSupportMessage; window.searchServices = searchServices;
     </script>
