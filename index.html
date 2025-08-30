@@ -307,41 +307,41 @@
         .carousel-container {
             position: relative;
             width: 100%;
-            max-width: 900px; /* MODIFICADO */
+            max-width: 900px;
             margin: 2rem auto;
             overflow: hidden;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
             border: 2px solid rgba(0, 255, 0, 0.5);
-            aspect-ratio: 2 / 1; /* MODIFICADO: Hace el carrusel responsivo y compacto */
+            aspect-ratio: 2 / 1;
         }
 
         .carousel-wrapper {
             display: flex;
-            height: 100%; /* MODIFICADO */
+            height: 100%;
             transition: transform 0.5s ease-in-out;
         }
 
         .carousel-item {
             min-width: 100%;
-            height: 100%; /* MODIFICADO */
+            height: 100%;
             position: relative;
             overflow: hidden;
-            background-color: #000; /* MODIFICADO: Fondo para imágenes que no llenan el espacio */
+            background-color: #000;
         }
 
         .carousel-item img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* MODIFICADO: Asegura que toda la imagen sea visible */
-            filter: brightness(0.8); /* MODIFICADO */
+            object-fit: contain;
+            filter: brightness(0.8);
         }
 
         .carousel-caption {
             position: absolute;
             bottom: 20px;
             left: 20px;
-            right: 20px; /* NUEVO: para mejor ajuste */
+            right: 20px;
             background: rgba(0, 0, 0, 0.7);
             padding: 10px 20px;
             border-radius: 10px;
@@ -1075,9 +1075,8 @@
                 font-size: 1rem;
             }
 
-            /* NUEVAS REGLAS PARA CARRUSEL EN MÓVIL */
             .carousel-container {
-                aspect-ratio: 16 / 9; /* Proporción más estándar para móviles */
+                aspect-ratio: 16 / 9;
             }
 
             .carousel-caption h3 {
@@ -1087,11 +1086,10 @@
             .carousel-caption p {
                 font-size: 0.8rem;
                 display: -webkit-box;
-                -webkit-line-clamp: 2; /* Limita el texto a 2 líneas */
+                -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
             }
-            /* FIN DE NUEVAS REGLAS */
             
             .services-grid {
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1234,29 +1232,90 @@
             to { transform: translateX(100%); opacity: 0; }
         }
 
-        /* Testimonials Section */
+        /* ================================== */
+        /* MODIFICADO: Testimonials Section   */
+        /* ================================== */
         .testimonials-section {
             padding: 2rem 0;
             text-align: center;
         }
 
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
         .testimonial-card {
             background: rgba(0, 255, 0, 0.1);
             border: 2px solid rgba(0, 255, 0, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1rem 0;
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            backdrop-filter: blur(5px);
             animation: fadeInUp 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .testimonial-card p {
-            font-style: italic;
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
+            border-color: #00ff00;
+        }
+
+        .testimonial-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
             margin-bottom: 1rem;
         }
 
-        .testimonial-card h4 {
+        .testimonial-rating {
+            color: #f1c40f;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-quote {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding: 0 1rem;
+            font-size: 0.95rem;
+            color: #e0e0e0;
+        }
+
+        .testimonial-quote::before {
+            content: '“';
+            position: absolute;
+            top: -10px;
+            left: -5px;
+            font-size: 3rem;
+            color: rgba(0, 255, 0, 0.3);
+            font-family: 'Georgia', serif;
+        }
+        
+        .testimonial-quote::after {
+            content: '”';
+            position: absolute;
+            bottom: -20px;
+            right: -5px;
+            font-size: 3rem;
+            color: rgba(0, 255, 0, 0.3);
+            font-family: 'Georgia', serif;
+        }
+
+        .testimonial-name {
             color: #00ff00;
             margin: 0;
+            font-weight: bold;
+            margin-top: auto;
         }
         
         /* FAQ Section */
@@ -1308,7 +1367,7 @@
         }
         
         .faq-item.active .faq-answer {
-            max-height: 200px; /* Adjust as needed */
+            max-height: 200px;
             padding: 1rem;
         }
         
@@ -1409,13 +1468,31 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             
             <div class="testimonials-section">
                 <h2>💬 Lo que dicen nuestros clientes</h2>
-                <div class="testimonial-card">
-                    <p>"¡Excelente servicio! La entrega fue inmediata y la calidad del streaming es perfecta. Muy recomendados."</p>
-                    <h4>- José P.</h4>
-                </div>
-                <div class="testimonial-card">
-                    <p>"Los mejores precios y la atención es de primera. Siempre están disponibles para resolver cualquier duda. ¡Sigan así!"</p>
-                    <h4>- María G.</h4>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <img src="img/cliente1.jpg" alt="Cliente satisfecho José rojas." class="testimonial-img">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-quote">"¡Excelente servicio! La entrega fue inmediata y la calidad del streaming es perfecta. Muy recomendados."</p>
+                        <h4 class="testimonial-name">- José rojas.</h4>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="img/cliente2.jpg" alt="Cliente satisfecha abraham." class="testimonial-img">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-quote">"Los mejores precios y la atención es de primera. Siempre están disponibles para resolver cualquier duda. ¡Sigan así!"</p>
+                        <h4 class="testimonial-name">- abraham.</h4>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="img/cliente3.jpg" alt="Cliente satisfecho josgil." class="testimonial-img">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-quote">"Totalmente confiables y el soporte es súper rápido. Llevo meses con ellos y nunca he tenido un problema."</p>
+                        <h4 class="testimonial-name">- josgil.</h4>
+                    </div>
                 </div>
             </div>
 
@@ -1611,7 +1688,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/netflix.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "✅ Acceso completo a todo el catálogo de Netflix",
                     "🎬 Películas y series en HD y 4K",
@@ -1630,7 +1707,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/netflix.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "✅ Acceso completo por 15 días",
                     "🎬 Películas y series en HD",
@@ -1649,7 +1726,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/universalper.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "✅ ofrece una amplia variedad de contenido de televisión y cine, incluyendo series de estreno, películas de Hollywood, comedia, crímenes reales y reality shows.",
                     "🎬 Películas y series en HD",
@@ -1667,7 +1744,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/jellyfin.png",
                 type: "perfil",
-                available: false, // Cambia a false para marcar como agotado
+                available: false,
                 details: [
                     "🎥 Amplio catálogo de películas y series",
                     "🌟 Contenido actualizado constantemente",
@@ -1685,7 +1762,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/disney.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "🏰 Todo el contenido de Disney+",
                     "⭐ Marvel, Star Wars y Pixar",
@@ -1704,7 +1781,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/primevideo.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "🎭 Series originales de Amazon",
                     "🎬 Películas taquilleras recientes",
@@ -1722,7 +1799,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/flujotv.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "📺 Canales de TV en vivo",
                     "🎬 Películas y series on-demand",
@@ -1741,7 +1818,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 image: "img/telelatino.png",
                 altPrice: "670,00 Bs (2 MESES)",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "📺 Canales latinos en vivo",
                     "🎬 Películas y series latinas",
@@ -1760,7 +1837,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 image: "img/stellatv.png",
                 altPrice: "700,00 Bs (2 MESES)",
                 type: "perfil",
-                available: false, // Cambia a false para marcar como agotado
+                available: false,
                 details: [
                     "🌟 Contenido premium latino",
                     "📺 Canales de TV variados",
@@ -1778,7 +1855,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/crunchyroll.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "🎌 Anime exclusivo y simulcast",
                     "📚 Manga digital incluido",
@@ -1796,7 +1873,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/vix.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "🎭 Contenido original de ViX",
                     "📺 Telenovelas y series latinas",
@@ -1815,7 +1892,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/max.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "🎬 Contenido HBO Max premium",
                     "⚡ Estrenos simultáneos con cines",
@@ -1832,7 +1909,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/paramount.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "🎬 Películas de Paramount Pictures",
                     "📺 Shows de Comedy Central y MTV",
@@ -1850,7 +1927,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/IPtvEntretenimiento.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "🎬 Disfruta series, películas y canales en vivo 🎬📡",
                     "📺 Con la interfaz más increíble 🤩 y fácil de usar 🖥️",
@@ -1858,10 +1935,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "✨ ¡El mejor entretenimiento está aquí y al mejor precio! 💥💸",
                     "🎭 Series originales exclusivas"
                 ]   
-
-            
-            
-          
 
             }
         ];
@@ -1876,7 +1949,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "4 DISPOSITIVOS",
                 image: "img/netflixcuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "👥 Hasta 4 perfiles simultáneos",
                     "📱 4 dispositivos conectados",
@@ -1895,7 +1968,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "3 DISPOSITIVO",
                 image: "img/IPtvcuenta.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "🎬 Disfruta series, películas y canales en vivo 🎬📡",
                     "📺 Con la interfaz más increíble 🤩 y fácil de usar 🖥️",
@@ -1904,8 +1977,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "🎭 Series originales exclusivas"
                 ]   
 
-
-                
            },
             { 
                 name: "Disney+ Premium Completa", 
@@ -1915,7 +1986,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "7 DISPOSITIVO",
                 image: "img/disnepre.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "🍿Disney+: El Hogar de la Magia📡",
                     "🏰✨Descubre un mundo de entretenimiento mágico con Disney+",
@@ -1923,9 +1994,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "😉todo el contenido icónico de Disney, Pixar, Marvel y mucho mas,",
                     "✅ RENOVABLE."
                 ]   
-
-                
-
             },
             { 
                 name: "JELLYFIN CUENTA COMPLETA", 
@@ -1935,7 +2003,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "4 DISPOSITIVOS",
                 image: "img/jellyfincuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "👥 Hasta 4 usuarios simultáneos",
                     "🎬 Biblioteca completa HD/4K",
@@ -1953,7 +2021,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "6 DISPOSITIVOS",
                 image: "img/disneycuentas.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "👥 6 perfiles familiares",
                     "🏰 Todo Disney, Marvel, Star Wars",
@@ -1972,7 +2040,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "5 DISPOSITIVOS",
                 image: "img/primevideocuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "👥 5 streams simultáneos",
                     "🎬 Biblioteca completa de Amazon",
@@ -1981,8 +2049,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "🎵 Prime Music incluido",
                     "📦 Beneficios Prime parciales"
                 ]       
-
-
             },
             { 
                   name: "FLUJO TV CUENTA", 
@@ -1992,7 +2058,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "3 DISPOSITIVOS",
                 image: "img/flujotvcuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "👥 3 usuarios simultáneos",
                     "📺 Canales TV en vivo",
@@ -2001,9 +2067,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "📱 Apps móviles incluidas",
                     "📄 Grabación en la nube"
                 ]       
-
-
-
            },
             { 
                  name: "TELE LATINO CUENTA", 
@@ -2013,7 +2076,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "4 DISPOSITIVOS",
                 image: "img/telelatinocuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "👥 4 conexiones simultáneas",
                     "📺 Todos los canales latinos",
@@ -2032,7 +2095,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "3 DISPOSITIVOS",
                 image: "img/stellatvcuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "👥 3 perfiles de usuario",
                     "🌟 Contenido premium completo",
@@ -2041,9 +2104,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "👨‍👩‍👧‍👦 Programación familiar",
                     "📱 Compatible con Smart TV"
                 ]       
-
-
-
             },
             { 
                  name: "CRUNCHYROLL CUENTA", 
@@ -2053,7 +2113,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "5 DISPOSITIVOS",
                 image: "img/crunchyrollcuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "👥 4 streams simultáneos",
                     "🎌 Anime completo sin ads",
@@ -2062,8 +2122,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "📱 Apps móviles premium",
                     "🌟 Calidad HD sin interrupciones"
                 ]       
-            
-            
             },
             { 
                  name: "Viki Rakuten", 
@@ -2073,7 +2131,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "4 DISPOSITIVOS",
                 image: "img/vikicuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                      "👥 4 streams simultáneos",
                     "🎌 disponible: 🇰🇷 K-Dramas (Corea del Sur) 🇨🇳 C-Dramas (China) 🇯🇵 J-Dramas (Japón)",
@@ -2081,10 +2139,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "🎬 Viki Rakuten Es una plataforma de streaming con dramas y programas de Asia 🌏",
                     "🌟 Calidad HD sin interrupciones"
                 ]       
-
-
-
-                
             },
             { 
                  name: "VIX CUENTA", 
@@ -2094,7 +2148,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "5 DISPOSITIVOS",
                 image: "img/vixcuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                       "👥 4 dispositivos simultáneos",
                     "🎭 Contenido ViX+ completo",
@@ -2103,7 +2157,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "🎬 Originales exclusivos",
                     "📰 Noticias Univision"
                ] 
-
            },
             { 
                   name: "MAX CUENTA COMPLETA", 
@@ -2113,7 +2166,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "4 DISPOSITIVOS",
                 image: "img/maxcuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                       "👥 4 streams simultáneos",
                     "🎬 HBO Max completo",
@@ -2122,7 +2175,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "🎨 Documentales premium",
                     "👨‍👩‍👧‍👦 Contenido para toda la familia"
                ] 
-
              },
             { 
                    name: "PARAMOUNT CUENTA", 
@@ -2132,7 +2184,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "6 DISPOSITIVOS",
                 image: "img/paramountcuenta.png",
                 type: "cuenta",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "👥 5 streams simultáneos",
                     "🎬 Biblioteca Paramount completa",
@@ -2141,9 +2193,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "👶 Nickelodeon completo",
                     "🎭 Originales de Paramount+"
                ] 
-
-
-
             }
         ];
 
@@ -2157,7 +2206,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/youtubeper.png",
                 type: "otro",
-                available: true, // Ejemplo de servicio agotado
+                available: true,
                 details: [
                     "✅ YouTube y YouTube Music sin anuncios",
                     "🎬 Mira videos sin interrupciones",
@@ -2176,17 +2225,14 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/canva.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "✅ Miles de plantillas y recursos exclusivos",
                     "✅ Edición fácil y profesional",
                     "✅ Aumenta tu productividad con herramientas avanzadas",
                     "✅Ideal para individuos, emprendedores y diseñadores independientes",
                     "✅RENOVABLE"
-                
                 ]   
-            
-            
             },
             { 
                 name: "CANVA 3", 
@@ -2196,7 +2242,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/canva3.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "✅ Tiene una duración de 3 meses, con garantia de 45 dias",
                     "✅ Miles de plantillas y recursos exclusivos",
@@ -2204,7 +2250,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "✅ Aumenta tu productividad con herramientas avanzadas",
                     "❌NO RENOVABLE"
                 ]   
-
              },
             { 
                 name: "CANVA 12", 
@@ -2214,7 +2259,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 devices: "1 DISPOSITIVO",
                 image: "img/canva12.png",
                 type: "perfil",
-                available: true, // Cambia a false para marcar como agotado
+                available: true,
                 details: [
                     "✅Tiene una duración de 12 meses, con garantia de 6 meses",
                     "✅ Miles de plantillas y recursos exclusivos",
@@ -2222,11 +2267,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "✅ Aumenta tu productividad con herramientas avanzadas",
                     "❌NO RENOVABLE"
                 ]   
-
-
-
-            
-        }
+            }
         ];
         
         // OFERTAS DESTACADAS - Puedes editar este array
@@ -2263,8 +2304,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     "👶 Contenido Nickelodeeon",
                     "🎭 Series originales exclusivas"
                 ]
-           
-           
             }
         ];
         
@@ -2303,19 +2342,16 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             updateCarousel();
         }
 
-        // Auto-slide every 5 seconds
         setInterval(autoSlide, 5000);
         
         // ============================================
         // LÓGICA DE LA TIENDA Y CARRITO - NO EDITAR
         // ============================================
 
-        // Variables globales
         let cart = [];
         let currentTab = 0;
         const tabs = ['perfiles', 'cuentas', 'otros'];
 
-        // Crear partículas flotantes
         function createParticles() {
             const particles = document.getElementById('particles');
             const particleCount = 15;
@@ -2330,13 +2366,11 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             }
         }
 
-        // Función para crear una tarjeta de servicio
         function createServiceCard(service, index) {
             const card = document.createElement('div');
             card.className = `service-card ${!service.available ? 'out-of-stock' : ''}`;
             card.style.setProperty('--card-index', index);
             
-            // Price information
             let priceInfo = '';
             if (service.plans) {
                 let plansHtml = '<div style="margin: 0.5rem 0;">';
@@ -2352,7 +2386,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 }
             }
             
-            // Service details
             let detailsHtml = '';
             if (service.duration) {
                 detailsHtml += `<div class="service-details">📅 ${service.duration}</div>`;
@@ -2361,7 +2394,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 detailsHtml += `<div class="service-details">🔴 ${service.devices}</div>`;
             }
 
-            // Details content for toggle
             let detailsContent = '';
             if (service.details && service.details.length > 0) {
                 detailsContent = `
@@ -2373,7 +2405,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 `;
             }
 
-            // Stock badge and button
             const stockBadge = !service.available ? '<div class="stock-badge">Agotado</div>' : '';
             const buttonContent = service.available ? 
                 `<button class="add-to-cart-btn" onclick="addToCart('${service.name}', ${service.numericPrice}, '${service.displayPrice || service.price}')">🛒 Agregar al Carrito</button>` :
@@ -2398,7 +2429,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             return card;
         }
 
-        // Función para alternar detalles
         function toggleDetails(serviceId) {
             const detailsElement = document.getElementById(`details-${serviceId}`);
             const toggleButton = event.target;
@@ -2407,7 +2437,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 detailsElement.classList.remove('active');
                 toggleButton.innerHTML = 'ℹ️ Ver Detalles';
             } else {
-                // Cerrar otros detalles abiertos
                 document.querySelectorAll('.service-details-content.active').forEach(el => {
                     el.classList.remove('active');
                 });
@@ -2420,17 +2449,13 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             }
         }
 
-        // Funciones del carrito de compras - CORREGIDAS
         function addToCart(serviceName, numericPrice, displayPrice) {
-            // Buscar si el servicio ya existe en el carrito
             const existingItemIndex = cart.findIndex(item => item.name === serviceName);
             
             if (existingItemIndex !== -1) {
-                // Si existe, incrementar la cantidad y recalcular el total
                 cart[existingItemIndex].quantity += 1;
                 cart[existingItemIndex].total = cart[existingItemIndex].price * cart[existingItemIndex].quantity;
             } else {
-                // Si no existe, agregar nuevo item
                 cart.push({
                     name: serviceName,
                     price: numericPrice,
@@ -2454,9 +2479,8 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             if (itemIndex !== -1) {
                 cart[itemIndex].quantity += change;
                 if (cart[itemIndex].quantity <= 0) {
-                    cart.splice(itemIndex, 1); // Remover el item del array
+                    cart.splice(itemIndex, 1);
                 } else {
-                    // Recalcular el total del item
                     cart[itemIndex].total = cart[itemIndex].price * cart[itemIndex].quantity;
                 }
                 updateCartDisplay();
@@ -2471,10 +2495,8 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             const cartTotalSection = document.getElementById('cartTotalSection');
             const checkoutBtn = document.getElementById('checkoutBtn');
 
-            // Calcular el total de items en el carrito
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             
-            // Actualizar contador del carrito
             if (totalItems > 0) {
                 cartCount.textContent = totalItems;
                 cartCount.style.display = 'flex';
@@ -2482,7 +2504,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 cartCount.style.display = 'none';
             }
 
-            // Actualizar contenido del carrito
             if (cart.length === 0) {
                 cartItems.style.display = 'none';
                 emptyCartMessage.style.display = 'block';
@@ -2511,7 +2532,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     </div>
                 `).join('');
 
-                // Calcular y mostrar el total correcto
                 const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 totalAmount.textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
             }
@@ -2571,13 +2591,11 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             const whatsappUrl = `https://wa.me/584242357804?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
             
-            // Limpiar carrito después de la compra
             cart = [];
             updateCartDisplay();
             closeCart();
         }
 
-        // Tab navigation functions
         function nextTab() {
             if (currentTab < tabs.length - 1) {
                 currentTab++;
@@ -2600,41 +2618,34 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             nextBtn.disabled = currentTab === tabs.length - 1;
         }
 
-        // Load services in their respective grids
         function loadServices() {
             const perfilesGrid = document.getElementById('perfilesGrid');
             const cuentasGrid = document.getElementById('cuentasGrid');
             const otrosGrid = document.getElementById('otrosGrid');
             const featuredOffersGrid = document.getElementById('featuredOffersGrid');
             
-            // Clear grids
             perfilesGrid.innerHTML = '';
             cuentasGrid.innerHTML = '';
             otrosGrid.innerHTML = '';
             featuredOffersGrid.innerHTML = '';
             
-            // Load perfiles
             perfiles.forEach((service, index) => {
                 perfilesGrid.appendChild(createServiceCard(service, index));
             });
             
-            // Load cuentas
             cuentas.forEach((service, index) => {
                 cuentasGrid.appendChild(createServiceCard(service, index));
             });
             
-            // Load otros
             otros.forEach((service, index) => {
                 otrosGrid.appendChild(createServiceCard(service, index));
             });
 
-            // Load featured offers
             featuredOffers.forEach((service, index) => {
                 featuredOffersGrid.appendChild(createServiceCard(service, index));
             });
         }
         
-        // FAQ Accordion
         function setupFAQAccordion() {
             const faqQuestions = document.querySelectorAll('.faq-question');
             faqQuestions.forEach(question => {
@@ -2642,12 +2653,10 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                     const parentItem = question.parentElement;
                     const isActive = parentItem.classList.contains('active');
                     
-                    // Close all open items
                     document.querySelectorAll('.faq-item.active').forEach(item => {
                         item.classList.remove('active');
                     });
                     
-                    // Open the clicked item if it was not already active
                     if (!isActive) {
                         parentItem.classList.add('active');
                     }
@@ -2655,31 +2664,23 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             });
         }
 
-        // Tab switching functionality
         function showServicesTab(tabName) {
-            // Update current tab index
             currentTab = tabs.indexOf(tabName);
             
-            // Hide all service containers
             document.querySelectorAll('.services-container').forEach(container => {
                 container.classList.remove('active');
             });
             
-            // Remove active class from all tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            // Show selected container
             document.getElementById(tabName).classList.add('active');
             
-            // Add active class to clicked button
             document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
 
-            // Update navigation buttons
             updateNavButtons();
 
-            // Cerrar todos los detalles abiertos al cambiar de tab
             document.querySelectorAll('.service-details-content.active').forEach(el => {
                 el.classList.remove('active');
             });
@@ -2688,19 +2689,16 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             });
         }
 
-        // Navigation
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             document.getElementById(sectionId).classList.add('active');
 
-            // Para la sección 'store', mostramos el primer tab por defecto
             if (sectionId === 'store') {
                 showServicesTab('perfiles');
             }
             
-            // Close mobile menu if open
             document.getElementById('mobileMenu').classList.remove('active');
         }
 
@@ -2708,7 +2706,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             document.getElementById('mobileMenu').classList.toggle('active');
         }
 
-        // Close cart when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('cartModal');
             if (event.target === modal) {
@@ -2716,7 +2713,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             }
         }
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
             loadServices();
@@ -2727,7 +2723,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             setupFAQAccordion();
         });
 
-        // Make functions global
         window.toggleDetails = toggleDetails;
         window.addToCart = addToCart;
         window.removeFromCart = removeFromCart;
@@ -2742,6 +2737,4 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         window.toggleMobileMenu = toggleMobileMenu;
     </script>
 </body>
-
-
 </html>
