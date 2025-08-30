@@ -793,7 +793,8 @@
             box-shadow: 0 20px 60px rgba(0, 255, 0, 0.3);
             animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             max-height: 90vh;
-            overflow-y: auto;
+            display: flex; /* MODIFICADO */
+            flex-direction: column; /* MODIFICADO */
         }
 
         @keyframes modalSlideIn {
@@ -846,6 +847,8 @@
 
         .cart-body {
             padding: 2rem;
+            overflow-y: auto; /* MODIFICADO */
+            flex-grow: 1; /* MODIFICADO */
         }
 
         .cart-items {
@@ -1000,6 +1003,96 @@
             color: #00ff00;
             margin-bottom: 1rem;
         }
+
+        /* --- INICIO DE ESTILOS PARA CHECKOUT POR PASOS --- */
+        .progress-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            margin-bottom: 1.5rem;
+        }
+        .progress-step {
+            text-align: center;
+            color: #888;
+            font-weight: bold;
+            position: relative;
+            flex: 1;
+        }
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -50%;
+            width: 90%;
+            height: 2px;
+            background-color: #444;
+            transform: translateY(-50%);
+            z-index: -1;
+        }
+        .progress-step:last-child::after {
+            display: none;
+        }
+        .progress-step.active {
+            color: #00ff00;
+        }
+        .progress-step.active::before {
+            content: '✓';
+            display: block;
+            margin: 0 auto 0.5rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #00ff00;
+            color: black;
+            line-height: 30px;
+            font-size: 1rem;
+            border: 2px solid #00ff00;
+        }
+        .progress-step.active ~ .progress-step::before {
+            content: '';
+             display: block;
+            margin: 0 auto 0.5rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: transparent;
+            border: 2px solid #888;
+        }
+
+        .cart-step {
+            display: none;
+            animation: fadeInStep 0.5s ease-in-out;
+        }
+        .cart-step.active {
+            display: block;
+        }
+        @keyframes fadeInStep {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cart-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        .nav-btn {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover {
+            background: #00ff00;
+            color: black;
+        }
+        /* --- FIN DE ESTILOS PARA CHECKOUT POR PASOS --- */
+
 
         /* WhatsApp Button */
         .whatsapp-btn {
@@ -1696,71 +1789,77 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             </div>
         </section>
     </main>
-
+    
     <div id="cartModal" class="cart-modal">
         <div class="cart-content">
             <div class="cart-header">
-                <h2>🛒 Tu Carrito de Compras</h2>
+                <h2 id="cart-title">🛒 Tu Carrito de Compras</h2>
                 <span class="close" onclick="closeCart()">&times;</span>
             </div>
             <div class="cart-body">
-                <div class="cart-items" id="cartItems">
-                </div>
-                
-                <div class="cart-total" id="cartTotalSection">
-                    <h3>💰 Total a Pagar:</h3>
-                    <div class="total-amount" id="totalAmount">0,00 Bs</div>
+                <div class="progress-bar" id="progressBar" style="display: none;">
+                    <div class="progress-step active" data-step="1">🛒 Carrito</div>
+                    <div class="progress-step" data-step="2">📝 Tus Datos</div>
+                    <div class="progress-step" data-step="3">✅ Confirmar</div>
                 </div>
 
-                <button class="checkout-btn" id="checkoutBtn" onclick="checkout()">
-                    🚀 Finalizar Compra por WhatsApp
-                </button>
+                <div id="cart-step-1" class="cart-step active">
+                    <div class="cart-items" id="cartItems"></div>
+                    <div class="cart-total" id="cartTotalSection">
+                        <h3>💰 Total a Pagar:</h3>
+                        <div class="total-amount" id="totalAmount">0,00 Bs</div>
+                    </div>
+                    <button class="checkout-btn" id="checkoutBtn" onclick="navigateToStep(2)">
+                        🚀 Continuar
+                    </button>
+                    <div class="empty-cart" id="emptyCartMessage" style="display: none;">
+                        <h3>🛒 Tu carrito está vacío</h3>
+                        <p>¡Agrega algunos servicios para comenzar!</p>
+                    </div>
+                </div>
 
-                <div class="empty-cart" id="emptyCartMessage" style="display: none;">
-                    <h3>🛒 Tu carrito está vacío</h3>
-                    <p>¡Agrega algunos servicios para comenzar!</p>
+                <div id="cart-step-2" class="cart-step">
+                    <h3>Completa tus datos para continuar</h3>
+                    <br>
+                    <form id="customerInfoForm" onsubmit="event.preventDefault(); navigateToStep(3);">
+                        <div class="form-group">
+                            <label for="customerName">Tu Nombre (Requerido):</label>
+                            <input type="text" id="customerName" placeholder="Escribe tu nombre y apellido" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">Tu Email (Opcional):</label>
+                            <input type="email" id="customerEmail" placeholder="Para recibir una copia del pedido">
+                        </div>
+                    </form>
+                    <div class="cart-navigation">
+                        <button class="nav-btn" onclick="navigateToStep(1)">⬅️ Volver al Carrito</button>
+                        <button class="checkout-btn" style="width: auto;" onclick="navigateToStep(3)">Continuar a Confirmación ➡️</button>
+                    </div>
+                </div>
+
+                <div id="cart-step-3" class="cart-step">
+                    <h3>✅ ¡Estás a un paso! Revisa tu pedido</h3>
+                    <p>Este es el resumen que enviaremos a nuestro equipo por WhatsApp.</p>
+                    <div class="checkout-instructions" id="finalSummary">
+                        </div>
+                    <div class="cart-total">
+                        <h3>💰 Total Final a Pagar:</h3>
+                        <div class="total-amount" id="finalTotalAmount">0,00 Bs</div>
+                    </div>
+                     <div class="checkout-instructions">
+                        <p><strong>Próximo Paso:</strong> Al hacer clic en "Confirmar", tu pedido se enviará por WhatsApp y un agente te atenderá para coordinar el pago (Pago Móvil / Transferencia BCV).</p>
+                    </div>
+                    <div class="cart-navigation">
+                         <button class="nav-btn" onclick="navigateToStep(2)">⬅️ Volver a Datos</button>
+                         <button class="checkout-btn" onclick="processCheckout()">
+                            ✅ Confirmar y Enviar Pedido a WhatsApp
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="checkoutModal" class="cart-modal">
-        <div class="cart-content">
-            <div class="cart-header">
-                <h2>📝 Confirmar Pedido</h2>
-                <span class="close" onclick="closeCheckoutModal()">&times;</span>
-            </div>
-            <div class="cart-body">
-                <h3>Resumen Final</h3>
-                <div class="cart-items" id="checkoutSummary">
-                    </div>
-    
-                <div class="cart-total">
-                    <h3>💰 Total a Pagar:</h3>
-                    <div class="total-amount" id="checkoutTotalAmount">0,00 Bs</div>
-                </div>
-    
-                <form id="customerInfoForm" onsubmit="event.preventDefault(); processCheckout();">
-                    <div class="form-group">
-                        <label for="customerName">Tu Nombre (Requerido):</label>
-                        <input type="text" id="customerName" placeholder="Escribe tu nombre y apellido" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerEmail">Tu Email (Opcional):</label>
-                        <input type="email" id="customerEmail" placeholder="Para recibir una copia del pedido">
-                    </div>
-                </form>
-    
-                <div class="checkout-instructions">
-                    <p><strong>Próximo Paso:</strong> Al hacer clic en "Confirmar", tu pedido se enviará por WhatsApp y un agente te atenderá para coordinar el pago.</p>
-                </div>
-    
-                <button class="checkout-btn" onclick="processCheckout()">
-                    ✅ Confirmar y Enviar Pedido a WhatsApp
-                </button>
-            </div>
-        </div>
-    </div>
 
     <a href="#" onclick="sendSupportMessage()" class="whatsapp-btn" target="_blank">📞</a>
 
@@ -2676,6 +2775,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         function openCart() {
             document.getElementById('cartModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
+            navigateToStep(1); // Siempre empezar en el paso 1
         }
 
         function closeCart() {
@@ -2683,45 +2783,72 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             document.body.style.overflow = 'auto';
         }
 
-        function checkout() {
-            if (cart.length === 0) return;
-            openCheckoutModal();
-        }
+        // --- INICIO DE LÓGICA DE CHECKOUT POR PASOS ---
+        function navigateToStep(step) {
+            const customerNameInput = document.getElementById('customerName');
+            
+            // Validación para pasar del paso 2 al 3
+            if (step === 3 && !customerNameInput.value.trim()) {
+                alert('Por favor, ingresa tu nombre para continuar.');
+                customerNameInput.focus();
+                return;
+            }
 
-        function openCheckoutModal() {
-            const summaryContainer = document.getElementById('checkoutSummary');
-            const totalAmount = document.getElementById('checkoutTotalAmount');
+            // Ocultar todos los pasos
+            document.querySelectorAll('.cart-step').forEach(s => s.classList.remove('active'));
+            // Mostrar el paso actual
+            document.getElementById(`cart-step-${step}`).classList.add('active');
+
+            // Actualizar barra de progreso
+            const progressBar = document.getElementById('progressBar');
+            if (cart.length > 0) {
+                progressBar.style.display = 'flex';
+                document.querySelectorAll('.progress-step').forEach(p => {
+                    p.classList.remove('active');
+                    if (parseInt(p.dataset.step) <= step) {
+                        p.classList.add('active');
+                    }
+                });
+            } else {
+                progressBar.style.display = 'none';
+            }
+
+            // Actualizar título del modal
+            const cartTitle = document.getElementById('cart-title');
+            if(step === 1) cartTitle.innerText = "🛒 Tu Carrito de Compras";
+            if(step === 2) cartTitle.innerText = "📝 Completa tus Datos";
+            if(step === 3) {
+                 cartTitle.innerText = "✅ Confirma tu Pedido";
+                 generateFinalSummary();
+            }
+        }
+        
+        function generateFinalSummary() {
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemsList = cart.map(item => `<li>${item.quantity}x ${item.name}</li>`).join('');
+
+            const summaryHTML = `
+                <p><strong>Nombre:</strong> ${customerName}</p>
+                ${customerEmail ? `<p><strong>Email:</strong> ${customerEmail}</p>` : ''}
+                <hr style="border-color: rgba(0,255,0,0.2); margin: 0.5rem 0;">
+                <p><strong>Pedido:</strong></p>
+                <ul style="list-style: none; padding-left: 10px;">${itemsList}</ul>
+            `;
             
-            summaryContainer.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name} (x${item.quantity})</div>
-                        <div class="cart-item-price">${(item.price * item.quantity).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</div>
-                    </div>
-                </div>
-            `).join('');
-            
-            totalAmount.textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
-            
-            closeCart();
-            document.getElementById('checkoutModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
+            document.getElementById('finalSummary').innerHTML = summaryHTML;
+            document.getElementById('finalTotalAmount').textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
         }
 
-        function closeCheckoutModal() {
-            document.getElementById('checkoutModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
 
         function processCheckout() {
-            const customerNameInput = document.getElementById('customerName');
-            const customerName = customerNameInput.value.trim();
+            const customerName = document.getElementById('customerName').value.trim();
             const customerEmail = document.getElementById('customerEmail').value.trim();
 
             if (!customerName) {
-                alert('Por favor, ingresa tu nombre para continuar.');
-                customerNameInput.focus();
+                alert('Hubo un error, por favor regresa y verifica tu nombre.');
+                navigateToStep(2);
                 return;
             }
 
@@ -2735,8 +2862,10 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             
             cart = [];
             updateCartDisplay();
-            closeCheckoutModal();
+            closeCart();
         }
+        // --- FIN DE LÓGICA DE CHECKOUT POR PASOS ---
+
 
         function loadServices() {
             document.getElementById('perfilesGrid').innerHTML = perfiles.map((s, i) => createServiceCard(s, i).outerHTML).join('');
@@ -2794,7 +2923,6 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
 
         window.onclick = (event) => {
             if (event.target == document.getElementById('cartModal')) closeCart();
-            if (event.target == document.getElementById('checkoutModal')) closeCheckoutModal();
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -2809,10 +2937,10 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         // Exposing functions to global scope
         window.toggleDetails = toggleDetails; window.addToCart = addToCart; window.removeFromCart = removeFromCart;
         window.updateQuantity = updateQuantity; window.openCart = openCart; window.closeCart = closeCart;
-        window.checkout = checkout;
-        window.processCheckout = processCheckout; window.closeCheckoutModal = closeCheckoutModal;
+        window.processCheckout = processCheckout;
         window.showServicesTab = showServicesTab; window.showSection = showSection; window.toggleMobileMenu = toggleMobileMenu;
         window.sendSupportMessage = sendSupportMessage; window.searchServices = searchServices;
+        window.navigateToStep = navigateToStep; // MODIFICADO: Exponer nueva función
     </script>
 </body>
 
