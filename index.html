@@ -1306,11 +1306,24 @@
             color: var(--primary-color);
             transform: scale(1.2);
         }
+        
+        /* --- INICIO: NUEVOS ESTILOS Y AJUSTES --- */
+        .mobile-menu .theme-switch-wrapper {
+            display: none; /* Oculto por defecto */
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin-top: 0.5rem;
+        }
 
         /* Responsive Design */
-        @media (max-width: 992px) { /* Reduje el breakpoint para que el menú móvil aparezca antes */
-            .nav-links {
-                display: none;
+        @media (max-width: 992px) {
+            .nav-links, .desktop-theme-switch {
+                display: none; /* Oculta el menú principal y el switch de tema de escritorio */
             }
              .menu-toggle {
                 display: block;
@@ -1318,7 +1331,11 @@
             .mobile-menu.active {
                 display: flex;
             }
+            .mobile-menu .theme-switch-wrapper {
+                display: flex; /* Muestra el switch de tema en el menú móvil */
+            }
         }
+        /* --- FIN: NUEVOS ESTILOS Y AJUSTES --- */
         
         @media (max-width: 768px) {
             .container {
@@ -1745,7 +1762,7 @@
                 <li><a href="#" data-section="support" onclick="showSection('support')">📞 Soporte</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 1rem;">
-                <div class="theme-switch-wrapper">
+                <div class="theme-switch-wrapper desktop-theme-switch">
                     <span class="theme-icon">🌙</span>
                     <label class="theme-switch">
                         <input type="checkbox" id="theme-toggle">
@@ -1765,6 +1782,14 @@
                 <a href="#" data-section="about" onclick="showSection('about'); toggleMobileMenu();">👥 Quienes Somos</a>
                 <a href="#" data-section="why-us" onclick="showSection('why-us'); toggleMobileMenu();">✅ Por Que Elegirnos</a>
                 <a href="#" data-section="support" onclick="showSection('support'); toggleMobileMenu();">📞 Soporte</a>
+                <div class="theme-switch-wrapper">
+                    <span class="theme-icon">🌙</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="mobile-theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="theme-icon">☀️</span>
+                </div>
             </div>
         </nav>
     </header>
@@ -3137,22 +3162,29 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         }
         
         // --- LÓGICA DEL CAMBIO DE TEMA ---
-        const themeToggle = document.getElementById('theme-toggle');
+        const desktopToggle = document.getElementById('theme-toggle');
+        const mobileToggle = document.getElementById('mobile-theme-toggle');
 
         function setTheme(isLight) {
             if (isLight) {
                 document.body.classList.add('light-theme');
-                themeToggle.checked = true;
+                desktopToggle.checked = true;
+                mobileToggle.checked = true;
                 localStorage.setItem('theme', 'light');
             } else {
                 document.body.classList.remove('light-theme');
-                themeToggle.checked = false;
+                desktopToggle.checked = false;
+                mobileToggle.checked = false;
                 localStorage.setItem('theme', 'dark');
             }
         }
 
-        themeToggle.addEventListener('change', () => {
-            setTheme(themeToggle.checked);
+        desktopToggle.addEventListener('change', () => {
+            setTheme(desktopToggle.checked);
+        });
+        
+        mobileToggle.addEventListener('change', () => {
+            setTheme(mobileToggle.checked);
         });
         
         function loadTheme() {
