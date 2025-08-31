@@ -14,6 +14,36 @@
     <title>ConnectTV - Tu Mejor Opción en Streaming</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            /* Tema Oscuro (Default) */
+            --bg-gradient: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d4a2d 100%);
+            --text-color: white;
+            --primary-color: #00ff00;
+            --header-bg: rgba(0, 0, 0, 0.9);
+            --card-bg: linear-gradient(145deg, rgba(0, 0, 0, 0.8), rgba(45, 74, 45, 0.3));
+            --card-border: rgba(0, 255, 0, 0.3);
+            --text-shadow-glow: 0 0 10px rgba(0, 255, 0, 0.5);
+            --section-content-bg: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(0,0,0,0.5);
+            --modal-bg: linear-gradient(145deg, #1a1a1a, #2d4a2d);
+            --cart-item-bg: rgba(0, 255, 0, 0.1);
+        }
+
+        .light-theme {
+            /* Tema Claro */
+            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 50%, #b0c4de 100%);
+            --text-color: #333;
+            --primary-color: #008f00;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --card-bg: linear-gradient(145deg, #ffffff, #f0f0f0);
+            --card-border: rgba(0, 143, 0, 0.4);
+            --text-shadow-glow: 0 0 10px rgba(0, 143, 0, 0.3);
+            --section-content-bg: rgba(0, 0, 0, 0.05);
+            --input-bg: rgba(255,255,255,0.8);
+            --modal-bg: linear-gradient(145deg, #f0f4f8, #e6e9ed);
+            --cart-item-bg: rgba(0, 143, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -22,11 +52,62 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d4a2d 100%);
-            color: white;
+            background: var(--bg-gradient);
+            color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
         }
+        
+        /* --- Theme Toggle Switch --- */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 28px;
+            position: relative;
+            width: 50px;
+        }
+        .theme-switch input {
+            display:none;
+        }
+        .slider {
+            background-color: #333;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            background-color: #fff;
+            bottom: 4px;
+            content: "";
+            height: 20px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 20px;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #ccc;
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+            background-color: #008f00;
+        }
+        .theme-icon {
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
 
         .container {
             max-width: 1200px;
@@ -73,14 +154,14 @@
 
         /* Header */
         header {
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--header-bg);
             padding: 1rem 0;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            border-bottom: 1px solid var(--card-border);
             animation: slideDown 0.8s ease;
         }
 
@@ -127,41 +208,51 @@
         }
 
         .logo h1 {
-            color: #00ff00;
+            color: var(--primary-color);
             font-size: 1.8rem;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            text-shadow: var(--text-shadow-glow);
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 1rem; /* Reducido para mejor ajuste */
+            gap: 0.5rem; /* <-- CAMBIO REALIZADO AQUÍ */
         }
 
         .nav-links a {
-            color: white;
+            color: var(--text-color);
             text-decoration: none;
-            padding: 0.6rem 1.2rem; /* Aumento de padding para apariencia de botón */
+            padding: 0.6rem 1rem; /* <-- CAMBIO REALIZADO AQUÍ */
             border-radius: 8px; /* Bordes redondeados */
             transition: all 0.3s ease;
             font-weight: bold;
             background: rgba(0, 255, 0, 0.1); /* Fondo sutil */
-            border: 1px solid rgba(0, 255, 0, 0.3); /* Borde para definir el botón */
+            border: 1px solid var(--card-border); /* Borde para definir el botón */
+            white-space: nowrap; /* Evita que el texto del botón se parta en dos líneas */
         }
 
         .nav-links a:hover {
-            background: #00ff00;
+            background: var(--primary-color);
             color: black;
             transform: translateY(-3px) scale(1.05); /* Efecto al pasar el cursor */
             box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
         }
+        
+        .light-theme .nav-links a {
+            color: var(--text-color);
+            background: rgba(0, 143, 0, 0.1);
+        }
+
+        .light-theme .nav-links a:hover {
+            color: white;
+        }
 
         /* Estilo para el botón activo */
         .nav-links a.active {
-            background: linear-gradient(45deg, #00ff00, #00cc00);
+            background: linear-gradient(45deg, var(--primary-color), #00cc00);
             color: black;
-            border-color: #00ff00;
+            border-color: var(--primary-color);
             box-shadow: 0 5px 20px rgba(0, 255, 0, 0.5);
             transform: translateY(-2px);
         }
@@ -170,7 +261,7 @@
         /* Shopping Cart Button */
         .cart-button {
             position: relative;
-            background: linear-gradient(45deg, #00ff00, #00cc00);
+            background: linear-gradient(45deg, var(--primary-color), #00cc00);
             color: black;
             border: none;
             padding: 0.8rem 1.2rem;
@@ -223,6 +314,10 @@
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
             animation: fadeInUp 1s ease;
         }
+        
+        .light-theme .hero {
+             background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7));
+        }
 
         @keyframes fadeInUp {
             from {
@@ -238,7 +333,7 @@
         .hero h2 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: #00ff00;
+            color: var(--primary-color);
             text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
             animation: glow 2s ease-in-out infinite alternate;
         }
@@ -250,6 +345,10 @@
             to {
                 text-shadow: 0 0 30px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.6);
             }
+        }
+        
+        .light-theme .hero h2 {
+            text-shadow: 0 0 20px rgba(0, 143, 0, 0.5);
         }
 
         .hero p {
@@ -286,7 +385,7 @@
         }
 
         .hero-features h3 {
-            color: #00ff00;
+            color: var(--primary-color);
             margin-bottom: 1rem;
             font-size: 1.2rem;
         }
@@ -359,7 +458,7 @@
         .carousel-caption h3 {
             margin: 0 0 0.5rem 0;
             font-size: 1.5rem;
-            color: #00ff00;
+            color: var(--primary-color);
         }
 
         .carousel-caption p {
@@ -388,7 +487,7 @@
         }
 
         .dot.active {
-            background: #00ff00;
+            background: var(--primary-color);
         }
 
         /* Services Tabs */
@@ -419,7 +518,7 @@
         .tab-btn {
             background: rgba(0, 0, 0, 0.8);
             color: white;
-            border: 2px solid rgba(0, 255, 0, 0.3);
+            border: 2px solid var(--card-border);
             padding: 1rem 2rem;
             border-radius: 12px;
             cursor: pointer;
@@ -429,6 +528,11 @@
             text-transform: uppercase;
             position: relative;
             overflow: hidden;
+        }
+        
+        .light-theme .tab-btn {
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text-color);
         }
 
         .tab-btn::before {
@@ -448,11 +552,16 @@
 
         .tab-btn.active,
         .tab-btn:hover {
-            background: linear-gradient(45deg, #00ff00, #00cc00);
+            background: linear-gradient(45deg, var(--primary-color), #00cc00);
             color: black;
-            border-color: #00ff00;
+            border-color: var(--primary-color);
             transform: translateY(-2px) scale(1.05);
             box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+        }
+        
+        .light-theme .tab-btn.active,
+        .light-theme .tab-btn:hover {
+            color: white;
         }
 
         /* Search Bar */
@@ -467,15 +576,15 @@
             padding: 1rem;
             font-size: 1rem;
             border-radius: 50px;
-            border: 2px solid rgba(0, 255, 0, 0.5);
-            background: rgba(0,0,0,0.5);
-            color: white;
+            border: 2px solid var(--card-border);
+            background: var(--input-bg);
+            color: var(--text-color);
             backdrop-filter: blur(5px);
             transition: all 0.3s ease;
         }
         .search-bar:focus {
             outline: none;
-            border-color: #00ff00;
+            border-color: var(--primary-color);
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
 
@@ -519,7 +628,7 @@
         }
 
         .section h2 {
-            color: #00ff00;
+            color: var(--primary-color);
             font-size: 2rem;
             text-align: center;
             margin-bottom: 1.5rem;
@@ -527,11 +636,11 @@
         }
 
         .section-content {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--section-content-bg);
             padding: 1.5rem;
             border-radius: 12px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 0, 0.3);
+            border: 1px solid var(--card-border);
             font-size: 0.95rem;
             line-height: 1.6;
             animation: slideInRight 0.8s ease 0.2s both;
@@ -550,11 +659,11 @@
 
         /* Service Cards */
         .service-card {
-            background: linear-gradient(145deg, rgba(0, 0, 0, 0.8), rgba(45, 74, 45, 0.3));
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 1rem;
             text-align: center;
-            border: 2px solid rgba(0, 255, 0, 0.3);
+            border: 2px solid var(--card-border);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             min-height: 380px;
             display: flex;
@@ -604,8 +713,12 @@
 
         .service-card:hover:not(.out-of-stock) {
             transform: translateY(-10px) scale(1.05);
-            border-color: #00ff00;
+            border-color: var(--primary-color);
             box-shadow: 0 15px 35px rgba(0, 255, 0, 0.4);
+        }
+        
+        .light-theme .service-card:hover:not(.out-of-stock) {
+            box-shadow: 0 15px 35px rgba(0, 143, 0, 0.4);
         }
 
         .service-card img {
@@ -618,13 +731,17 @@
             padding: 12px;
             transition: transform 0.3s ease;
         }
+        
+        .light-theme .service-card img {
+             background: rgba(0, 0, 0, 0.05);
+        }
 
         .service-card:hover:not(.out-of-stock) img {
             transform: scale(1.1) rotate(5deg);
         }
 
         .service-card h3 {
-            color: #00ff00;
+            color: var(--primary-color);
             margin-bottom: 0.5rem;
             font-size: 1rem;
             line-height: 1.2;
@@ -650,10 +767,14 @@
 
         .service-card .price {
             font-size: 1.3rem;
-            color: white;
+            color: var(--text-color);
             margin: 0.5rem 0;
             font-weight: bold;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .light-theme .service-card .price {
+            text-shadow: none;
         }
 
         .alt-price {
@@ -661,6 +782,11 @@
             color: #00cc00;
             margin: 0.3rem 0;
         }
+        
+        .light-theme .alt-price {
+            color: #008f00;
+        }
+
 
         /* Out of stock badge */
         .stock-badge {
@@ -680,8 +806,8 @@
         /* Details Toggle */
         .details-toggle {
             background: rgba(0, 255, 0, 0.1);
-            border: 1px solid rgba(0, 255, 0, 0.3);
-            color: #00ff00;
+            border: 1px solid var(--card-border);
+            color: var(--primary-color);
             padding: 0.5rem 1rem;
             border-radius: 8px;
             cursor: pointer;
@@ -703,6 +829,10 @@
             border-radius: 8px;
             margin: 0.5rem 0;
         }
+        
+        .light-theme .service-details-content {
+             background: rgba(0, 0, 0, 0.05);
+        }
 
         .service-details-content.active {
             max-height: 200px;
@@ -721,13 +851,18 @@
             color: #cccccc;
             border-bottom: 1px solid rgba(0, 255, 0, 0.1);
         }
+        
+        .light-theme .service-details-content li {
+            color: var(--text-color);
+            border-bottom-color: rgba(0, 143, 0, 0.2);
+        }
 
         .service-details-content li:last-child {
             border-bottom: none;
         }
 
         .add-to-cart-btn {
-            background: linear-gradient(45deg, #00ff00, #00cc00);
+            background: linear-gradient(45deg, var(--primary-color), #00cc00);
             color: black;
             border: none;
             padding: 0.8rem 2rem;
@@ -738,6 +873,10 @@
             width: 100%;
             position: relative;
             overflow: hidden;
+        }
+        
+        .light-theme .add-to-cart-btn {
+            color: white;
         }
 
         .add-to-cart-btn.out-of-stock {
@@ -783,13 +922,13 @@
         }
 
         .cart-content {
-            background: linear-gradient(145deg, #1a1a1a, #2d4a2d);
+            background: var(--modal-bg);
             margin: 2% auto;
             padding: 0;
             border-radius: 20px;
             width: 90%;
             max-width: 800px;
-            border: 2px solid #00ff00;
+            border: 2px solid var(--primary-color);
             box-shadow: 0 20px 60px rgba(0, 255, 0, 0.3);
             animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             max-height: 90vh;
@@ -809,7 +948,7 @@
         }
 
         .cart-header {
-            background: linear-gradient(45deg, #00ff00, #00cc00);
+            background: linear-gradient(45deg, var(--primary-color), #00cc00);
             color: black;
             padding: 1.5rem;
             border-radius: 18px 18px 0 0;
@@ -817,6 +956,10 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+        
+        .light-theme .cart-header {
+            color: white;
         }
 
         .cart-header h2 {
@@ -859,11 +1002,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(0, 255, 0, 0.1);
+            background: var(--cart-item-bg);
             padding: 1rem;
             border-radius: 10px;
             margin-bottom: 1rem;
-            border: 1px solid rgba(0, 255, 0, 0.3);
+            border: 1px solid var(--card-border);
             animation: slideInLeft 0.5s ease;
         }
 
@@ -872,13 +1015,13 @@
         }
 
         .cart-item-name {
-            color: #00ff00;
+            color: var(--primary-color);
             font-weight: bold;
             margin-bottom: 0.5rem;
         }
 
         .cart-item-price {
-            color: white;
+            color: var(--text-color);
             font-size: 1.1rem;
         }
 
@@ -896,8 +1039,8 @@
 
         .quantity-btn {
             background: rgba(0, 255, 0, 0.2);
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -909,12 +1052,12 @@
         }
 
         .quantity-btn:hover {
-            background: #00ff00;
+            background: var(--primary-color);
             color: black;
         }
 
         .quantity {
-            color: white;
+            color: var(--text-color);
             font-weight: bold;
             min-width: 30px;
             text-align: center;
@@ -936,29 +1079,29 @@
         }
 
         .cart-total {
-            background: rgba(0, 255, 0, 0.1);
+            background: var(--cart-item-bg);
             padding: 1.5rem;
             border-radius: 10px;
-            border: 2px solid rgba(0, 255, 0, 0.3);
+            border: 2px solid var(--card-border);
             text-align: center;
             margin-bottom: 2rem;
         }
 
         .cart-total h3 {
-            color: #00ff00;
+            color: var(--primary-color);
             margin-bottom: 1rem;
             font-size: 1.5rem;
         }
 
         .total-amount {
-            color: white;
+            color: var(--text-color);
             font-size: 2rem;
             font-weight: bold;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         .checkout-btn {
-            background: linear-gradient(45deg, #00ff00, #00cc00);
+            background: linear-gradient(45deg, var(--primary-color), #00cc00);
             color: black;
             border: none;
             padding: 1.2rem 2rem;
@@ -971,6 +1114,11 @@
             position: relative;
             overflow: hidden;
         }
+        
+        .light-theme .checkout-btn {
+            color: white;
+        }
+
 
         .checkout-btn::before {
             content: '';
@@ -998,9 +1146,13 @@
             color: #cccccc;
             padding: 2rem;
         }
+        
+        .light-theme .empty-cart {
+            color: #888;
+        }
 
         .empty-cart h3 {
-            color: #00ff00;
+            color: var(--primary-color);
             margin-bottom: 1rem;
         }
 
@@ -1009,7 +1161,7 @@
             display: flex;
             justify-content: space-around;
             padding: 1rem 0;
-            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            border-bottom: 1px solid var(--card-border);
             margin-bottom: 1.5rem;
         }
         .progress-step {
@@ -1034,7 +1186,7 @@
             display: none;
         }
         .progress-step.active {
-            color: #00ff00;
+            color: var(--primary-color);
         }
         .progress-step.active::before {
             content: '✓';
@@ -1043,11 +1195,11 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background-color: #00ff00;
+            background-color: var(--primary-color);
             color: black;
             line-height: 30px;
             font-size: 1rem;
-            border: 2px solid #00ff00;
+            border: 2px solid var(--primary-color);
         }
         .progress-step.active ~ .progress-step::before {
             content: '';
@@ -1079,8 +1231,8 @@
         }
         .nav-btn {
             background: rgba(0, 255, 0, 0.2);
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
             padding: 0.8rem 1.5rem;
             border-radius: 10px;
             cursor: pointer;
@@ -1088,7 +1240,7 @@
             transition: all 0.3s ease;
         }
         .nav-btn:hover {
-            background: #00ff00;
+            background: var(--primary-color);
             color: black;
         }
         /* --- FIN DE ESTILOS PARA CHECKOUT POR PASOS --- */
@@ -1124,16 +1276,16 @@
 
         /* Footer */
         footer {
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--header-bg);
             text-align: center;
             padding: 2rem 0;
             margin-top: 4rem;
-            border-top: 1px solid rgba(0, 255, 0, 0.3);
+            border-top: 1px solid var(--card-border);
             animation: slideInUp 1s ease;
         }
 
         .footer-content {
-            color: #00ff00;
+            color: var(--primary-color);
             animation: pulse 2s infinite;
         }
 
@@ -1145,24 +1297,32 @@
         }
         
         .social-links a {
-            color: white;
+            color: var(--text-color);
             font-size: 1.5rem;
             transition: color 0.3s ease, transform 0.3s ease;
         }
         
         .social-links a:hover {
-            color: #00ff00;
+            color: var(--primary-color);
             transform: scale(1.2);
         }
 
         /* Responsive Design */
+        @media (max-width: 992px) { /* Reduje el breakpoint para que el menú móvil aparezca antes */
+            .nav-links {
+                display: none;
+            }
+             .menu-toggle {
+                display: block;
+            }
+            .mobile-menu.active {
+                display: flex;
+            }
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 0 15px;
-            }
-
-            .nav-links {
-                display: none;
             }
             
             .hero h2 {
@@ -1308,7 +1468,7 @@
         }
 
         .mobile-menu a:hover, .mobile-menu a.active {
-            background: #00ff00;
+            background: var(--primary-color);
             color: black;
             transform: translateX(10px);
         }
@@ -1317,7 +1477,7 @@
             display: none;
             background: none;
             border: none;
-            color: white;
+            color: var(--text-color);
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.5rem;
@@ -1326,18 +1486,6 @@
 
         .menu-toggle:hover {
             transform: scale(1.2) rotate(90deg);
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-            .nav-links {
-                display: none;
-            }
-            .mobile-menu.active {
-                display: flex;
-            }
         }
 
         /* Animation for cart notifications */
@@ -1365,7 +1513,7 @@
 
         .testimonial-card {
             background: rgba(0, 255, 0, 0.1);
-            border: 2px solid rgba(0, 255, 0, 0.3);
+            border: 2px solid var(--card-border);
             border-radius: 15px;
             padding: 2rem 1.5rem;
             backdrop-filter: blur(5px);
@@ -1379,7 +1527,7 @@
         .testimonial-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
-            border-color: #00ff00;
+            border-color: var(--primary-color);
         }
 
         .testimonial-img {
@@ -1387,7 +1535,7 @@
             height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid #00ff00;
+            border: 3px solid var(--primary-color);
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
             margin-bottom: 1rem;
         }
@@ -1405,6 +1553,10 @@
             padding: 0 1rem;
             font-size: 0.95rem;
             color: #e0e0e0;
+        }
+        
+        .light-theme .testimonial-quote {
+            color: #555;
         }
 
         .testimonial-quote::before {
@@ -1428,7 +1580,7 @@
         }
 
         .testimonial-name {
-            color: #00ff00;
+            color: var(--primary-color);
             margin: 0;
             font-weight: bold;
             margin-top: auto;
@@ -1441,7 +1593,7 @@
         
         .faq-item {
             background: rgba(0, 255, 0, 0.1);
-            border: 1px solid rgba(0, 255, 0, 0.3);
+            border: 1px solid var(--card-border);
             border-radius: 10px;
             margin-bottom: 1rem;
             overflow: hidden;
@@ -1453,7 +1605,7 @@
             padding: 1rem;
             font-size: 1.1rem;
             font-weight: bold;
-            color: #00ff00;
+            color: var(--primary-color);
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -1461,8 +1613,16 @@
             transition: all 0.3s ease;
         }
         
+        .light-theme .faq-question {
+            background: rgba(0,0,0,0.05);
+        }
+        
         .faq-question:hover {
             background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .light-theme .faq-question:hover {
+            background: rgba(0,0,0,0.1);
         }
         
         .faq-question .icon {
@@ -1476,6 +1636,10 @@
             padding: 0 1rem;
             transition: max-height 0.4s ease-out, padding 0.4s ease-out;
             background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .light-theme .faq-answer {
+            background: transparent;
         }
         
         .faq-answer p {
@@ -1499,7 +1663,7 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #00ff00;
+            color: var(--primary-color);
             font-weight: bold;
         }
 
@@ -1508,21 +1672,21 @@
             padding: 0.8rem;
             font-size: 1rem;
             border-radius: 8px;
-            border: 2px solid rgba(0, 255, 0, 0.5);
-            background: rgba(0,0,0,0.5);
-            color: white;
+            border: 2px solid var(--card-border);
+            background: var(--input-bg);
+            color: var(--text-color);
             transition: all 0.3s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #00ff00;
+            border-color: var(--primary-color);
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
 
         .checkout-instructions {
-            background: rgba(0, 255, 0, 0.1);
-            border: 1px solid rgba(0, 255, 0, 0.3);
+            background: var(--cart-item-bg);
+            border: 1px solid var(--card-border);
             padding: 1rem;
             border-radius: 8px;
             margin: 1.5rem 0;
@@ -1534,6 +1698,9 @@
 </head>
 <body>
     <div class="particles" id="particles"></div>
+    
+    <audio id="notificationSound" src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-the-sound-pack-tree/tspt_bubble_pop_01_lifelike_shiny.mp3" preload="auto"></audio>
+
 
     <header>
         <nav class="container">
@@ -1549,6 +1716,14 @@
                 <li><a href="#" data-section="support" onclick="showSection('support')">📞 Soporte</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 1rem;">
+                <div class="theme-switch-wrapper">
+                    <span class="theme-icon">🌙</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="theme-icon">☀️</span>
+                </div>
                 <button class="cart-button" onclick="openCart()">
                     🛒 Carrito
                     <span class="cart-count" id="cartCount" style="display: none;">0</span>
@@ -1579,7 +1754,7 @@
                         <div>✅ <strong>Garantía Incluida</strong></div>
                         <div>✅ <strong>Soporte 24/7</strong></div>
                     </div>
-                    <p style="margin-top: 1rem; color: #00ff00; font-size: 1rem;"><strong>🥳 Pagos al BCV 🇻🇪</strong></p>
+                    <p style="margin-top: 1rem; color: var(--primary-color); font-size: 1rem;"><strong>🥳 Pagos al BCV 🇻🇪</strong></p>
                     <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>👉🏻 Precios especiales para distribuidores 🤝🏻</strong></p>
                 </div>
             </div>
@@ -1740,7 +1915,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 <p>Con años de experiencia en el mercado venezolano, garantizamos un servicio confiable, seguro y de calidad superior para toda tu familia. Trabajamos con <strong>pagos al BCV 🇻🇪</strong> para tu comodidad.</p>
                 <br>
                 <div style="background: rgba(0,255,0,0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
-                    <h4 style="color: #00ff00; margin-bottom: 0.5rem;">🤝 Para Distribuidores:</h4>
+                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">🤝 Para Distribuidores:</h4>
                     <p>Ofrecemos excelentes precios mayoristas con tu panel personal, incluyendo usuario y contraseña personalizados. ¡Contáctanos para más información!</p>
                 </div>
             </div>
@@ -1749,19 +1924,19 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         <section id="why-us" class="section">
             <h2>Por Que Elegirnos</h2>
             <div class="section-content">
-                <h3 style="color: #00ff00; margin-bottom: 1rem;">✅ Entrega Inmediata</h3>
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">✅ Entrega Inmediata</h3>
                 <p>Activamos tu servicio de forma inmediata una vez verificado el pago. No esperas, ¡empiezas a disfrutar al instante!</p>
                 
-                <h3 style="color: #00ff00; margin: 2rem 0 1rem;">✅ Precios Accesibles</h3>
+                <h3 style="color: var(--primary-color); margin: 2rem 0 1rem;">✅ Precios Accesibles</h3>
                 <p>Los mejores precios del mercado venezolano con pagos al BCV 🇻🇪. Calidad premium a precios que se ajustan a tu presupuesto.</p>
                 
-                <h3 style="color: #00ff00; margin: 2rem 0 1rem;">✅ Garantía Total</h3>
+                <h3 style="color: var(--primary-color); margin: 2rem 0 1rem;">✅ Garantía Total</h3>
                 <p>Todos nuestros servicios incluyen garantía completa. Si tienes algún problema, lo solucionamos inmediatamente.</p>
                 
-                <h3 style="color: #00ff00; margin: 2rem 0 1rem;">✅ Soporte 24/7</h3>
+                <h3 style="color: var(--primary-color); margin: 2rem 0 1rem;">✅ Soporte 24/7</h3>
                 <p>Nuestro equipo de soporte está disponible las 24 horas por WhatsApp para ayudarte con cualquier consulta o problema técnico.</p>
 
-                <h3 style="color: #00ff00; margin: 2rem 0 1rem;">🤝 Distribuidores Bienvenidos</h3>
+                <h3 style="color: var(--primary-color); margin: 2rem 0 1rem;">🤝 Distribuidores Bienvenidos</h3>
                 <p>Ofrecemos excelentes condiciones para distribuidores con panel personal, usuario y contraseña exclusivos para tu negocio.</p>
             </div>
         </section>
@@ -1769,14 +1944,14 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         <section id="support" class="section">
             <h2>Soporte</h2>
             <div class="section-content">
-                <h3 style="color: #00ff00; margin-bottom: 1rem;">Contacto de Soporte</h3>
-                <p><strong>WhatsApp:</strong> <a href="https://wa.me/584242357804" style="color: #00ff00;">+584242357804</a></p>
-                <p><strong>Email:</strong> <a href="mailto:davidstreaming78@gmail.com" style="color: #00ff00;">davidstreaming78@gmail.com</a></p>
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Contacto de Soporte</h3>
+                <p><strong>WhatsApp:</strong> <a href="https://wa.me/584242357804" style="color: var(--primary-color);">+584242357804</a></p>
+                <p><strong>Email:</strong> <a href="mailto:davidstreaming78@gmail.com" style="color: var(--primary-color);">davidstreaming78@gmail.com</a></p>
                 <br>
                 <div style="background: rgba(0,255,0,0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                    <h4 style="color: #00ff00; margin-bottom: 0.5rem;">📱 Enlaces Rápidos:</h4>
-                    <p><a href="https://walink.co/9fd827" target="_blank" style="color: #00ff00; text-decoration: underline;">🔗 walink.co/9fd827</a></p>
-                    <p><a href="https://wa.link/3q0heb" target="_blank" style="color: #00ff00; text-decoration: underline;">🔗 wa.link/3q0heb</a></p>
+                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">📱 Enlaces Rápidos:</h4>
+                    <p><a href="https://walink.co/9fd827" target="_blank" style="color: var(--primary-color); text-decoration: underline;">🔗 walink.co/9fd827</a></p>
+                    <p><a href="https://wa.link/3q0heb" target="_blank" style="color: var(--primary-color); text-decoration: underline;">🔗 wa.link/3q0heb</a></p>
                 </div>
                 <p>Nuestro equipo de soporte está disponible para ayudarte con:</p>
                 <ul style="margin-top: 1rem; padding-left: 20px;">
@@ -2688,6 +2863,12 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 toggleButton.innerHTML = '❌ Cerrar Detalles';
             }
         }
+        
+        function playNotificationSound() {
+            const sound = document.getElementById('notificationSound');
+            sound.volume = 0.5; // Ajusta el volumen si es necesario
+            sound.play().catch(e => console.log("No se pudo reproducir el sonido:", e));
+        }
 
         function addToCart(serviceName, numericPrice, displayPrice) {
             const existingItem = cart.find(item => item.name === serviceName);
@@ -2698,6 +2879,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             }
             updateCartDisplay();
             showCartNotification();
+            playNotificationSound();
         }
 
         function removeFromCart(serviceName) {
@@ -2763,7 +2945,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed; top: 100px; right: 20px;
-                background: linear-gradient(45deg, #00ff00, #00cc00); color: black;
+                background: linear-gradient(45deg, var(--primary-color), #00cc00); color: black;
                 padding: 1rem 1.5rem; border-radius: 10px; font-weight: bold; z-index: 10000;
                 animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 2.7s;
                 box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);`;
@@ -2924,6 +3106,55 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         window.onclick = (event) => {
             if (event.target == document.getElementById('cartModal')) closeCart();
         }
+        
+        // --- LÓGICA DEL CAMBIO DE TEMA ---
+        const themeToggle = document.getElementById('theme-toggle');
+
+        function setTheme(isLight) {
+            if (isLight) {
+                document.body.classList.add('light-theme');
+                themeToggle.checked = true;
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.remove('light-theme');
+                themeToggle.checked = false;
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        themeToggle.addEventListener('change', () => {
+            setTheme(themeToggle.checked);
+        });
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                setTheme(true);
+            } else {
+                setTheme(false); // Default to dark theme
+            }
+        }
+        
+        // <<<--- INICIO DE LA SOLUCIÓN PARA EL SONIDO ---<<<
+        // Esta función desbloquea el audio después de la primera interacción del usuario
+        function userInteractionUnlockAudio() {
+            const sound = document.getElementById('notificationSound');
+            sound.play().then(() => {
+                sound.pause();
+                sound.currentTime = 0;
+            }).catch(error => {
+                // No es necesario hacer nada aquí, el navegador podría bloquear este primer intento
+            });
+            // Elimina el listener para que no se ejecute más de una vez
+            document.body.removeEventListener('click', userInteractionUnlockAudio);
+            document.body.removeEventListener('keydown', userInteractionUnlockAudio);
+        }
+        
+        // Agregamos listeners para la primera interacción
+        document.body.addEventListener('click', userInteractionUnlockAudio);
+        document.body.addEventListener('keydown', userInteractionUnlockAudio);
+        // <<<--- FIN DE LA SOLUCIÓN PARA EL SONIDO ---<<<
+
 
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
@@ -2932,6 +3163,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
             createDots();
             showSection('home');
             setupFAQAccordion();
+            loadTheme();
         });
 
         // Exposing functions to global scope
@@ -2940,7 +3172,7 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
         window.processCheckout = processCheckout;
         window.showServicesTab = showServicesTab; window.showSection = showSection; window.toggleMobileMenu = toggleMobileMenu;
         window.sendSupportMessage = sendSupportMessage; window.searchServices = searchServices;
-        window.navigateToStep = navigateToStep; // MODIFICADO: Exponer nueva función
+        window.navigateToStep = navigateToStep;
     </script>
 </body>
 
