@@ -1011,23 +1011,51 @@ function navigateToStep(step) {
     if(step === 1) cartTitle.innerText = "🛒 Tu Carrito de Compras";
     if(step === 2) cartTitle.innerText = "📝 Completa tus Datos";
     if(step === 3) {
-         cartTitle.innerText = "✅ Confirma tu Pedido";
+         cartTitle.innerText = "✅ Confirma tu Factura";
          generateFinalSummary();
     }
 }
 
 function generateFinalSummary() {
+    // Obtener la fecha actual y formatearla
+    const now = new Date();
+    const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
+    
+    // Generar un número de factura simple usando el timestamp
+    const invoiceNumber = `CTV-${Date.now().toString().slice(-6)}`;
+
     const customerName = document.getElementById('customerName').value.trim();
     const customerEmail = document.getElementById('customerEmail').value.trim();
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const itemsList = cart.map(item => `<li>${item.quantity}x ${item.name}</li>`).join('');
+    
+    // Crear una lista detallada de los productos para la tabla de la factura
+    const itemsList = cart.map(item => `
+        <tr>
+            <td style="padding: 5px; text-align: left;">${item.quantity}x ${item.name}</td>
+            <td style="padding: 5px; text-align: right;">${(item.price * item.quantity).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</td>
+        </tr>
+    `).join('');
 
+    // Construir el HTML de la factura que se mostrará en la pantalla de confirmación
     const summaryHTML = `
-        <p><strong>Nombre:</strong> ${customerName}</p>
-        ${customerEmail ? `<p><strong>Email:</strong> ${customerEmail}</p>` : ''}
-        <hr style="border-color: rgba(0,255,0,0.2); margin: 0.5rem 0;">
-        <p><strong>Pedido:</strong></p>
-        <ul style="list-style: none; padding-left: 10px;">${itemsList}</ul>
+        <div style="text-align: left; padding: 10px;">
+            <h4>Factura N°: ${invoiceNumber}</h4>
+            <p><strong>Fecha:</strong> ${formattedDate}</p>
+            <p><strong>Cliente:</strong> ${customerName}</p>
+            ${customerEmail ? `<p><strong>Email:</strong> ${customerEmail}</p>` : ''}
+            <hr style="border-color: rgba(0,255,0,0.2); margin: 1rem 0;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Descripción</th>
+                        <th style="text-align: right; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${itemsList}
+                </tbody>
+            </table>
+        </div>
     `;
     
     document.getElementById('finalSummary').innerHTML = summaryHTML;
@@ -1044,10 +1072,16 @@ function processCheckout() {
         return;
     }
 
+    // Volver a generar la fecha y el número de factura para el mensaje de WhatsApp
+    const now = new Date();
+    const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
+    const invoiceNumber = `CTV-${Date.now().toString().slice(-6)}`;
+
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const itemsList = cart.map(item => `• ${item.quantity}x ${item.name} - ${(item.price * item.quantity).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`).join('\n');
     
-    const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n🛒 *Quisiera confirmar el siguiente pedido:*\n\n${itemsList}\n\n💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n${customerEmail ? `✉️ *Mi email:* ${customerEmail}\n` : ''}\n✅ *Pedido generado desde la web.*\n\nQuedo atento a las instrucciones para el pago. ¡Gracias!`;
+    // Mensaje de WhatsApp actualizado con la información de la factura
+    const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n🛒 *Quisiera confirmar el siguiente pedido:*\n\n📄 *Factura N°:* ${invoiceNumber}\n🗓️ *Fecha:* ${formattedDate}\n\n${itemsList}\n\n💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n${customerEmail ? `✉️ *Mi email:* ${customerEmail}\n` : ''}\n✅ *Pedido generado desde la web.*\n\nQuedo atento a las instrucciones para el pago. ¡Gracias!`;
     
     const whatsappUrl = `https://wa.me/584242357804?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
