@@ -13,6 +13,7 @@ const perfiles = [
         image: "img/netflix.png",
         type: "perfil",
         available: true,
+        popular: true, // Insignia "Más Vendido"
         details: [
             "✅ Acceso completo a todo el catálogo de Netflix",
             "🎬 Películas y series en HD y 4K",
@@ -20,9 +21,26 @@ const perfiles = [
             "🔄 No renovable 🕐1 mes ",
             "👤 Perfil personalizado exclusivo"
         ]
-    
-    
+    },
+    { 
+        name: "MAX PERFIL", 
+        price: "464,00 Bs", 
+        numericPrice: 464.00,
+        duration: "1 MES (30 DÍAS)", 
+        devices: "1 DISPOSITIVO",
+        image: "img/max.png",
+        type: "perfil",
+        available: true,
+        popular: true, // Insignia "Más Vendido"
+        details: [
+             "🎬 Contenido HBO Max premium",
+            "⚡ Estrenos simultáneos con cines",
+            "🎭 Series originales de HBO",
+            "🎨 Documentales y especiales",
+            "👨‍👩‍👧‍👦 Contenido Warner Bros"
+        ]   
    },
+    // ... (El resto de tus perfiles sin cambios)
     { 
         name: "NETFLIX PERFIL 15 DÍAS", 
         price: "350,00 Bs", 
@@ -207,23 +225,6 @@ const perfiles = [
 
    },
     { 
-         name: "MAX PERFIL", 
-        price: "464,00 Bs", 
-        numericPrice: 464.00,
-        duration: "1 MES (30 DÍAS)", 
-        devices: "1 DISPOSITIVO",
-        image: "img/max.png",
-        type: "perfil",
-        available: true,
-        details: [
-             "🎬 Contenido HBO Max premium",
-            "⚡ Estrenos simultáneos con cines",
-            "🎭 Series originales de HBO",
-            "🎨 Documentales y especiales",
-            "👨‍👩‍👧‍👦 Contenido Warner Bros"
-        ]   
-   },
-    { 
         name: "PARAMOUNT PERFIL", 
         price: "385,00 Bs", 
         numericPrice: 385.00,
@@ -260,8 +261,6 @@ const perfiles = [
 
     }
 ];
-
-// CUENTAS COMPLETAS (múltiples dispositivos y perfiles)
 const cuentas = [
     { 
         name: "NETFLIX CUENTA COMPLETA", 
@@ -517,8 +516,24 @@ const cuentas = [
        ] 
     }
 ];
-
 const combos = [
+    { 
+        name: "COMBO 2", 
+        price: "750,00 Bs", 
+        numericPrice: 750.00,
+        duration: "30 DÍAS", 
+        devices: "1 DISPOSITIVO C/U",
+        image: "img/combo2.png",
+        type: "combo",
+        available: true,
+        popular: true, // Insignia "Más Vendido"
+        details: [
+            "✅ 1 Perfil Netflix",
+            "✅ 1 Perfil max",
+            "✨ El entretenimiento completo para la familia"
+        ]
+    },
+    // ... (El resto de tus combos sin cambios)
     { 
         name: "COMBO 1", 
         price: "700,00 Bs", 
@@ -535,23 +550,6 @@ const combos = [
             "🎬 Acceso a miles de series y películas"
         ]
     },
-    { 
-        name: "COMBO 2", 
-        price: "750,00 Bs", 
-        numericPrice: 750.00,
-        duration: "30 DÍAS", 
-        devices: "1 DISPOSITIVO C/U",
-        image: "img/combo2.png", // Sugerencia: crea una imagen para este combo
-        type: "combo",
-        available: true,
-        details: [
-            "✅ 1 Perfil Netflix",
-            "✅ 1 Perfil max",
-            "✨ El entretenimiento completo para la familia"
-        ]
-   
-   
-   },
     { 
         name: "COMBO 3", 
         price: "750,00 Bs", 
@@ -617,8 +615,6 @@ const combos = [
         ]
     }
 ];
-
-// OTROS SERVICIOS
 const otros = [
     { 
         name: "YOUTUBE PREMIUM", 
@@ -691,8 +687,6 @@ const otros = [
         ]   
     }
 ];
-
-// OFERTAS DESTACADAS - Puedes editar este array
 const featuredOffers = [
     { 
         name: "max perfil estandar", 
@@ -732,156 +726,20 @@ const featuredOffers = [
 // ============================================
 // LÓGICA DEL SITIO - NO EDITAR DESDE AQUÍ
 // ============================================
-const carouselWrapper = document.getElementById('carouselWrapper');
-const carouselDots = document.getElementById('carouselDots');
-const carouselItems = document.querySelectorAll('.carousel-item');
-let currentSlide = 0;
-
-function createDots() {
-    if (!carouselDots) return;
-    carouselDots.innerHTML = '';
-    carouselItems.forEach((_, index) => {
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
-        if (index === 0) dot.classList.add('active');
-        dot.addEventListener('click', () => changeSlide(index));
-        carouselDots.appendChild(dot);
-    });
-}
-
-function updateCarousel() {
-    if (!carouselWrapper) return;
-    carouselWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-    document.querySelectorAll('.dot').forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-    });
-}
-
-function changeSlide(index) {
-    currentSlide = index;
-    updateCarousel();
-}
-
-function autoSlide() {
-    if (carouselItems.length > 0) {
-       currentSlide = (currentSlide + 1) % carouselItems.length;
-       updateCarousel();
-    }
-}
-
-setInterval(autoSlide, 5000);
-
 let cart = [];
-const tabs = ['perfiles', 'cuentas', 'combos', 'otros'];
 
-function createParticles() {
-    const particles = document.getElementById('particles');
-    if(!particles) return;
-    const particleCount = 15;
-    particles.innerHTML = '';
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 15 + 's';
-        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-        particles.appendChild(particle);
+// --- Funciones del Carrito ---
+function saveCart() {
+    localStorage.setItem('connectTVCart', JSON.stringify(cart));
+}
+
+function loadCart() {
+    const savedCart = localStorage.getItem('connectTVCart');
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
     }
 }
 
-function createServiceCard(service, index) {
-    const card = document.createElement('div');
-    card.className = `service-card ${!service.available ? 'out-of-stock' : ''}`;
-    card.style.setProperty('--card-index', index);
-    
-    let priceInfo = `<div class="price">${service.price}</div>`;
-    if (service.altPrice) {
-        priceInfo += `<div class="alt-price">${service.altPrice}</div>`;
-    }
-    
-    let detailsHtml = '';
-    if (service.duration) detailsHtml += `<div class="service-details">📅 ${service.duration}</div>`;
-    if (service.devices) detailsHtml += `<div class="service-details">🔴 ${service.devices}</div>`;
-
-    let detailsContent = '';
-    if (service.details && service.details.length > 0) {
-        detailsContent = `
-            <div class="service-details-content" id="details-${service.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}">
-                <ul>${service.details.map(detail => `<li>${detail}</li>`).join('')}</ul>
-            </div>
-        `;
-    }
-
-    const stockBadge = !service.available ? '<div class="stock-badge">Agotado</div>' : '';
-    const buttonContent = service.available ? 
-        `<button class="add-to-cart-btn" onclick="addToCart('${service.name}', ${service.numericPrice}, '${service.price}', '${service.type}')">🛒 Agregar al Carrito</button>` :
-        `<button class="add-to-cart-btn out-of-stock" disabled>❌ Agotado</button>`;
-    
-    card.innerHTML = `
-        ${stockBadge}
-        <div>
-            <img src="${service.image}" alt="${service.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZmYwMCIgZm9udC1zaXplPSIxMiI+${service.name.replace(/ /g, '%20').split('%20')[0].substring(0,6)}</dGV4dD48L3N2Zz4='}">
-            <h3>${service.name}</h3>
-        </div>
-        <div class="service-info">
-            <div>
-                ${detailsHtml}
-                ${priceInfo}
-                ${service.details ? `<div class="details-toggle" onclick="toggleDetails('${service.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}')">ℹ️ Ver Detalles</div>` : ''}
-                ${detailsContent}
-            </div>
-            ${buttonContent}
-        </div>
-    `;
-    return card;
-}
-
-function searchServices() {
-    const input = document.getElementById('serviceSearch');
-    const filter = input.value.toUpperCase();
-    const grids = document.querySelectorAll('.services-grid');
-
-    grids.forEach(grid => {
-        const cards = grid.getElementsByClassName('service-card');
-        for (let i = 0; i < cards.length; i++) {
-            const h3 = cards[i].getElementsByTagName("h3")[0];
-            if (h3) {
-                const txtValue = h3.textContent || h3.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    cards[i].style.display = "";
-                } else {
-                    cards[i].style.display = "none";
-                }
-            }
-        }
-    });
-}
-
-function toggleDetails(serviceId) {
-    const detailsElement = document.getElementById(`details-${serviceId}`);
-    const toggleButton = event.target;
-    
-    if (detailsElement.classList.contains('active')) {
-        detailsElement.classList.remove('active');
-        toggleButton.innerHTML = 'ℹ️ Ver Detalles';
-    } else {
-        document.querySelectorAll('.service-details-content.active').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.details-toggle').forEach(btn => btn.innerHTML = 'ℹ️ Ver Detalles');
-        
-        detailsElement.classList.add('active');
-        toggleButton.innerHTML = '❌ Cerrar Detalles';
-    }
-}
-
-function playNotificationSound() {
-    const sound = document.getElementById('notificationSound');
-    sound.volume = 0.5;
-    sound.play().catch(e => console.log("No se pudo reproducir el sonido:", e));
-}
-
-/**
-* MODIFICADO: Añade un producto al carrito con una duración por defecto de 1 mes y su tipo.
-*/
 function addToCart(serviceName, numericPrice, displayPrice, serviceType) {
     const existingItem = cart.find(item => item.name === serviceName);
     if (existingItem) {
@@ -889,14 +747,18 @@ function addToCart(serviceName, numericPrice, displayPrice, serviceType) {
     } else {
         cart.push({ name: serviceName, price: numericPrice, displayPrice: displayPrice, quantity: 1, months: 1, type: serviceType });
     }
+    saveCart();
     updateCartDisplay();
-    showCartNotification();
-    playNotificationSound();
+    showNotification('✅ ¡Producto agregado al carrito!');
+    playSound('addSound');
 }
 
 function removeFromCart(serviceName) {
     cart = cart.filter(item => item.name !== serviceName);
+    saveCart();
     updateCartDisplay();
+    showNotification('🗑️ Producto eliminado del carrito.', 'remove');
+    playSound('removeSound');
 }
 
 function updateQuantity(serviceName, change) {
@@ -905,32 +767,38 @@ function updateQuantity(serviceName, change) {
         item.quantity += change;
         if (item.quantity <= 0) {
             removeFromCart(serviceName);
+            return; // Salimos para evitar doble guardado
         }
     }
+    saveCart();
     updateCartDisplay();
 }
 
-/**
-* NUEVO: Actualiza la duración (meses) de un servicio en el carrito.
-*/
 function updateDuration(serviceName, newDuration) {
     const item = cart.find(item => item.name === serviceName);
     if (item) {
         item.months = parseInt(newDuration, 10);
     }
+    saveCart();
     updateCartDisplay();
 }
 
-/**
-* MODIFICADO: Actualiza toda la vista del carrito. Para combos, solo muestra "1 Mes". Para otros servicios, muestra un selector de meses.
-*/
+function emptyCart() {
+    if (cart.length > 0 && confirm("¿Estás seguro de que quieres vaciar tu carrito?")) {
+        cart = [];
+        saveCart();
+        updateCartDisplay();
+        showNotification('🛒 Carrito vaciado.', 'remove');
+    }
+}
+
 function updateCartDisplay() {
     const cartCount = document.getElementById('cartCount');
     const cartItems = document.getElementById('cartItems');
     const totalAmount = document.getElementById('totalAmount');
     const emptyCartMessage = document.getElementById('emptyCartMessage');
     const cartTotalSection = document.getElementById('cartTotalSection');
-    const checkoutBtn = document.getElementById('checkoutBtn');
+    const cartActions = document.querySelector('.cart-actions');
 
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     
@@ -941,39 +809,36 @@ function updateCartDisplay() {
         if(emptyCartMessage) emptyCartMessage.style.display = 'block';
         if(cartItems) cartItems.innerHTML = '';
         if(cartTotalSection) cartTotalSection.style.display = 'none';
-        if(checkoutBtn) checkoutBtn.style.display = 'none';
+        if(cartActions) cartActions.style.display = 'none';
     } else {
         if(emptyCartMessage) emptyCartMessage.style.display = 'none';
         if(cartTotalSection) cartTotalSection.style.display = 'block';
-        if(checkoutBtn) checkoutBtn.style.display = 'block';
+        if(cartActions) cartActions.style.display = 'flex';
         if(cartItems) {
             cartItems.innerHTML = cart.map(item => {
                 const safeItemName = item.name.replace(/[^a-zA-Z0-9]/g, '-');
                 let durationControlsHTML = '';
+                let subtotalHTML = '';
 
-                // Lógica condicional para la duración
                 if (item.type === 'combo') {
-                    item.months = 1; // Forzar que los combos duren solo 1 mes
-                    durationControlsHTML = `
-                        <div class="quantity-controls">
-                            <span style="font-size: 0.8em; margin-right: 5px;">Duración:</span>
-                            <span style="font-weight: bold;">1 Mes</span>
-                        </div>
-                    `;
+                    item.months = 1; 
+                    durationControlsHTML = `<div class="quantity-controls"><span style="font-size: 0.8em; margin-right: 5px;">Duración:</span><span style="font-weight: bold;">1 Mes</span></div>`;
                 } else {
-                    durationControlsHTML = `
-                        <div class="quantity-controls">
-                            <label for="months-${safeItemName}" style="font-size: 0.8em; margin-right: 5px;">Meses:</label>
-                            <select id="months-${safeItemName}" onchange="updateDuration('${item.name}', this.value)" style="background: var(--input-bg); color: var(--text-color); border: 1px solid var(--card-border); border-radius: 5px; padding: 3px; cursor: pointer;">
-                                <option value="1" ${item.months === 1 ? 'selected' : ''}>1 Mes</option>
-                                <option value="2" ${item.months === 2 ? 'selected' : ''}>2 Meses</option>
-                                <option value="3" ${item.months === 3 ? 'selected' : ''}>3 Meses</option>
-                            </select>
-                        </div>
-                    `;
+                    durationControlsHTML = `<div class="quantity-controls"><label for="months-${safeItemName}" style="font-size: 0.8em; margin-right: 5px;">Meses:</label><select id="months-${safeItemName}" onchange="updateDuration('${item.name}', this.value)" style="background: var(--input-bg); color: var(--text-color); border: 1px solid var(--card-border); border-radius: 5px; padding: 3px; cursor: pointer;"><option value="1" ${item.months === 1 ? 'selected' : ''}>1 Mes</option><option value="2" ${item.months === 2 ? 'selected' : ''}>2 Meses</option><option value="3" ${item.months === 3 ? 'selected' : ''}>3 Meses</option></select></div>`;
                 }
 
-                const subtotal = item.price * item.quantity * item.months;
+                const originalSubtotal = item.price * item.quantity * item.months;
+                let finalSubtotal = originalSubtotal;
+
+                if (item.months === 3 && item.type !== 'combo') {
+                    const discount = originalSubtotal * 0.05;
+                    finalSubtotal = originalSubtotal - discount;
+                    subtotalHTML = `<div class="discount-details"><span class="original-price">${originalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</span> <span>(5% Dcto.)</span></div> <div>${finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</div>`;
+                } else {
+                    subtotalHTML = `${finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
+                }
+                
+                item.finalSubtotal = finalSubtotal;
 
                 return `
                 <div class="cart-item">
@@ -988,62 +853,205 @@ function updateCartDisplay() {
                             <span class="quantity">${item.quantity}</span>
                             <button class="quantity-btn" onclick="updateQuantity('${item.name}', 1)">+</button>
                         </div>
-                        <button class="remove-btn" onclick="removeFromCart('${item.name}')">🗑️ Eliminar</button>
+                        <button class="remove-btn" onclick="removeFromCart('${item.name}')">Eliminar</button>
                     </div>
                      <div style="width: 100%; text-align: right; font-weight: bold; margin-top: 10px; font-size: 1.1em;">
-                        Subtotal: ${subtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs
+                        Subtotal: ${subtotalHTML}
                     </div>
-                </div>
-            `}).join('');
+                </div>`;
+            }).join('');
         }
 
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity * item.months), 0);
+        const total = cart.reduce((sum, item) => sum + item.finalSubtotal, 0);
         if(totalAmount) totalAmount.textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
     }
 }
 
-function showCartNotification() {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed; top: 100px; right: 20px;
-        background: linear-gradient(45deg, var(--primary-color), #00cc00); color: black;
-        padding: 1rem 1.5rem; border-radius: 10px; font-weight: bold; z-index: 10000;
-        animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 2.7s;
-        box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);`;
-    notification.innerHTML = '✅ ¡Producto agregado al carrito!';
-    document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 3000);
-}
-
-function openCart() {
-    document.getElementById('cartModal').style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    navigateToStep(1);
-}
-
-function closeCart() {
-    document.getElementById('cartModal').style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-function navigateToStep(step) {
-    const customerNameInput = document.getElementById('customerName');
+function createServiceCard(service, index) {
+    const card = document.createElement('div');
+    card.className = `service-card ${!service.available ? 'out-of-stock' : ''}`;
+    card.style.setProperty('--card-index', index);
     
-    if (step === 3 && !customerNameInput.value.trim()) {
+    const stockBadge = !service.available ? '<div class="stock-badge">Agotado</div>' : '';
+    const popularBadge = service.popular ? '<div class="popular-badge">🔥 Más Vendido</div>' : '';
+    
+    card.innerHTML = `
+        ${stockBadge}
+        ${popularBadge}
+        <div>
+            <img src="${service.image}" alt="${service.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjMzMzMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZmYwMCIgZm9udC1zaXplPSIxMiI+${service.name.replace(/ /g, '%20').split('%20')[0].substring(0,6)}</dGV4dD48L3N2Zz4='}">
+            <h3>${service.name}</h3>
+        </div>
+        <div class="service-info">
+            <div>
+                <div class="service-details">📅 ${service.duration}</div>
+                <div class="service-details">🔴 ${service.devices}</div>
+                <div class="price">${service.price}</div>
+                <div class="details-toggle" onclick="toggleDetails('${service.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}')">ℹ️ Ver Detalles</div>
+                <div class="service-details-content" id="details-${service.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}">
+                    <ul>${service.details.map(detail => `<li>${detail}</li>`).join('')}</ul>
+                </div>
+            </div>
+            <button class="add-to-cart-btn ${!service.available ? 'out-of-stock' : ''}" onclick="addToCart('${service.name}', ${service.numericPrice}, '${service.price}', '${service.type}')" ${!service.available ? 'disabled' : ''}>
+                ${service.available ? '🛒 Agregar al Carrito' : '❌ Agotado'}
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+function searchServices() {
+    const input = document.getElementById('serviceSearch');
+    const filter = input.value.toUpperCase();
+    const grids = document.querySelectorAll('.services-grid');
+    const noResultsMessage = document.getElementById('noResultsMessage');
+    let resultsFound = false;
+
+    grids.forEach(grid => {
+        const cards = grid.getElementsByClassName('service-card');
+        for (let card of cards) {
+            const h3 = card.getElementsByTagName("h3")[0];
+            if (h3) {
+                const txtValue = h3.textContent || h3.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    card.style.display = "";
+                    resultsFound = true;
+                } else {
+                    card.style.display = "none";
+                }
+            }
+        }
+    });
+
+    noResultsMessage.style.display = resultsFound ? "none" : "block";
+}
+
+// --- Lógica de Navegación y UI ---
+function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+
+    document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.section === sectionId) {
+            link.classList.add('active');
+        }
+    });
+
+    if (sectionId === 'store') showServicesTab('perfiles');
+}
+
+function showServicesTab(tabName) {
+    document.querySelectorAll('.services-container').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+}
+
+function loadServices() {
+    const loader = document.getElementById('servicesLoader');
+    loader.style.display = 'flex';
+
+    setTimeout(() => {
+        document.getElementById('perfilesGrid').innerHTML = perfiles.map((s, i) => createServiceCard(s, i).outerHTML).join('');
+        document.getElementById('cuentasGrid').innerHTML = cuentas.map((s, i) => createServiceCard(s, i).outerHTML).join('');
+        document.getElementById('combosGrid').innerHTML = combos.map((s, i) => createServiceCard(s, i).outerHTML).join('');
+        document.getElementById('otrosGrid').innerHTML = otros.map((s, i) => createServiceCard(s, i).outerHTML).join('');
+        document.getElementById('featuredOffersGrid').innerHTML = featuredOffers.map((s, i) => createServiceCard(s, i).outerHTML).join('');
+        loader.style.display = 'none';
+    }, 500); // Simula una pequeña carga
+}
+
+// --- Mensajes de WhatsApp ---
+function sendSupportMessage() {
+    const message = `👋 ¡Hola ConnectTV! Necesito ayuda con un problema.\n\n*🚨 MI ERROR O PROBLEMA ES:*\n(Describe aquí tu inconveniente)\n\n*📺 SERVICIO AFECTADO:*\n(Ej: Netflix, Disney+)\n\n*🔍 YA INTENTÉ:*\n(Ej: Reiniciar la app, cambiar de dispositivo)\n\nEspero su pronta respuesta. ¡Gracias!`;
+    window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function sendResellerMessage() {
+    const message = `👋 ¡Hola ConnectTV! Estoy interesado/a en obtener información sobre los precios y condiciones para ser distribuidor. ¡Gracias!`;
+    window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function processCheckout() {
+    const customerName = document.getElementById('customerName').value.trim();
+    if (!customerName) {
         alert('Por favor, ingresa tu nombre para continuar.');
-        customerNameInput.focus();
+        navigateToStep(2);
         return;
     }
+    
+    const total = cart.reduce((sum, item) => sum + item.finalSubtotal, 0);
+    const itemsList = cart.map(item => {
+        let priceDetail = ` - ${item.finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
+        if (item.months === 3 && item.type !== 'combo') {
+            priceDetail += ` (dcto. aplicado)`;
+        }
+        return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})${priceDetail}`;
+    }).join('\n');
+    
+    const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n🛒 *Quisiera confirmar el siguiente pedido:*\n\n${itemsList}\n\n💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n✅ *Pedido generado desde la web.*\n\nQuedo atento a las instrucciones para el pago. ¡Gracias!`;
+    
+    window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
+    
+    cart = [];
+    saveCart();
+    updateCartDisplay();
+    closeCart();
+}
 
+// --- Inicialización y Event Listeners ---
+document.addEventListener('DOMContentLoaded', function() {
+    loadCart();
+    createParticles();
+    loadServices();
+    updateCartDisplay();
+    createDots();
+    showSection('home');
+    setupFAQAccordion();
+    loadTheme();
+    // Prepara los audios para que puedan sonar sin interacción previa
+    document.querySelectorAll('audio').forEach(audio => audio.load());
+});
+
+
+// ============================================
+// El resto de funciones de UI (sin cambios mayores)
+// ============================================
+const carouselWrapper = document.getElementById('carouselWrapper');
+const carouselDots = document.getElementById('carouselDots');
+const carouselItems = document.querySelectorAll('.carousel-item');
+let currentSlide = 0;
+function createDots() { if (!carouselDots) return; carouselDots.innerHTML = ''; carouselItems.forEach((_, index) => { const dot = document.createElement('div'); dot.classList.add('dot'); if (index === 0) dot.classList.add('active'); dot.addEventListener('click', () => changeSlide(index)); carouselDots.appendChild(dot); }); }
+function updateCarousel() { if (!carouselWrapper) return; carouselWrapper.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.dot').forEach((dot, index) => { dot.classList.toggle('active', index === currentSlide); }); }
+function changeSlide(index) { currentSlide = index; updateCarousel(); }
+function autoSlide() { if (carouselItems.length > 0) { currentSlide = (currentSlide + 1) % carouselItems.length; updateCarousel(); } }
+setInterval(autoSlide, 5000);
+function createParticles() { const particles = document.getElementById('particles'); if(!particles) return; for (let i = 0; i < 15; i++) { const particle = document.createElement('div'); particle.className = 'particle'; particle.style.left = Math.random() * 100 + '%'; particle.style.animationDelay = Math.random() * 15 + 's'; particle.style.animationDuration = (Math.random() * 10 + 10) + 's'; particles.appendChild(particle); } }
+function toggleDetails(serviceId) { const detailsElement = document.getElementById(`details-${serviceId}`); if (detailsElement.classList.contains('active')) { detailsElement.classList.remove('active'); event.target.innerHTML = 'ℹ️ Ver Detalles'; } else { document.querySelectorAll('.service-details-content.active').forEach(el => el.classList.remove('active')); document.querySelectorAll('.details-toggle').forEach(btn => btn.innerHTML = 'ℹ️ Ver Detalles'); detailsElement.classList.add('active'); event.target.innerHTML = '❌ Cerrar Detalles'; } }
+function playSound(soundId) { const sound = document.getElementById(soundId); sound.currentTime = 0; sound.volume = 0.5; sound.play().catch(e => {}); }
+function showNotification(message, type = 'add') { const notification = document.createElement('div'); const color = type === 'add' ? 'linear-gradient(45deg, var(--primary-color), #00cc00)' : 'linear-gradient(45deg, #ff9800, #ff5722)'; notification.style.cssText = `position: fixed; top: 100px; right: 20px; background: ${color}; color: black; padding: 1rem 1.5rem; border-radius: 10px; font-weight: bold; z-index: 10000; animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 2.7s; box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);`; notification.innerHTML = message; document.body.appendChild(notification); setTimeout(() => notification.remove(), 3000); }
+function openCart() { document.getElementById('cartModal').style.display = 'block'; document.body.style.overflow = 'hidden'; navigateToStep(1); }
+function closeCart() { document.getElementById('cartModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+
+function navigateToStep(step) {
+    if (step === 3 && !document.getElementById('customerName').value.trim()) {
+        alert('Por favor, ingresa tu nombre para continuar.');
+        document.getElementById('customerName').focus();
+        return;
+    }
     document.querySelectorAll('.cart-step').forEach(s => s.classList.remove('active'));
     document.getElementById(`cart-step-${step}`).classList.add('active');
-
+    
     const progressBar = document.getElementById('progressBar');
     if (cart.length > 0) {
         progressBar.style.display = 'flex';
         document.querySelectorAll('.progress-step').forEach(p => {
-            p.classList.remove('active');
-            if (parseInt(p.dataset.step) <= step) {
+            p.classList.remove('active', 'completed');
+            const pStep = parseInt(p.dataset.step);
+            if (pStep < step) {
+                p.classList.add('completed');
+            } else if (pStep === step) {
                 p.classList.add('active');
             }
         });
@@ -1055,192 +1063,23 @@ function navigateToStep(step) {
     if(step === 1) cartTitle.innerText = "🛒 Tu Carrito de Compras";
     if(step === 2) cartTitle.innerText = "📝 Completa tus Datos";
     if(step === 3) {
-         cartTitle.innerText = "✅ Confirma tu Factura";
-         generateFinalSummary();
+        cartTitle.innerText = "✅ Confirma tu Pedido";
+        generateFinalSummary();
     }
 }
 
-/**
-* MODIFICADO: Genera la factura final incluyendo la duración de cada servicio.
-*/
-function generateFinalSummary() {
-    const now = new Date();
-    const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
-    const invoiceNumber = `CTV-${Date.now().toString().slice(-6)}`;
-    const customerName = document.getElementById('customerName').value.trim();
-    const customerEmail = document.getElementById('customerEmail').value.trim();
-    
-    const itemsList = cart.map(item => {
-        const subtotal = item.price * item.quantity * item.months;
-        return `
-        <tr>
-            <td style="padding: 5px; text-align: left;">${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})</td>
-            <td style="padding: 5px; text-align: right;">${subtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</td>
-        </tr>
-    `}).join('');
-
-    const summaryHTML = `
-        <div style="text-align: left; padding: 10px;">
-            <h4>Factura N°: ${invoiceNumber}</h4>
-            <p><strong>Fecha:</strong> ${formattedDate}</p>
-            <p><strong>Cliente:</strong> ${customerName}</p>
-            ${customerEmail ? `<p><strong>Email:</strong> ${customerEmail}</p>` : ''}
-            <hr style="border-color: rgba(0,255,0,0.2); margin: 1rem 0;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr>
-                        <th style="text-align: left; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Descripción</th>
-                        <th style="text-align: right; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${itemsList}
-                </tbody>
-            </table>
-        </div>
-    `;
-    
-    document.getElementById('finalSummary').innerHTML = summaryHTML;
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity * item.months), 0);
-    document.getElementById('finalTotalAmount').textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
-}
-
-/**
-* MODIFICADO: Procesa el pago final, enviando la duración de cada servicio en el mensaje de WhatsApp.
-*/
-function processCheckout() {
-    const customerName = document.getElementById('customerName').value.trim();
-    const customerEmail = document.getElementById('customerEmail').value.trim();
-
-    if (!customerName) {
-        alert('Hubo un error, por favor regresa y verifica tu nombre.');
-        navigateToStep(2);
-        return;
-    }
-
-    const now = new Date();
-    const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
-    const invoiceNumber = `CTV-${Date.now().toString().slice(-6)}`;
-
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity * item.months), 0);
-    const itemsList = cart.map(item => {
-        const subtotal = item.price * item.quantity * item.months;
-        return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'}) - ${subtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
-    }).join('\n');
-    
-    const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n🛒 *Quisiera confirmar el siguiente pedido:*\n\n📄 *Factura N°:* ${invoiceNumber}\n🗓️ *Fecha:* ${formattedDate}\n\n${itemsList}\n\n💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n${customerEmail ? `✉️ *Mi email:* ${customerEmail}\n` : ''}\n✅ *Pedido generado desde la web.*\n\nQuedo atento a las instrucciones para el pago. ¡Gracias!`;
-    
-    const whatsappUrl = `https://wa.me/584242357804?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-    
-    cart = [];
-    updateCartDisplay();
-    closeCart();
-}
-
-function loadServices() {
-    document.getElementById('perfilesGrid').innerHTML = perfiles.map((s, i) => createServiceCard(s, i).outerHTML).join('');
-    document.getElementById('cuentasGrid').innerHTML = cuentas.map((s, i) => createServiceCard(s, i).outerHTML).join('');
-    document.getElementById('combosGrid').innerHTML = combos.map((s, i) => createServiceCard(s, i).outerHTML).join('');
-    document.getElementById('otrosGrid').innerHTML = otros.map((s, i) => createServiceCard(s, i).outerHTML).join('');
-    document.getElementById('featuredOffersGrid').innerHTML = featuredOffers.map((s, i) => createServiceCard(s, i).outerHTML).join('');
-}
-
-function setupFAQAccordion() {
-    document.querySelectorAll('.faq-question').forEach(q => {
-        q.addEventListener('click', () => {
-            const parentItem = q.parentElement;
-            const isActive = parentItem.classList.contains('active');
-            document.querySelectorAll('.faq-item.active').forEach(i => i.classList.remove('active'));
-            if (!isActive) parentItem.classList.add('active');
-        });
-    });
-}
-
-function showServicesTab(tabName) {
-    document.querySelectorAll('.services-container').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(tabName).classList.add('active');
-    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-}
-
-function showSection(sectionId) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-
-    document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(link => {
-        link.classList.remove('active');
-    });
-    document.querySelectorAll(`a[data-section="${sectionId}"]`).forEach(link => {
-        link.classList.add('active');
-    });
-
-    if (sectionId === 'store') showServicesTab('perfiles');
-}
-
-function toggleMobileMenu() {
-    document.getElementById('mobileMenu').classList.toggle('active');
-}
-
-function sendSupportMessage() {
-    const phoneNumber = "584242357804";
-    const message = `👋 ¡Hola ConnectTV! Necesito ayuda con un problema.\n\n*🚨 MI ERROR O PROBLEMA ES:*\n(Por favor, describe aquí tu inconveniente)\n\n*📺 SERVICIO AFECTADO:*\n(Ej: Netflix, Disney+, Prime Video, etc.)\n\n*🔍 YA INTENTÉ:*\n(Ej: Reiniciar la app, cambiar de dispositivo, etc.)\n\nEspero su pronta respuesta. ¡Gracias!`;
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-}
-
-window.onclick = (event) => {
-    if (event.target == document.getElementById('cartModal')) closeCart();
-}
-
+function generateFinalSummary() { const customerName = document.getElementById('customerName').value.trim(); const itemsList = cart.map(item => `<tr><td style="padding: 5px; text-align: left;">${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})</td><td style="padding: 5px; text-align: right;">${item.finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</td></tr>`).join(''); const summaryHTML = `<div style="text-align: left; padding: 10px;"><p><strong>Cliente:</strong> ${customerName}</p><hr style="border-color: rgba(0,255,0,0.2); margin: 1rem 0;"><table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="text-align: left; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Descripción</th><th style="text-align: right; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Subtotal</th></tr></thead><tbody>${itemsList}</tbody></table></div>`; document.getElementById('finalSummary').innerHTML = summaryHTML; const total = cart.reduce((sum, item) => sum + item.finalSubtotal, 0); document.getElementById('finalTotalAmount').textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`; }
+function setupFAQAccordion() { document.querySelectorAll('.faq-question').forEach(q => { q.addEventListener('click', () => { const parentItem = q.parentElement; const isActive = parentItem.classList.contains('active'); document.querySelectorAll('.faq-item.active').forEach(i => i.classList.remove('active')); if (!isActive) parentItem.classList.add('active'); }); }); }
+function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
+window.onclick = (event) => { if (event.target == document.getElementById('cartModal')) closeCart(); }
 const desktopToggle = document.getElementById('theme-toggle');
 const mobileToggle = document.getElementById('mobile-theme-toggle');
-
-function setTheme(isLight) {
-    if (isLight) {
-        document.body.classList.add('light-theme');
-        if(desktopToggle) desktopToggle.checked = true;
-        if(mobileToggle) mobileToggle.checked = true;
-        localStorage.setItem('theme', 'light');
-    } else {
-        document.body.classList.remove('light-theme');
-        if(desktopToggle) desktopToggle.checked = false;
-        if(mobileToggle) mobileToggle.checked = false;
-        localStorage.setItem('theme', 'dark');
-    }
-}
+function setTheme(isLight) { if (isLight) { document.body.classList.add('light-theme'); if(desktopToggle) desktopToggle.checked = true; if(mobileToggle) mobileToggle.checked = true; localStorage.setItem('theme', 'light'); } else { document.body.classList.remove('light-theme'); if(desktopToggle) desktopToggle.checked = false; if(mobileToggle) mobileToggle.checked = false; localStorage.setItem('theme', 'dark'); } }
 if(desktopToggle) desktopToggle.addEventListener('change', () => setTheme(desktopToggle.checked));
 if(mobileToggle) mobileToggle.addEventListener('change', () => setTheme(mobileToggle.checked));
+function loadTheme() { setTheme(localStorage.getItem('theme') === 'light'); }
 
-function loadTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    setTheme(savedTheme === 'light');
-}
-
-function userInteractionUnlockAudio() {
-    const sound = document.getElementById('notificationSound');
-    sound.play().then(() => {
-        sound.pause();
-        sound.currentTime = 0;
-    }).catch(error => {});
-    document.body.removeEventListener('click', userInteractionUnlockAudio);
-    document.body.removeEventListener('keydown', userInteractionUnlockAudio);
-}
-
-document.body.addEventListener('click', userInteractionUnlockAudio);
-document.body.addEventListener('keydown', userInteractionUnlockAudio);
-
-document.addEventListener('DOMContentLoaded', function() {
-    createParticles();
-    loadServices();
-    updateCartDisplay();
-    createDots();
-    showSection('home');
-    setupFAQAccordion();
-    loadTheme();
-});
-
-// Hacer funciones accesibles globalmente para los eventos onclick/onchange
+// Funciones globales para HTML
 window.toggleDetails = toggleDetails; 
 window.addToCart = addToCart; 
 window.removeFromCart = removeFromCart;
@@ -1251,7 +1090,9 @@ window.processCheckout = processCheckout;
 window.showServicesTab = showServicesTab; 
 window.showSection = showSection; 
 window.toggleMobileMenu = toggleMobileMenu;
-window.sendSupportMessage = sendSupportMessage; 
+window.sendSupportMessage = sendSupportMessage;
+window.sendResellerMessage = sendResellerMessage;
 window.searchServices = searchServices;
 window.navigateToStep = navigateToStep;
-window.updateDuration = updateDuration; // <-- NUEVA FUNCIÓN GLOBAL
+window.updateDuration = updateDuration;
+window.emptyCart = emptyCart;

@@ -20,7 +20,8 @@
 <body>
     <div class="particles" id="particles"></div>
     
-    <audio id="notificationSound" src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-the-sound-pack-tree/tspt_bubble_pop_01_lifelike_shiny.mp3" preload="auto"></audio>
+    <audio id="addSound" src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-the-sound-pack-tree/tspt_bubble_pop_01_lifelike_shiny.mp3" preload="auto"></audio>
+    <audio id="removeSound" src="https://cdn.freesound.org/previews/253/253886_4429394-lq.mp3" preload="auto"></audio>
 
     <header>
         <nav class="container">
@@ -31,8 +32,9 @@
             <ul class="nav-links">
                 <li><a href="#" data-section="home" onclick="showSection('home')">🏠 Inicio</a></li>
                 <li><a href="#" data-section="store" onclick="showSection('store')">🛍️ Tienda</a></li>
+                <li><a href="#" data-section="how-it-works" onclick="showSection('how-it-works')">⚙️ Cómo Funciona</a></li>
                 <li><a href="#" data-section="about" onclick="showSection('about')">👥 Quienes Somos</a></li>
-                <li><a href="#" data-section="why-us" onclick="showSection('why-us')">✅ Por Que Elegirnos</a></li>
+                <li><a href="#" data-section="why-us" onclick="showSection('why-us')">✅ Por Qué Elegirnos</a></li>
                 <li><a href="#" data-section="support" onclick="showSection('support')">📞 Soporte</a></li>
             </ul>
             <div style="display: flex; align-items: center; gap: 1rem;">
@@ -53,6 +55,7 @@
             <div class="mobile-menu" id="mobileMenu">
                 <a href="#" data-section="home" onclick="showSection('home'); toggleMobileMenu();">🏠 Inicio</a>
                 <a href="#" data-section="store" onclick="showSection('store'); toggleMobileMenu();">🛍️ Tienda</a>
+                <a href="#" data-section="how-it-works" onclick="showSection('how-it-works'); toggleMobileMenu();">⚙️ Cómo Funciona</a>
                 <a href="#" data-section="about" onclick="showSection('about'); toggleMobileMenu();">👥 Quienes Somos</a>
                 <a href="#" data-section="why-us" onclick="showSection('why-us'); toggleMobileMenu();">✅ Por Que Elegirnos</a>
                 <a href="#" data-section="support" onclick="showSection('support'); toggleMobileMenu();">📞 Soporte</a>
@@ -218,6 +221,14 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 </div>
             </div>
 
+            <div class="loader-container" id="servicesLoader">
+                <div class="loader"></div>
+            </div>
+
+            <div id="noResultsMessage" class="no-results" style="display: none;">
+                😢 No se encontraron servicios con ese nombre. Intenta con otra búsqueda.
+            </div>
+
             <div id="perfiles" class="services-container active">
                 <div class="services-grid" id="perfilesGrid"></div>
             </div>
@@ -234,6 +245,33 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 <div class="services-grid" id="otrosGrid"></div>
             </div>
         </section>
+        
+        <section id="how-it-works" class="section">
+            <h2>¿Cómo Comprar? ¡Es muy fácil!</h2>
+            <div class="how-it-works-steps">
+                <div class="step-card">
+                    <div class="step-icon">1</div>
+                    <h3>🛍️ Elige tu Plan</h3>
+                    <p>Navega por nuestra tienda, selecciona los servicios o combos que más te gusten y agrégalos a tu carrito de compras.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">2</div>
+                    <h3>🛒 Revisa tu Carrito</h3>
+                    <p>Abre tu carrito, verifica tus productos, completa tu nombre y haz clic en "Confirmar" para generar tu pedido.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">3</div>
+                    <h3>📲 Contacta por WhatsApp</h3>
+                    <p>Serás redirigido a WhatsApp con un resumen de tu pedido. Un agente te atenderá para coordinar el pago de forma segura.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">4</div>
+                    <h3>🎉 ¡A Disfrutar!</h3>
+                    <p>Una vez confirmado el pago, recibirás los datos de tu cuenta de forma inmediata. ¡Así de rápido y sencillo!</p>
+                </div>
+            </div>
+        </section>
+
 
         <section id="about" class="section">
             <h2>Quienes Somos</h2>
@@ -242,9 +280,12 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                 <br>
                 <p>Con años de experiencia en el mercado venezolano, garantizamos un servicio confiable, seguro y de calidad superior para toda tu familia. Trabajamos con <strong>pagos al BCV 🇻🇪</strong> para tu comodidad.</p>
                 <br>
-                <div style="background: rgba(0,255,0,0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
-                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">🤝 Para Distribuidores:</h4>
-                    <p>Ofrecemos excelentes precios mayoristas con tu panel personal, incluyendo usuario y contraseña personalizados. ¡Contáctanos para más información!</p>
+                <div class="reseller-box">
+                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">🤝 ¿Quieres ser Distribuidor?</h4>
+                    <p>Ofrecemos excelentes precios mayoristas con tu panel personal, incluyendo usuario y contraseña personalizados. ¡Contáctanos para más información y empieza a vender hoy!</p>
+                    <button class="reseller-btn" onclick="sendResellerMessage()">
+                        <i class="fab fa-whatsapp"></i> Solicitar Información para Distribuidores
+                    </button>
                 </div>
             </div>
         </section>
@@ -311,9 +352,12 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
                         <h3>💰 Total a Pagar:</h3>
                         <div class="total-amount" id="totalAmount">0,00 Bs</div>
                     </div>
-                    <button class="checkout-btn" id="checkoutBtn" onclick="navigateToStep(2)">
-                        🚀 Continuar
-                    </button>
+                    <div class="cart-actions">
+                        <button class="empty-cart-btn" id="emptyCartBtn" onclick="emptyCart()">🗑️ Vaciar Carrito</button>
+                        <button class="checkout-btn" id="checkoutBtn" onclick="navigateToStep(2)">
+                            🚀 Continuar
+                        </button>
+                    </div>
                     <div class="empty-cart" id="emptyCartMessage" style="display: none;">
                         <h3>🛒 Tu carrito está vacío</h3>
                         <p>¡Agrega algunos servicios para comenzar!</p>
