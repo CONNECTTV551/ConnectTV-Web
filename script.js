@@ -523,8 +523,8 @@ const cuentas = [
 const combos = [
     { 
         name: "COMBO 1", 
-        price: "600,00 Bs", 
-        numericPrice: 600.00,
+        price: "700,00 Bs", 
+        numericPrice: 700.00,
         duration: "30 DÍAS", 
         devices: "1 DISPOSITIVO C/U",
         image: "img/combo-basico.png", // Sugerencia: crea una imagen para este combo
@@ -539,8 +539,8 @@ const combos = [
     },
     { 
         name: "COMBO 2", 
-        price: "700,00 Bs", 
-        numericPrice: 700.00,
+        price: "750,00 Bs", 
+        numericPrice: 750.00,
         duration: "30 DÍAS", 
         devices: "1 DISPOSITIVO C/U",
         image: "img/combo2.png", // Sugerencia: crea una imagen para este combo
@@ -556,8 +556,8 @@ const combos = [
    },
     { 
         name: "COMBO 3", 
-        price: "700,00 Bs", 
-        numericPrice: 700.00,
+        price: "750,00 Bs", 
+        numericPrice: 750.00,
         duration: "30 DÍAS", 
         devices: "1 DISPOSITIVO C/U",
         image: "img/combo3.png", // Sugerencia: crea una imagen para este combo
@@ -569,8 +569,58 @@ const combos = [
             "✨ El entretenimiento completo para la familia"
         ]
    
+   },
+    { 
+        name: "COMBO 4", 
+        price: "750,00 Bs", 
+        numericPrice: 750.00,
+        duration: "30 DÍAS", 
+        devices: "1 DISPOSITIVO C/U",
+        image: "img/combo4.png", // Sugerencia: crea una imagen para este combo
+        type: "combo",
+        available: true,
+        details: [
+            "✅ 1 Perfil Netflix",
+            "✅ 1 Perfil vix",
+            "✨ El entretenimiento completo para la familia"
+        ]
    
    
+   },
+    { 
+        name: "COMBO 5", 
+        price: "750,00 Bs", 
+        numericPrice: 750.00,
+        duration: "30 DÍAS", 
+        devices: "1 DISPOSITIVO C/U",
+        image: "img/combo5.png", // Sugerencia: crea una imagen para este combo
+        type: "combo",
+        available: true,
+        details: [
+            "✅ 1 Perfil Netflix",
+            "✅ 1 Perfil crunchiroll",
+            "✨ El entretenimiento completo para la familia"
+        ]
+
+},
+    { 
+        name: "COMBO 6", 
+        price: "750,00 Bs", 
+        numericPrice: 750.00,
+        duration: "30 DÍAS", 
+        devices: "1 DISPOSITIVO C/U",
+        image: "img/combo6.png", // Sugerencia: crea una imagen para este combo
+        type: "combo",
+        available: true,
+        details: [
+            "✅ 1 Perfil Netflix",
+            "✅ 1 Perfil prime video",
+            "✨ El entretenimiento completo para la familia"
+        ]
+
+
+
+
    
    
     }
