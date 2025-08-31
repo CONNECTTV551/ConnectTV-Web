@@ -289,7 +289,7 @@ const cuentas = [
         duration: "1 MES (30 DÍAS)", 
         devices: "3 DISPOSITIVO",
         image: "img/IPtvcuenta.png",
-        type: "perfil",
+        type: "cuenta",
         available: true,
         details: [
              "🎬 Disfruta series, películas y canales en vivo 🎬📡",
@@ -307,7 +307,7 @@ const cuentas = [
         duration: "1 MES (30 DÍAS)", 
         devices: "7 DISPOSITIVO",
         image: "img/disnepre.png",
-        type: "perfil",
+        type: "cuenta",
         available: true,
         details: [
              "🍿Disney+: El Hogar de la Magia📡",
@@ -646,7 +646,7 @@ const otros = [
         duration: "30 DÍAS", 
         devices: "1 DISPOSITIVO",
         image: "img/canva.png",
-        type: "perfil",
+        type: "otro",
         available: true,
         details: [
             "✅ Miles de plantillas y recursos exclusivos",
@@ -663,7 +663,7 @@ const otros = [
         duration: "1 MES (90 DÍAS)", 
         devices: "1 DISPOSITIVO",
         image: "img/canva3.png",
-        type: "perfil",
+        type: "otro",
         available: true,
         details: [
             "✅ Tiene una duración de 3 meses, con garantia de 45 dias",
@@ -680,7 +680,7 @@ const otros = [
         duration: "12 MESES (365 DÍAS)", 
         devices: "1 DISPOSITIVO",
         image: "img/canva12.png",
-        type: "perfil",
+        type: "otro",
         available: true,
         details: [
             "✅Tiene una duración de 12 meses, con garantia de 6 meses",
@@ -814,7 +814,7 @@ function createServiceCard(service, index) {
 
     const stockBadge = !service.available ? '<div class="stock-badge">Agotado</div>' : '';
     const buttonContent = service.available ? 
-        `<button class="add-to-cart-btn" onclick="addToCart('${service.name}', ${service.numericPrice}, '${service.price}')">🛒 Agregar al Carrito</button>` :
+        `<button class="add-to-cart-btn" onclick="addToCart('${service.name}', ${service.numericPrice}, '${service.price}', '${service.type}')">🛒 Agregar al Carrito</button>` :
         `<button class="add-to-cart-btn out-of-stock" disabled>❌ Agotado</button>`;
     
     card.innerHTML = `
@@ -880,14 +880,14 @@ function playNotificationSound() {
 }
 
 /**
-* MODIFICADO: Añade un producto al carrito con una duración por defecto de 1 mes.
+* MODIFICADO: Añade un producto al carrito con una duración por defecto de 1 mes y su tipo.
 */
-function addToCart(serviceName, numericPrice, displayPrice) {
+function addToCart(serviceName, numericPrice, displayPrice, serviceType) {
     const existingItem = cart.find(item => item.name === serviceName);
     if (existingItem) {
         existingItem.quantity++;
     } else {
-        cart.push({ name: serviceName, price: numericPrice, displayPrice: displayPrice, quantity: 1, months: 1 });
+        cart.push({ name: serviceName, price: numericPrice, displayPrice: displayPrice, quantity: 1, months: 1, type: serviceType });
     }
     updateCartDisplay();
     showCartNotification();
@@ -922,7 +922,7 @@ function updateDuration(serviceName, newDuration) {
 }
 
 /**
-* MODIFICADO: Actualiza toda la vista del carrito, incluyendo el nuevo selector de meses y los cálculos de precios.
+* MODIFICADO: Actualiza toda la vista del carrito. Para combos, solo muestra "1 Mes". Para otros servicios, muestra un selector de meses.
 */
 function updateCartDisplay() {
     const cartCount = document.getElementById('cartCount');
@@ -948,15 +948,20 @@ function updateCartDisplay() {
         if(checkoutBtn) checkoutBtn.style.display = 'block';
         if(cartItems) {
             cartItems.innerHTML = cart.map(item => {
-                const subtotal = item.price * item.quantity * item.months;
                 const safeItemName = item.name.replace(/[^a-zA-Z0-9]/g, '-');
-                return `
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">${item.displayPrice} / mes</div>
-                    </div>
-                    <div class="cart-item-controls">
+                let durationControlsHTML = '';
+
+                // Lógica condicional para la duración
+                if (item.type === 'combo') {
+                    item.months = 1; // Forzar que los combos duren solo 1 mes
+                    durationControlsHTML = `
+                        <div class="quantity-controls">
+                            <span style="font-size: 0.8em; margin-right: 5px;">Duración:</span>
+                            <span style="font-weight: bold;">1 Mes</span>
+                        </div>
+                    `;
+                } else {
+                    durationControlsHTML = `
                         <div class="quantity-controls">
                             <label for="months-${safeItemName}" style="font-size: 0.8em; margin-right: 5px;">Meses:</label>
                             <select id="months-${safeItemName}" onchange="updateDuration('${item.name}', this.value)" style="background: var(--input-bg); color: var(--text-color); border: 1px solid var(--card-border); border-radius: 5px; padding: 3px; cursor: pointer;">
@@ -965,6 +970,19 @@ function updateCartDisplay() {
                                 <option value="3" ${item.months === 3 ? 'selected' : ''}>3 Meses</option>
                             </select>
                         </div>
+                    `;
+                }
+
+                const subtotal = item.price * item.quantity * item.months;
+
+                return `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.displayPrice} / mes</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        ${durationControlsHTML}
                         <div class="quantity-controls">
                             <button class="quantity-btn" onclick="updateQuantity('${item.name}', -1)">-</button>
                             <span class="quantity">${item.quantity}</span>
