@@ -551,6 +551,28 @@ const combos = [
             "✅ 1 Perfil max",
             "✨ El entretenimiento completo para la familia"
         ]
+   
+   
+   },
+    { 
+        name: "COMBO 3", 
+        price: "700,00 Bs", 
+        numericPrice: 700.00,
+        duration: "30 DÍAS", 
+        devices: "1 DISPOSITIVO C/U",
+        image: "img/combo3.png", // Sugerencia: crea una imagen para este combo
+        type: "combo",
+        available: true,
+        details: [
+            "✅ 1 Perfil Netflix",
+            "✅ 1 Perfil paramount",
+            "✨ El entretenimiento completo para la familia"
+        ]
+   
+   
+   
+   
+   
     }
 ];
 
