@@ -969,6 +969,7 @@ main {
 
 .cart-item {
     display: flex;
+    flex-wrap: wrap; /* <-- PERMITE QUE LOS ELEMENTOS SE ENVUELVAN */
     align-items: center;
     justify-content: space-between;
     background: var(--cart-item-bg);
@@ -998,6 +999,8 @@ main {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex-wrap: wrap; /* <-- AÑADIDO */
+    justify-content: flex-end; /* <-- AÑADIDO */
 }
 
 .quantity-controls {

@@ -140,7 +140,6 @@ const perfiles = [
         duration: "1 MES (30 DÍAS)", 
         devices: "1 DISPOSITIVO",
         image: "img/telelatino.png",
-        altPrice: "670,00 Bs (2 MESES)",
         type: "perfil",
         available: true,
         details: [
@@ -159,7 +158,6 @@ const perfiles = [
         duration: "1 MES (30 DÍAS)", 
         devices: "1 DISPOSITIVO",
         image: "img/stellatv.png",
-        altPrice: "700,00 Bs (2 MESES)",
         type: "perfil",
         available: false,
         details: [
@@ -617,12 +615,6 @@ const combos = [
             "✅ 1 Perfil prime video",
             "✨ El entretenimiento completo para la familia"
         ]
-
-
-
-
-   
-   
     }
 ];
 
@@ -887,12 +879,15 @@ function playNotificationSound() {
     sound.play().catch(e => console.log("No se pudo reproducir el sonido:", e));
 }
 
+/**
+* MODIFICADO: Añade un producto al carrito con una duración por defecto de 1 mes.
+*/
 function addToCart(serviceName, numericPrice, displayPrice) {
     const existingItem = cart.find(item => item.name === serviceName);
     if (existingItem) {
         existingItem.quantity++;
     } else {
-        cart.push({ name: serviceName, price: numericPrice, displayPrice: displayPrice, quantity: 1 });
+        cart.push({ name: serviceName, price: numericPrice, displayPrice: displayPrice, quantity: 1, months: 1 });
     }
     updateCartDisplay();
     showCartNotification();
@@ -915,6 +910,20 @@ function updateQuantity(serviceName, change) {
     updateCartDisplay();
 }
 
+/**
+* NUEVO: Actualiza la duración (meses) de un servicio en el carrito.
+*/
+function updateDuration(serviceName, newDuration) {
+    const item = cart.find(item => item.name === serviceName);
+    if (item) {
+        item.months = parseInt(newDuration, 10);
+    }
+    updateCartDisplay();
+}
+
+/**
+* MODIFICADO: Actualiza toda la vista del carrito, incluyendo el nuevo selector de meses y los cálculos de precios.
+*/
 function updateCartDisplay() {
     const cartCount = document.getElementById('cartCount');
     const cartItems = document.getElementById('cartItems');
@@ -937,23 +946,40 @@ function updateCartDisplay() {
         if(emptyCartMessage) emptyCartMessage.style.display = 'none';
         if(cartTotalSection) cartTotalSection.style.display = 'block';
         if(checkoutBtn) checkoutBtn.style.display = 'block';
-        if(cartItems) cartItems.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">${item.displayPrice} c/u</div>
-                </div>
-                <div class="cart-item-controls">
-                    <div class="quantity-controls">
-                        <button class="quantity-btn" onclick="updateQuantity('${item.name}', -1)">-</button>
-                        <span class="quantity">${item.quantity}</span>
-                        <button class="quantity-btn" onclick="updateQuantity('${item.name}', 1)">+</button>
+        if(cartItems) {
+            cartItems.innerHTML = cart.map(item => {
+                const subtotal = item.price * item.quantity * item.months;
+                const safeItemName = item.name.replace(/[^a-zA-Z0-9]/g, '-');
+                return `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.displayPrice} / mes</div>
                     </div>
-                    <button class="remove-btn" onclick="removeFromCart('${item.name}')">🗑️ Eliminar</button>
+                    <div class="cart-item-controls">
+                        <div class="quantity-controls">
+                            <label for="months-${safeItemName}" style="font-size: 0.8em; margin-right: 5px;">Meses:</label>
+                            <select id="months-${safeItemName}" onchange="updateDuration('${item.name}', this.value)" style="background: var(--input-bg); color: var(--text-color); border: 1px solid var(--card-border); border-radius: 5px; padding: 3px; cursor: pointer;">
+                                <option value="1" ${item.months === 1 ? 'selected' : ''}>1 Mes</option>
+                                <option value="2" ${item.months === 2 ? 'selected' : ''}>2 Meses</option>
+                                <option value="3" ${item.months === 3 ? 'selected' : ''}>3 Meses</option>
+                            </select>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity('${item.name}', -1)">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity('${item.name}', 1)">+</button>
+                        </div>
+                        <button class="remove-btn" onclick="removeFromCart('${item.name}')">🗑️ Eliminar</button>
+                    </div>
+                     <div style="width: 100%; text-align: right; font-weight: bold; margin-top: 10px; font-size: 1.1em;">
+                        Subtotal: ${subtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs
+                    </div>
                 </div>
-            </div>
-        `).join('');
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            `}).join('');
+        }
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity * item.months), 0);
         if(totalAmount) totalAmount.textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
     }
 }
@@ -1016,27 +1042,25 @@ function navigateToStep(step) {
     }
 }
 
+/**
+* MODIFICADO: Genera la factura final incluyendo la duración de cada servicio.
+*/
 function generateFinalSummary() {
-    // Obtener la fecha actual y formatearla
     const now = new Date();
     const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
-    
-    // Generar un número de factura simple usando el timestamp
     const invoiceNumber = `CTV-${Date.now().toString().slice(-6)}`;
-
     const customerName = document.getElementById('customerName').value.trim();
     const customerEmail = document.getElementById('customerEmail').value.trim();
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
-    // Crear una lista detallada de los productos para la tabla de la factura
-    const itemsList = cart.map(item => `
+    const itemsList = cart.map(item => {
+        const subtotal = item.price * item.quantity * item.months;
+        return `
         <tr>
-            <td style="padding: 5px; text-align: left;">${item.quantity}x ${item.name}</td>
-            <td style="padding: 5px; text-align: right;">${(item.price * item.quantity).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</td>
+            <td style="padding: 5px; text-align: left;">${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})</td>
+            <td style="padding: 5px; text-align: right;">${subtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</td>
         </tr>
-    `).join('');
+    `}).join('');
 
-    // Construir el HTML de la factura que se mostrará en la pantalla de confirmación
     const summaryHTML = `
         <div style="text-align: left; padding: 10px;">
             <h4>Factura N°: ${invoiceNumber}</h4>
@@ -1059,9 +1083,13 @@ function generateFinalSummary() {
     `;
     
     document.getElementById('finalSummary').innerHTML = summaryHTML;
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity * item.months), 0);
     document.getElementById('finalTotalAmount').textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
 }
 
+/**
+* MODIFICADO: Procesa el pago final, enviando la duración de cada servicio en el mensaje de WhatsApp.
+*/
 function processCheckout() {
     const customerName = document.getElementById('customerName').value.trim();
     const customerEmail = document.getElementById('customerEmail').value.trim();
@@ -1072,15 +1100,16 @@ function processCheckout() {
         return;
     }
 
-    // Volver a generar la fecha y el número de factura para el mensaje de WhatsApp
     const now = new Date();
     const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
     const invoiceNumber = `CTV-${Date.now().toString().slice(-6)}`;
 
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const itemsList = cart.map(item => `• ${item.quantity}x ${item.name} - ${(item.price * item.quantity).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`).join('\n');
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity * item.months), 0);
+    const itemsList = cart.map(item => {
+        const subtotal = item.price * item.quantity * item.months;
+        return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'}) - ${subtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
+    }).join('\n');
     
-    // Mensaje de WhatsApp actualizado con la información de la factura
     const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n🛒 *Quisiera confirmar el siguiente pedido:*\n\n📄 *Factura N°:* ${invoiceNumber}\n🗓️ *Fecha:* ${formattedDate}\n\n${itemsList}\n\n💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n${customerEmail ? `✉️ *Mi email:* ${customerEmail}\n` : ''}\n✅ *Pedido generado desde la web.*\n\nQuedo atento a las instrucciones para el pago. ¡Gracias!`;
     
     const whatsappUrl = `https://wa.me/584242357804?text=${encodeURIComponent(message)}`;
@@ -1193,9 +1222,18 @@ document.addEventListener('DOMContentLoaded', function() {
     loadTheme();
 });
 
-window.toggleDetails = toggleDetails; window.addToCart = addToCart; window.removeFromCart = removeFromCart;
-window.updateQuantity = updateQuantity; window.openCart = openCart; window.closeCart = closeCart;
+// Hacer funciones accesibles globalmente para los eventos onclick/onchange
+window.toggleDetails = toggleDetails; 
+window.addToCart = addToCart; 
+window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity; 
+window.openCart = openCart; 
+window.closeCart = closeCart;
 window.processCheckout = processCheckout;
-window.showServicesTab = showServicesTab; window.showSection = showSection; window.toggleMobileMenu = toggleMobileMenu;
-window.sendSupportMessage = sendSupportMessage; window.searchServices = searchServices;
+window.showServicesTab = showServicesTab; 
+window.showSection = showSection; 
+window.toggleMobileMenu = toggleMobileMenu;
+window.sendSupportMessage = sendSupportMessage; 
+window.searchServices = searchServices;
 window.navigateToStep = navigateToStep;
+window.updateDuration = updateDuration; // <-- NUEVA FUNCIÓN GLOBAL
