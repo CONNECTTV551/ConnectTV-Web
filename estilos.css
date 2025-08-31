@@ -74,14 +74,38 @@ input:checked + .slider:before { transform: translateX(22px); background-color: 
 /* Header */
 header { background: var(--header-bg); padding: 1rem 0; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(10px); border-bottom: 1px solid var(--card-border); animation: slideDown 0.8s ease; }
 @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-nav { display: flex; justify-content: space-between; align-items: center; }
+nav { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    /* Reducimos el espacio entre los elementos de la navegación */
+    gap: 0.8rem; /* Antes 0.5rem, lo aumentamos un poco para no pegarlo demasiado */
+}
 .logo { display: flex; align-items: center; gap: 10px; animation: pulse 2s infinite; }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 .logo img { height: 40px; transition: transform 0.3s ease; }
 .logo img:hover { transform: rotate(360deg); }
 .logo h1 { color: var(--primary-color); font-size: 1.8rem; font-weight: bold; text-shadow: var(--text-shadow-glow); }
-.nav-links { display: flex; list-style: none; gap: 0.5rem; flex-wrap: nowrap; }
-.nav-links a { color: var(--text-color); text-decoration: none; padding: 0.6rem 0.8rem; border-radius: 8px; transition: all 0.3s ease; font-weight: bold; background: rgba(0, 255, 0, 0.1); border: 1px solid var(--card-border); white-space: nowrap; }
+.nav-links { 
+    display: flex; 
+    list-style: none; 
+    /* Ajustamos el gap para hacer las opciones más compactas */
+    gap: 0.4rem; /* Reducido de 0.5rem a 0.4rem */
+    flex-wrap: nowrap; 
+}
+.nav-links a { 
+    color: var(--text-color); 
+    text-decoration: none; 
+    /* Reducimos el padding para hacer los botones más pequeños */
+    padding: 0.5rem 0.7rem; /* Reducido de 0.6rem 0.8rem */
+    border-radius: 8px; 
+    transition: all 0.3s ease; 
+    font-weight: bold; 
+    background: rgba(0, 255, 0, 0.1); 
+    border: 1px solid var(--card-border); 
+    white-space: nowrap; 
+    font-size: 0.95rem; /* Hacemos la fuente un poco más pequeña */
+}
 .nav-links a:hover { background: var(--primary-color); color: black; transform: translateY(-3px) scale(1.05); box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4); }
 .light-theme .nav-links a { color: var(--text-color); background: rgba(0, 143, 0, 0.1); }
 .light-theme .nav-links a:hover { color: white; }
@@ -89,7 +113,7 @@ nav { display: flex; justify-content: space-between; align-items: center; }
 .cart-button { position: relative; background: linear-gradient(45deg, var(--primary-color), #00cc00); color: black; border: none; padding: 0.8rem 1.2rem; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3); }
 .cart-button:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0, 255, 0, 0.5); }
 .cart-count { position: absolute; top: -8px; right: -8px; background: #ff0000; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; animation: bounce 0.6s ease; }
-@keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+@keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
 main { margin-top: 80px; padding: 2rem 0; position: relative; z-index: 2; }
 
