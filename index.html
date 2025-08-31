@@ -1694,6 +1694,35 @@
             font-size: 0.9rem;
         }
         
+        /* --- INICIO: CÓDIGO DE CORRECCIÓN PARA MÓVILES --- */
+        @media (max-width: 480px) {
+            nav {
+                flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea si no caben */
+                justify-content: center; /* Centra los elementos cuando se apilan */
+                gap: 0.8rem;
+            }
+
+            .logo h1 {
+                font-size: 1.4rem; /* Se reduce un poco más el tamaño del logo para dar espacio */
+            }
+
+            .cart-body {
+                padding: 1.5rem 1rem; /* Añade espacio a los lados dentro del carrito para que no se pegue al borde */
+            }
+
+            .cart-item-controls {
+                flex-wrap: wrap; /* Permite que los botones (+, -, eliminar) se apilen si no hay espacio */
+                justify-content: flex-end;
+                gap: 0.5rem;
+            }
+
+            .remove-btn {
+                flex-grow: 1; /* Permite que el botón de eliminar se ajuste mejor */
+                text-align: center;
+            }
+        }
+        /* --- FIN: CÓDIGO DE CORRECCIÓN PARA MÓVILES --- */
+        
     </style>
 </head>
 <body>
