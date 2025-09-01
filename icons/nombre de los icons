@@ -1,0 +1,22 @@
+Debes nombrar los logos exactamente como aparecen en el archivo manifest.json para que el navegador pueda encontrarlos.
+
+El patrón es: icon-[tamaño]x[tamaño].png.
+
+Nombres de los Archivos
+Aquí está la lista de los nombres que debes usar para cada imagen. Recuerda que todas estas imágenes deben ir dentro de la carpeta que creaste llamada icons.
+
+icon-72x72.png (para la imagen de 72x72 píxeles)
+
+icon-96x96.png (para la imagen de 96x96 píxeles)
+
+icon-128x128.png (para la imagen de 128x128 píxeles)
+
+icon-144x144.png (para la imagen de 144x144 píxeles)
+
+icon-152x152.png (para la imagen de 152x152 píxeles)
+
+icon-192x192.png (para la imagen de 192x192 píxeles)
+
+icon-384x384.png (para la imagen de 384x384 píxeles)
+
+icon-512x512.png (para la imagen de 512x512 píxeles)
