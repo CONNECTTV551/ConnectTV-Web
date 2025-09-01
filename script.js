@@ -1033,6 +1033,34 @@ function processCheckout() {
     closeCart();
 }
 
+// --- Lógica para el Modal de Términos y Condiciones ---
+function setupTermsModal() {
+    const modal = document.getElementById('termsModal');
+    const link = document.getElementById('termsLink');
+    const closeBtn = document.querySelector('.terms-modal-close');
+
+    if (!modal || !link || !closeBtn) {
+        console.error('Terms modal elements not found!');
+        return;
+    }
+
+    link.onclick = function(event) {
+        event.preventDefault();
+        modal.style.display = 'block';
+    }
+
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.addEventListener('click', function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+
 // --- Inicialización y Event Listeners ---
 document.addEventListener('DOMContentLoaded', function() {
     setupSoundPermission();
@@ -1043,6 +1071,7 @@ document.addEventListener('DOMContentLoaded', function() {
     createDots();
     showSection('home');
     setupFAQAccordion();
+    setupTermsModal(); // Inicializa el modal de términos
     loadTheme();
     // Prepara los audios para que puedan sonar sin interacción previa
     document.querySelectorAll('audio').forEach(audio => audio.load());
