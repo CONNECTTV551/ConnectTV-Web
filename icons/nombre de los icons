@@ -20,3 +20,21 @@ icon-192x192.png (para la imagen de 192x192 píxeles)
 icon-384x384.png (para la imagen de 384x384 píxeles)
 
 icon-512x512.png (para la imagen de 512x512 píxeles)
+
+
+
+
+
+
+Tamaño (píxeles)	Nombre de Archivo	Propósito Principal
+72x72	icon-72x72.png	Teléfonos de menor resolución
+96x96	icon-96x96.png	Teléfonos de resolución media
+128x128	icon-128x128.png	Teléfonos de alta resolución
+144x144	icon-144x144.png	Android, Windows Phone
+152x152	icon-152x152.png	iOS
+192x192	icon-192x192.png	Android Chrome, Escritorios (tamaño común)
+256x256	icon-256x256.png	Escritorios
+384x384	icon-384x384.png	Teléfonos y Escritorios (alta resolución)
+512x512	icon-512x512.png	Escritorios (tamaño de fallback para alta resolución)
+
+Exportar a Hojas de cálculo
