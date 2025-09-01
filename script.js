@@ -1009,15 +1009,30 @@ function processCheckout() {
         return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})${priceDetail}\n  └─ *Vence:* ${formattedCutOffDate}`;
     }).join('\n\n');
 
+    // --- CAMBIO AQUÍ: SE HA MODIFICADO EL MENSAJE ---
+    // Se ha añadido una plantilla para que el vendedor la complete y envíe al cliente.
+
     const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n` +
-                    `🛒 *Quisiera confirmar el siguiente pedido:*\n\n` +
+                    `🛒 *Quisiera confirmar el siguiente pedido (Factura Proforma):*\n\n` +
                     `*Fecha de Compra:* ${formattedPurchaseDate}\n` +
                     `-----------------------------------\n` +
                     `${itemsList}\n` +
                     `-----------------------------------\n` +
                     `💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n` +
                     `✅ *Pedido generado desde la web.*\n\n` +
-                    `Quedo atento a las instrucciones para el pago. ¡Gracias!`;
+                    `Quedo atento a las instrucciones para el pago. ¡Gracias!\n\n` +
+                    `====================\n\n` +
+                    `*PARA USO DEL VENDEDOR (ConnectTV)*\n` +
+                    `_(Copiar, completar y enviar al cliente tras confirmar el pago)_\n\n` +
+                    `🟢 *¡Gracias por tu compra! Aquí están los datos de tu servicio:*\n\n` +
+                    `*Servicio:* \n` +
+                    `*Correo/Usuario:* \n` +
+                    `*Contraseña:* \n` +
+                    `*N° de Perfil/Pantalla:* \n` +
+                    `*PIN del Perfil:* \n\n` +
+                    `*¡A disfrutar!* 🍿`;
+    // --- FIN DEL CAMBIO ---
+
 
     window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
 
@@ -1026,6 +1041,7 @@ function processCheckout() {
     updateCartDisplay();
     closeCart();
 }
+
 
 // --- Lógica para el Modal de Términos y Condiciones ---
 function setupTermsModal() {
