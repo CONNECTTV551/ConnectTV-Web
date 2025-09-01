@@ -40,7 +40,6 @@ const perfiles = [
             "👨‍👩‍👧‍👦 Contenido Warner Bros"
         ]   
    },
-    // ... (El resto de tus perfiles sin cambios)
     { 
         name: "NETFLIX PERFIL 15 DÍAS", 
         price: "350,00 Bs", 
@@ -533,7 +532,6 @@ const combos = [
             "✨ El entretenimiento completo para la familia"
         ]
     },
-    // ... (El resto de tus combos sin cambios)
     { 
         name: "COMBO 1", 
         price: "700,00 Bs", 
@@ -985,7 +983,6 @@ function processCheckout() {
         return;
     }
 
-    // 1. Generar fecha de compra
     const purchaseDate = new Date();
     const formattedPurchaseDate = purchaseDate.toLocaleDateString('es-VE', {
         day: '2-digit',
@@ -995,14 +992,12 @@ function processCheckout() {
 
     const total = cart.reduce((sum, item) => sum + item.finalSubtotal, 0);
 
-    // 2. Añadir fecha de corte a cada item en el resumen
     const itemsList = cart.map(item => {
         let priceDetail = ` - ${item.finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
         if (item.months === 3 && item.type !== 'combo') {
             priceDetail += ` (dcto. aplicado)`;
         }
 
-        // Calcular la fecha de corte para este item
         const cutOffDate = new Date(purchaseDate);
         cutOffDate.setMonth(cutOffDate.getMonth() + item.months);
         const formattedCutOffDate = cutOffDate.toLocaleDateString('es-VE', {
@@ -1014,7 +1009,6 @@ function processCheckout() {
         return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})${priceDetail}\n  └─ *Vence:* ${formattedCutOffDate}`;
     }).join('\n\n');
 
-    // 3. Crear el nuevo mensaje de WhatsApp con toda la información
     const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n` +
                     `🛒 *Quisiera confirmar el siguiente pedido:*\n\n` +
                     `*Fecha de Compra:* ${formattedPurchaseDate}\n` +
@@ -1073,7 +1067,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupFAQAccordion();
     setupTermsModal(); // Inicializa el modal de términos
     loadTheme();
-    // Prepara los audios para que puedan sonar sin interacción previa
     document.querySelectorAll('audio').forEach(audio => audio.load());
 });
 
@@ -1095,14 +1088,13 @@ function setupSoundPermission() {
     modal.classList.add('visible');
 
     confirmBtn.addEventListener('click', async () => {
-        // Intenta reproducir un sonido para "desbloquear" el audio
         await playSound('addSound');
         hasSoundPermission = true;
         localStorage.setItem('soundPermissionGiven', 'true');
         modal.classList.remove('visible');
          setTimeout(() => {
              modal.style.display = 'none';
-         }, 400); // Espera a que la transición de opacidad termine
+         }, 400);
     });
 }
 

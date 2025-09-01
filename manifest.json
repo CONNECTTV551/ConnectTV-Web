@@ -7,6 +7,25 @@
   "background_color": "#1a1a1a",
   "theme_color": "#00ff00",
   "orientation": "portrait-primary",
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "screenshots": [
+    {
+      "src": "img/screenshot1.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Tienda de Servicios de Streaming"
+    },
+    {
+      "src": "img/screenshot2.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Carrito de Compras Fácil de Usar"
+    }
+  ],
   "icons": [
     {
       "src": "icons/icon-72x72.png",
