@@ -16,7 +16,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="estilos.css">
 
-</head>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2d4a2d"/>
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    </head>
 <body>
     <div id="sound-permission-modal">
         <div class="modal-content">
@@ -105,8 +108,8 @@
                             <img src="img/estreno1.jpg" alt="Película o serie de estreno 1">
                         </div>
                         <div class="carousel-caption">
-                            <h3>NO ESPERES MAS Y ADQUIERE TU SUSCRIPCION DE MAX </h3>
-                            <p>HBO Max incluye: Series y películas de HBO, Max Originals, series y películas selectas de Warner Bros., DC, Cartoon Network, Wizarding World, Adult Swim, Home & Health, ID, Discovery Kids, Discovery, y mucho más.</p>
+                            <h3>OFERTAS POR TIEMPO LIMITADO</h3>
+                            <p>connecttv te tiene los combos que esperabas, no te quedes sin tu preferido.</p>
                         </div>
                     </div>
                     <div class="carousel-item">
@@ -433,5 +436,18 @@ Películas y Series: Un amplio catálogo de producciones de diversos géneros co
 
     <script src="script.js"></script>
 
-</body>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registrado con éxito:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Fallo en el registro del ServiceWorker:', error);
+                    });
+            });
+        }
+    </script>
+    </body>
 </html>
