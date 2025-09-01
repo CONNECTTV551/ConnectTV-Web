@@ -974,6 +974,9 @@ function sendResellerMessage() {
     window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
 }
 
+// ============================================
+// FUNCIÓN DE CHECKOUT MODIFICADA
+// ============================================
 function processCheckout() {
     const customerName = document.getElementById('customerName').value.trim();
     if (!customerName) {
@@ -981,20 +984,49 @@ function processCheckout() {
         navigateToStep(2);
         return;
     }
-    
+
+    // 1. Generar fecha de compra
+    const purchaseDate = new Date();
+    const formattedPurchaseDate = purchaseDate.toLocaleDateString('es-VE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+
     const total = cart.reduce((sum, item) => sum + item.finalSubtotal, 0);
+
+    // 2. Añadir fecha de corte a cada item en el resumen
     const itemsList = cart.map(item => {
         let priceDetail = ` - ${item.finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
         if (item.months === 3 && item.type !== 'combo') {
             priceDetail += ` (dcto. aplicado)`;
         }
-        return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})${priceDetail}`;
-    }).join('\n');
-    
-    const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n🛒 *Quisiera confirmar el siguiente pedido:*\n\n${itemsList}\n\n💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n✅ *Pedido generado desde la web.*\n\nQuedo atento a las instrucciones para el pago. ¡Gracias!`;
-    
+
+        // Calcular la fecha de corte para este item
+        const cutOffDate = new Date(purchaseDate);
+        cutOffDate.setMonth(cutOffDate.getMonth() + item.months);
+        const formattedCutOffDate = cutOffDate.toLocaleDateString('es-VE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+
+        return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})${priceDetail}\n  └─ *Vence:* ${formattedCutOffDate}`;
+    }).join('\n\n');
+
+    // 3. Crear el nuevo mensaje de WhatsApp con toda la información
+    const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n` +
+                    `🛒 *Quisiera confirmar el siguiente pedido:*\n\n` +
+                    `*Fecha de Compra:* ${formattedPurchaseDate}\n` +
+                    `-----------------------------------\n` +
+                    `${itemsList}\n` +
+                    `-----------------------------------\n` +
+                    `💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n` +
+                    `✅ *Pedido generado desde la web.*\n\n` +
+                    `Quedo atento a las instrucciones para el pago. ¡Gracias!`;
+
     window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
-    
+
     cart = [];
     saveCart();
     updateCartDisplay();
@@ -1003,7 +1035,7 @@ function processCheckout() {
 
 // --- Inicialización y Event Listeners ---
 document.addEventListener('DOMContentLoaded', function() {
-    setupSoundPermission(); // NUEVA FUNCIÓN
+    setupSoundPermission();
     loadCart();
     createParticles();
     loadServices();
@@ -1018,7 +1050,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // ============================================
-// LÓGICA DE PERMISO DE SONIDO - NUEVO
+// LÓGICA DE PERMISO DE SONIDO
 // ============================================
 function setupSoundPermission() {
     const modal = document.getElementById('sound-permission-modal');
@@ -1035,7 +1067,6 @@ function setupSoundPermission() {
 
     confirmBtn.addEventListener('click', async () => {
         // Intenta reproducir un sonido para "desbloquear" el audio
-        // Esto es crucial. La primera interacción del usuario debe intentar reproducir un sonido.
         await playSound('addSound');
         hasSoundPermission = true;
         localStorage.setItem('soundPermissionGiven', 'true');
@@ -1063,7 +1094,7 @@ function createParticles() { const particles = document.getElementById('particle
 function toggleDetails(serviceId) { const detailsElement = document.getElementById(`details-${serviceId}`); if (detailsElement.classList.contains('active')) { detailsElement.classList.remove('active'); event.target.innerHTML = 'ℹ️ Ver Detalles'; } else { document.querySelectorAll('.service-details-content.active').forEach(el => el.classList.remove('active')); document.querySelectorAll('.details-toggle').forEach(btn => btn.innerHTML = 'ℹ️ Ver Detalles'); detailsElement.classList.add('active'); event.target.innerHTML = '❌ Cerrar Detalles'; } }
 
 async function playSound(soundId) {
-    if (!hasSoundPermission && !localStorage.getItem('soundPermissionGiven')) return; // No intenta reproducir si no hay permiso
+    if (!hasSoundPermission && !localStorage.getItem('soundPermissionGiven')) return;
     
     const sound = document.getElementById(soundId);
     if (!sound) {
