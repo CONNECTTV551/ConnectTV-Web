@@ -2,7 +2,7 @@
   "name": "ConnectTV - Streaming Premium",
   "short_name": "ConnectTV",
   "description": "Tu mejor opción para servicios de streaming en Venezuela. Precios accesibles y entrega inmediata.",
-  "start_url": "/index.html",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#00ff00",
