@@ -1,24 +1,4 @@
 // ============================================
-// INICIALIZACIÓN DE FIREBASE
-// ============================================
-
-// IMPORTANTE: Configuración de tu proyecto de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyBFsEmOKGZoxCYEnKYajBWxy_0zq86WXlg",
-  authDomain: "pagina-web-1b6c3.firebaseapp.com",
-  projectId: "pagina-web-1b6c3",
-  storageBucket: "pagina-web-1b6c3.appspot.com",
-  messagingSenderId: "739266339786",
-  appId: "1:739266339786:web:7bb98f0a9d74ddcb2ee533"
-};
-
-
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-
-
-// ============================================
 // CONFIGURACIÓN DE SERVICIOS - EDITA AQUÍ
 // ============================================
 
@@ -742,10 +722,10 @@ const featuredOffers = [
 ];
 
 // ============================================
-// LÓGICA DEL SITIO
+// LÓGICA DEL SITIO - NO EDITAR DESDE AQUÍ
 // ============================================
 let cart = [];
-let hasSoundPermission = false;
+let hasSoundPermission = false; // NUEVA VARIABLE GLOBAL
 
 // --- Funciones del Carrito ---
 function saveCart() {
@@ -969,7 +949,6 @@ function showServicesTab(tabName) {
 
 function loadServices() {
     const loader = document.getElementById('servicesLoader');
-    if (!loader) return;
     loader.style.display = 'flex';
 
     setTimeout(() => {
@@ -993,6 +972,9 @@ function sendResellerMessage() {
     window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
 }
 
+// ============================================
+// FUNCIÓN DE CHECKOUT MODIFICADA
+// ============================================
 function processCheckout() {
     const customerName = document.getElementById('customerName').value.trim();
     if (!customerName) {
@@ -1002,17 +984,33 @@ function processCheckout() {
     }
 
     const purchaseDate = new Date();
-    const formattedPurchaseDate = purchaseDate.toLocaleDateString('es-VE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const formattedPurchaseDate = purchaseDate.toLocaleDateString('es-VE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+
     const total = cart.reduce((sum, item) => sum + item.finalSubtotal, 0);
 
     const itemsList = cart.map(item => {
         let priceDetail = ` - ${item.finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
-        if (item.months === 3 && item.type !== 'combo') { priceDetail += ` (dcto. aplicado)`; }
+        if (item.months === 3 && item.type !== 'combo') {
+            priceDetail += ` (dcto. aplicado)`;
+        }
+
         const cutOffDate = new Date(purchaseDate);
         cutOffDate.setMonth(cutOffDate.getMonth() + item.months);
-        const formattedCutOffDate = cutOffDate.toLocaleDateString('es-VE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const formattedCutOffDate = cutOffDate.toLocaleDateString('es-VE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+
         return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})${priceDetail}\n  └─ *Vence:* ${formattedCutOffDate}`;
     }).join('\n\n');
+
+    // --- CAMBIO AQUÍ: SE HA MODIFICADO EL MENSAJE ---
+    // Se ha añadido una plantilla para que el vendedor la complete y envíe al cliente.
 
     const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n` +
                     `🛒 *Quisiera confirmar el siguiente pedido (Factura Proforma):*\n\n` +
@@ -1033,6 +1031,9 @@ function processCheckout() {
                     `*N° de Perfil/Pantalla:* \n` +
                     `*PIN del Perfil:* \n\n` +
                     `*¡A disfrutar!* 🍿`;
+    // --- FIN DEL CAMBIO ---
+
+
     window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
 
     cart = [];
@@ -1041,179 +1042,160 @@ function processCheckout() {
     closeCart();
 }
 
+
+// --- Lógica para el Modal de Términos y Condiciones ---
 function setupTermsModal() {
     const modal = document.getElementById('termsModal');
     const link = document.getElementById('termsLink');
     const closeBtn = document.querySelector('.terms-modal-close');
-    if (!modal || !link || !closeBtn) return;
-    link.onclick = (e) => { e.preventDefault(); modal.style.display = 'block'; };
-    closeBtn.onclick = () => { modal.style.display = 'none'; };
-    window.addEventListener('click', (e) => { if (e.target == modal) modal.style.display = 'none'; });
+
+    if (!modal || !link || !closeBtn) {
+        console.error('Terms modal elements not found!');
+        return;
+    }
+
+    link.onclick = function(event) {
+        event.preventDefault();
+        modal.style.display = 'block';
+    }
+
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.addEventListener('click', function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
 }
 
 
+// --- Inicialización y Event Listeners ---
+document.addEventListener('DOMContentLoaded', function() {
+    setupSoundPermission();
+    loadCart();
+    createParticles();
+    loadServices();
+    updateCartDisplay();
+    createDots();
+    showSection('home');
+    setupFAQAccordion();
+    setupTermsModal(); // Inicializa el modal de términos
+    loadTheme();
+    document.querySelectorAll('audio').forEach(audio => audio.load());
+});
+
+
 // ============================================
-// LÓGICA DE PERMISO DE SONIDO Y FUNCIONES DE UI
+// LÓGICA DE PERMISO DE SONIDO
 // ============================================
 function setupSoundPermission() {
     const modal = document.getElementById('sound-permission-modal');
     const confirmBtn = document.getElementById('confirm-sound-btn');
-    if (!modal || !confirmBtn) return;
-    if (localStorage.getItem('soundPermissionGiven')) {
+    const permissionGiven = localStorage.getItem('soundPermissionGiven');
+
+    if (permissionGiven) {
         hasSoundPermission = true;
         modal.style.display = 'none';
         return;
     }
+
     modal.classList.add('visible');
+
     confirmBtn.addEventListener('click', async () => {
         await playSound('addSound');
         hasSoundPermission = true;
         localStorage.setItem('soundPermissionGiven', 'true');
         modal.classList.remove('visible');
-        setTimeout(() => { modal.style.display = 'none'; }, 400);
+         setTimeout(() => {
+             modal.style.display = 'none';
+         }, 400);
     });
 }
+
+
+// ============================================
+// El resto de funciones de UI (sin cambios mayores)
+// ============================================
 const carouselWrapper = document.getElementById('carouselWrapper');
 const carouselDots = document.getElementById('carouselDots');
 const carouselItems = document.querySelectorAll('.carousel-item');
 let currentSlide = 0;
-function createDots() { if (!carouselDots) return; carouselDots.innerHTML = ''; carouselItems.forEach((_, i) => { const dot = document.createElement('div'); dot.classList.add('dot'); if (i === 0) dot.classList.add('active'); dot.addEventListener('click', () => changeSlide(i)); carouselDots.appendChild(dot); }); }
-function updateCarousel() { if (!carouselWrapper) return; carouselWrapper.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide)); }
+function createDots() { if (!carouselDots) return; carouselDots.innerHTML = ''; carouselItems.forEach((_, index) => { const dot = document.createElement('div'); dot.classList.add('dot'); if (index === 0) dot.classList.add('active'); dot.addEventListener('click', () => changeSlide(index)); carouselDots.appendChild(dot); }); }
+function updateCarousel() { if (!carouselWrapper) return; carouselWrapper.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.dot').forEach((dot, index) => { dot.classList.toggle('active', index === currentSlide); }); }
 function changeSlide(index) { currentSlide = index; updateCarousel(); }
 function autoSlide() { if (carouselItems.length > 0) { currentSlide = (currentSlide + 1) % carouselItems.length; updateCarousel(); } }
 setInterval(autoSlide, 5000);
-function createParticles() { const p = document.getElementById('particles'); if (!p) return; for (let i = 0; i < 15; i++) { const e = document.createElement('div'); e.className = 'particle'; e.style.left = Math.random()*100+'%'; e.style.animationDelay = Math.random()*15+'s'; e.style.animationDuration = (Math.random()*10+10)+'s'; p.appendChild(e); } }
-function toggleDetails(id) { const el = document.getElementById(`details-${id}`); if(el.classList.contains('active')) { el.classList.remove('active'); event.target.innerHTML = 'ℹ️ Ver Detalles'; } else { document.querySelectorAll('.service-details-content.active').forEach(e => e.classList.remove('active')); document.querySelectorAll('.details-toggle').forEach(b => b.innerHTML = 'ℹ️ Ver Detalles'); el.classList.add('active'); event.target.innerHTML = '❌ Cerrar Detalles'; } }
-async function playSound(id) { if (!hasSoundPermission && !localStorage.getItem('soundPermissionGiven')) return; const s = document.getElementById(id); if (!s) return; s.currentTime = 0; s.volume = 0.5; try { await s.play(); } catch (e) { console.error(`Error playing sound:`, e); } }
-function showNotification(msg, type = 'add') { const n = document.createElement('div'); const c = type === 'add' ? 'linear-gradient(45deg, var(--primary-color), #00cc00)' : 'linear-gradient(45deg, #ff9800, #ff5722)'; n.style.cssText = `position: fixed; top: 100px; right: 20px; background: ${c}; color: black; padding: 1rem 1.5rem; border-radius: 10px; font-weight: bold; z-index: 10000; animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 2.7s; box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);`; n.innerHTML = msg; document.body.appendChild(n); setTimeout(() => n.remove(), 3000); }
+function createParticles() { const particles = document.getElementById('particles'); if(!particles) return; for (let i = 0; i < 15; i++) { const particle = document.createElement('div'); particle.className = 'particle'; particle.style.left = Math.random() * 100 + '%'; particle.style.animationDelay = Math.random() * 15 + 's'; particle.style.animationDuration = (Math.random() * 10 + 10) + 's'; particles.appendChild(particle); } }
+function toggleDetails(serviceId) { const detailsElement = document.getElementById(`details-${serviceId}`); if (detailsElement.classList.contains('active')) { detailsElement.classList.remove('active'); event.target.innerHTML = 'ℹ️ Ver Detalles'; } else { document.querySelectorAll('.service-details-content.active').forEach(el => el.classList.remove('active')); document.querySelectorAll('.details-toggle').forEach(btn => btn.innerHTML = 'ℹ️ Ver Detalles'); detailsElement.classList.add('active'); event.target.innerHTML = '❌ Cerrar Detalles'; } }
+
+async function playSound(soundId) {
+    if (!hasSoundPermission && !localStorage.getItem('soundPermissionGiven')) return;
+    
+    const sound = document.getElementById(soundId);
+    if (!sound) {
+        console.error(`Sound element with id "${soundId}" not found.`);
+        return;
+    }
+    sound.currentTime = 0;
+    sound.volume = 0.5;
+
+    try {
+        await sound.play();
+    } catch (error) {
+        console.error(`Error playing sound "${soundId}":`, error);
+    }
+}
+
+function showNotification(message, type = 'add') { const notification = document.createElement('div'); const color = type === 'add' ? 'linear-gradient(45deg, var(--primary-color), #00cc00)' : 'linear-gradient(45deg, #ff9800, #ff5722)'; notification.style.cssText = `position: fixed; top: 100px; right: 20px; background: ${color}; color: black; padding: 1rem 1.5rem; border-radius: 10px; font-weight: bold; z-index: 10000; animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 2.7s; box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);`; notification.innerHTML = message; document.body.appendChild(notification); setTimeout(() => notification.remove(), 3000); }
 function openCart() { document.getElementById('cartModal').style.display = 'block'; document.body.style.overflow = 'hidden'; navigateToStep(1); }
 function closeCart() { document.getElementById('cartModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
-function navigateToStep(step) { if (step === 3 && !document.getElementById('customerName').value.trim()) { alert('Por favor, ingresa tu nombre.'); document.getElementById('customerName').focus(); return; } document.querySelectorAll('.cart-step').forEach(s => s.classList.remove('active')); document.getElementById(`cart-step-${step}`).classList.add('active'); const pb = document.getElementById('progressBar'); if (cart.length > 0) { pb.style.display = 'flex'; document.querySelectorAll('.progress-step').forEach(p => { p.classList.remove('active', 'completed'); const s = parseInt(p.dataset.step); if (s < step) p.classList.add('completed'); else if (s === step) p.classList.add('active'); }); } else { pb.style.display = 'none'; } const t = document.getElementById('cart-title'); if(step===1) t.innerText = "🛒 Tu Carrito"; if(step===2) t.innerText = "📝 Tus Datos"; if(step===3) { t.innerText = "✅ Confirma tu Pedido"; generateFinalSummary(); } }
-function generateFinalSummary() { const n = document.getElementById('customerName').value.trim(); const i = cart.map(item => `<tr><td style="padding:5px;text-align:left;">${item.quantity}x ${item.name} (${item.months} ${item.months>1?'Meses':'Mes'})</td><td style="padding:5px;text-align:right;">${item.finalSubtotal.toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})} Bs</td></tr>`).join(''); const h = `<div style="text-align:left;padding:10px;"><p><strong>Cliente:</strong> ${n}</p><hr style="border-color:rgba(0,255,0,0.2);margin:1rem 0;"><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="text-align:left;padding-bottom:5px;border-bottom:1px solid rgba(0,255,0,0.2);">Descripción</th><th style="text-align:right;padding-bottom:5px;border-bottom:1px solid rgba(0,255,0,0.2);">Subtotal</th></tr></thead><tbody>${i}</tbody></table></div>`; document.getElementById('finalSummary').innerHTML = h; const total = cart.reduce((s, item) => s + item.finalSubtotal, 0); document.getElementById('finalTotalAmount').textContent = `${total.toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})} Bs`; }
-function setupFAQAccordion() { document.querySelectorAll('.faq-question').forEach(q => q.addEventListener('click', () => { const p = q.parentElement; const a = p.classList.contains('active'); document.querySelectorAll('.faq-item.active').forEach(i => i.classList.remove('active')); if (!a) p.classList.add('active'); })); }
+
+function navigateToStep(step) {
+    if (step === 3 && !document.getElementById('customerName').value.trim()) {
+        alert('Por favor, ingresa tu nombre para continuar.');
+        document.getElementById('customerName').focus();
+        return;
+    }
+    document.querySelectorAll('.cart-step').forEach(s => s.classList.remove('active'));
+    document.getElementById(`cart-step-${step}`).classList.add('active');
+    
+    const progressBar = document.getElementById('progressBar');
+    if (cart.length > 0) {
+        progressBar.style.display = 'flex';
+        document.querySelectorAll('.progress-step').forEach(p => {
+            p.classList.remove('active', 'completed');
+            const pStep = parseInt(p.dataset.step);
+            if (pStep < step) {
+                p.classList.add('completed');
+            } else if (pStep === step) {
+                p.classList.add('active');
+            }
+        });
+    } else {
+        progressBar.style.display = 'none';
+    }
+
+    const cartTitle = document.getElementById('cart-title');
+    if(step === 1) cartTitle.innerText = "🛒 Tu Carrito de Compras";
+    if(step === 2) cartTitle.innerText = "📝 Completa tus Datos";
+    if(step === 3) {
+        cartTitle.innerText = "✅ Confirma tu Pedido";
+        generateFinalSummary();
+    }
+}
+
+function generateFinalSummary() { const customerName = document.getElementById('customerName').value.trim(); const itemsList = cart.map(item => `<tr><td style="padding: 5px; text-align: left;">${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})</td><td style="padding: 5px; text-align: right;">${item.finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</td></tr>`).join(''); const summaryHTML = `<div style="text-align: left; padding: 10px;"><p><strong>Cliente:</strong> ${customerName}</p><hr style="border-color: rgba(0,255,0,0.2); margin: 1rem 0;"><table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="text-align: left; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Descripción</th><th style="text-align: right; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Subtotal</th></tr></thead><tbody>${itemsList}</tbody></table></div>`; document.getElementById('finalSummary').innerHTML = summaryHTML; const total = cart.reduce((sum, item) => sum + item.finalSubtotal, 0); document.getElementById('finalTotalAmount').textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`; }
+function setupFAQAccordion() { document.querySelectorAll('.faq-question').forEach(q => { q.addEventListener('click', () => { const parentItem = q.parentElement; const isActive = parentItem.classList.contains('active'); document.querySelectorAll('.faq-item.active').forEach(i => i.classList.remove('active')); if (!isActive) parentItem.classList.add('active'); }); }); }
 function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
-window.onclick = (e) => { if (e.target == document.getElementById('cartModal')) closeCart(); }
+window.onclick = (event) => { if (event.target == document.getElementById('cartModal')) closeCart(); }
 const desktopToggle = document.getElementById('theme-toggle');
 const mobileToggle = document.getElementById('mobile-theme-toggle');
 function setTheme(isLight) { if (isLight) { document.body.classList.add('light-theme'); if(desktopToggle) desktopToggle.checked = true; if(mobileToggle) mobileToggle.checked = true; localStorage.setItem('theme', 'light'); } else { document.body.classList.remove('light-theme'); if(desktopToggle) desktopToggle.checked = false; if(mobileToggle) mobileToggle.checked = false; localStorage.setItem('theme', 'dark'); } }
 if(desktopToggle) desktopToggle.addEventListener('change', () => setTheme(desktopToggle.checked));
 if(mobileToggle) mobileToggle.addEventListener('change', () => setTheme(mobileToggle.checked));
 function loadTheme() { setTheme(localStorage.getItem('theme') === 'light'); }
-
-// ============================================
-// NUEVAS FUNCIONES DE AUTENTICACIÓN
-// ============================================
-
-// --- Control del Modal de Autenticación ---
-function toggleAuthForm(view) {
-    const loginView = document.getElementById('login-view');
-    const registerView = document.getElementById('register-view');
-    if (view === 'register') {
-        loginView.style.display = 'none';
-        registerView.style.display = 'block';
-    } else {
-        loginView.style.display = 'block';
-        registerView.style.display = 'none';
-    }
-}
-
-// --- Manejadores de Formularios de Firebase ---
-function handleRegister(event) {
-    event.preventDefault();
-    const name = document.getElementById('register-name').value;
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-
-    auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            return user.updateProfile({
-                displayName: name
-            });
-        })
-        .then(() => {
-            alert(`¡Bienvenido, ${name}! Tu cuenta ha sido creada exitosamente.`);
-            // El listener onAuthStateChanged se encargará de mostrar el contenido
-        })
-        .catch((error) => {
-            console.error("Error en el registro:", error);
-            alert("Error al registrarse: " + error.message);
-        });
-}
-
-function handleLogin(event) {
-    event.preventDefault();
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-
-    auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            alert("¡Inicio de sesión exitoso!");
-            // El listener onAuthStateChanged se encargará de mostrar el contenido
-        })
-        .catch((error) => {
-            console.error("Error en el inicio de sesión:", error);
-            alert("Error al iniciar sesión: " + error.message);
-        });
-}
-
-function handleLogout() {
-    if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-        auth.signOut().catch((error) => {
-            console.error("Error al cerrar sesión:", error);
-        });
-    }
-}
-
-// ============================================
-// INICIALIZACIÓN Y EVENT LISTENERS
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    // Listener de estado de autenticación de Firebase
-    auth.onAuthStateChanged((user) => {
-        const mainContent = document.getElementById('main-content');
-        const authModal = document.getElementById('auth-modal');
-
-        if (user) {
-            // Usuario ha iniciado sesión
-            mainContent.classList.remove('hidden');
-            authModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-
-            // Actualizar UI con info del usuario
-            const userInfoDiv = document.getElementById('user-info');
-            const userNameDisplay = document.getElementById('user-name-display');
-            if (userInfoDiv) userInfoDiv.style.display = 'flex';
-            if (userNameDisplay) userNameDisplay.textContent = user.displayName || user.email;
-
-            // Inicializar el resto de la página solo después de iniciar sesión
-            setupSoundPermission();
-            loadCart();
-            createParticles();
-            loadServices();
-            updateCartDisplay();
-            createDots();
-            showSection('home');
-            setupFAQAccordion();
-            setupTermsModal();
-            loadTheme();
-            document.querySelectorAll('audio').forEach(audio => audio.load());
-
-        } else {
-            // Usuario no ha iniciado sesión
-            mainContent.classList.add('hidden');
-            authModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-
-            const userInfoDiv = document.getElementById('user-info');
-            if(userInfoDiv) userInfoDiv.style.display = 'none';
-        }
-    });
-
-    // Listeners para los formularios de autenticación
-    document.getElementById('register-form').addEventListener('submit', handleRegister);
-    document.getElementById('login-form').addEventListener('submit', handleLogin);
-});
 
 // Funciones globales para HTML
 window.toggleDetails = toggleDetails; 
@@ -1232,5 +1214,3 @@ window.searchServices = searchServices;
 window.navigateToStep = navigateToStep;
 window.updateDuration = updateDuration;
 window.emptyCart = emptyCart;
-window.toggleAuthForm = toggleAuthForm;
-window.handleLogout = handleLogout;
