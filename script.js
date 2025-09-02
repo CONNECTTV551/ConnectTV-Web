@@ -422,7 +422,7 @@ const cuentas = [
             "📺 Canales variados",
             "🎬 Biblioteca de películas",
             "👨‍👩‍👧‍👦 Programación familiar",
-            "📱 Compatible con Smart TV"
+            "📱 Compatible com Smart TV"
         ]       
     },
     { 
@@ -725,7 +725,24 @@ const featuredOffers = [
 // LÓGICA DEL SITIO - NO EDITAR DESDE AQUÍ
 // ============================================
 let cart = [];
-let hasSoundPermission = false; // NUEVA VARIABLE GLOBAL
+let hasSoundPermission = false; 
+
+// ============================================
+// FIREBASE CONFIG
+// ============================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsEmOKGZoxCYEnKYajBWxy_0zq86WXlg",
+  authDomain: "pagina-web-1b6c3.firebaseapp.com",
+  projectId: "pagina-web-1b6c3",
+  storageBucket: "pagina-web-1b6c3.appspot.com",
+  messagingSenderId: "739266339786",
+  appId: "1:739266339786:web:7bb98f0a9d74ddcb2ee533"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
 
 // --- Funciones del Carrito ---
 function saveCart() {
@@ -949,6 +966,7 @@ function showServicesTab(tabName) {
 
 function loadServices() {
     const loader = document.getElementById('servicesLoader');
+    if (!loader) return;
     loader.style.display = 'flex';
 
     setTimeout(() => {
@@ -1009,9 +1027,6 @@ function processCheckout() {
         return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})${priceDetail}\n  └─ *Vence:* ${formattedCutOffDate}`;
     }).join('\n\n');
 
-    // --- CAMBIO AQUÍ: SE HA MODIFICADO EL MENSAJE ---
-    // Se ha añadido una plantilla para que el vendedor la complete y envíe al cliente.
-
     const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n` +
                     `🛒 *Quisiera confirmar el siguiente pedido (Factura Proforma):*\n\n` +
                     `*Fecha de Compra:* ${formattedPurchaseDate}\n` +
@@ -1031,7 +1046,6 @@ function processCheckout() {
                     `*N° de Perfil/Pantalla:* \n` +
                     `*PIN del Perfil:* \n\n` +
                     `*¡A disfrutar!* 🍿`;
-    // --- FIN DEL CAMBIO ---
 
 
     window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
@@ -1050,7 +1064,6 @@ function setupTermsModal() {
     const closeBtn = document.querySelector('.terms-modal-close');
 
     if (!modal || !link || !closeBtn) {
-        console.error('Terms modal elements not found!');
         return;
     }
 
@@ -1073,17 +1086,7 @@ function setupTermsModal() {
 
 // --- Inicialización y Event Listeners ---
 document.addEventListener('DOMContentLoaded', function() {
-    setupSoundPermission();
-    loadCart();
-    createParticles();
-    loadServices();
-    updateCartDisplay();
-    createDots();
-    showSection('home');
-    setupFAQAccordion();
-    setupTermsModal(); // Inicializa el modal de términos
-    loadTheme();
-    document.querySelectorAll('audio').forEach(audio => audio.load());
+    setupAuth(); // Se ejecuta primero para verificar el estado del usuario
 });
 
 
@@ -1093,6 +1096,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupSoundPermission() {
     const modal = document.getElementById('sound-permission-modal');
     const confirmBtn = document.getElementById('confirm-sound-btn');
+    if (!modal || !confirmBtn) return;
+    
     const permissionGiven = localStorage.getItem('soundPermissionGiven');
 
     if (permissionGiven) {
@@ -1112,6 +1117,129 @@ function setupSoundPermission() {
              modal.style.display = 'none';
          }, 400);
     });
+}
+
+
+// ============================================
+// LÓGICA DE AUTENTICACIÓN (MODIFICADA)
+// ============================================
+
+function setupAuth() {
+    const authGate = document.getElementById('auth-gate');
+    const mainApp = document.getElementById('main-app');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userEmailSpan = document.getElementById('user-email');
+    const showRegisterLink = document.getElementById('show-register');
+    const showLoginLink = document.getElementById('show-login');
+    const loginView = document.getElementById('login-view');
+    const registerView = document.getElementById('register-view');
+
+    // Toggle between Login and Register views
+    showRegisterLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginView.classList.add('hidden');
+        registerView.classList.remove('hidden');
+    });
+
+     showLoginLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        registerView.classList.add('hidden');
+        loginView.classList.remove('hidden');
+    });
+
+    // Firebase Auth State Observer
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            // User is signed in
+            authGate.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            // Muestra el nombre del usuario si está disponible, si não, muestra el correo.
+            userEmailSpan.textContent = user.displayName || user.email;
+            
+            // Initialize the rest of the app only after login
+            initializeApp(); 
+
+        } else {
+            // User is signed out
+            authGate.classList.remove('hidden');
+            mainApp.classList.add('hidden');
+            userEmailSpan.textContent = '';
+        }
+    });
+
+    // Register Form
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const confirmPassword = document.getElementById('register-confirm-password').value;
+        const errorP = document.getElementById('register-error');
+        errorP.textContent = '';
+
+        // Validación de Contraseña
+        if (password !== confirmPassword) {
+            errorP.textContent = 'Las contraseñas no coinciden.';
+            return;
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Una vez creado el usuario, actualiza su perfil con el nombre
+                const user = userCredential.user;
+                return user.updateProfile({
+                    displayName: name
+                }).then(() => {
+                     console.log('User registered and profile updated:', user);
+                });
+            })
+            .catch((error) => {
+                errorP.textContent = error.message;
+            });
+    });
+
+    // Login Form
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const errorP = document.getElementById('login-error');
+        errorP.textContent = '';
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                console.log('User logged in:', userCredential.user);
+            })
+            .catch((error) => {
+                 errorP.textContent = error.message;
+            });
+    });
+
+    // Logout Button
+    logoutBtn.addEventListener('click', () => {
+        auth.signOut().then(() => {
+            console.log('User signed out');
+        }).catch((error) => {
+            console.error('Sign out error', error);
+        });
+    });
+}
+
+// Function to initialize the main application logic after login
+function initializeApp() {
+    setupSoundPermission();
+    loadCart();
+    createParticles();
+    loadServices();
+    updateCartDisplay();
+    createDots();
+    showSection('home');
+    setupFAQAccordion();
+    setupTermsModal();
+    loadTheme();
+    document.querySelectorAll('audio').forEach(audio => audio.load());
 }
 
 

@@ -21,464 +21,498 @@
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
     </head>
 <body>
-    <div id="loader-wrapper">
-        <img src="img/logo.png" alt="ConnectTV Logo" class="loader-logo">
-        <div class="loader-dots">
-            <span></span>
-            <span></span>
-            <span></span>
+    <div id="auth-gate">
+        <div class="auth-gate-logo">
+             <img src="img/logo.png" alt="ConnectTV Logo">
         </div>
-        <p class="loader-text">Cargando tu entretenimiento...</p>
-    </div>
-    <div id="sound-permission-modal">
-        <div class="modal-content">
-            <img src="img/logo.png" alt="ConnectTV Logo" style="height: 80px; margin-bottom: 1rem;">
-            <h2>Bienvenido a ConnectTV</h2>
-            <p>Para una mejor experiencia, nos gustaría activar las notificaciones de sonido.</p>
-            <button id="confirm-sound-btn">Entendido, ¡vamos a la tienda!</button>
+        <div class="auth-form-container">
+            <div id="login-view">
+                <h2>Iniciar Sesión</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="login-email" placeholder="Correo Electrónico" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="login-password" placeholder="Contraseña" required>
+                    </div>
+                    <p id="login-error" class="auth-error"></p>
+                    <button type="submit" class="auth-submit-btn">Ingresar</button>
+                </form>
+                <p class="auth-toggle-text">¿Primera vez en ConnectTV? <a href="#" id="show-register">Regístrate ahora.</a></p>
+            </div>
+
+            <div id="register-view" class="hidden">
+                <h2>Crear Cuenta</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="register-name" placeholder="Nombre y Apellido" required>
+                    </div>
+                    <div class="form-group">
+                         <i class="fas fa-envelope"></i>
+                        <input type="email" id="register-email" placeholder="Correo Electrónico" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="register-password" placeholder="Contraseña (mín. 6 caracteres)" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="register-confirm-password" placeholder="Confirmar Contraseña" required>
+                    </div>
+                    <p id="register-error" class="auth-error"></p>
+                    <button type="submit" class="auth-submit-btn">Registrarse</button>
+                </form>
+                <p class="auth-toggle-text">¿Ya tienes una cuenta? <a href="#" id="show-login">Inicia sesión.</a></p>
+            </div>
         </div>
     </div>
-    <div class="particles" id="particles"></div>
     
-    <audio id="addSound" src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-the-sound-pack-tree/tspt_bubble_pop_01_lifelike_shiny.mp3" preload="auto"></audio>
-    <audio id="removeSound" src="https://cdn.freesound.org/previews/253/253886_4429394-lq.mp3" preload="auto"></audio>
-
-    <header>
-        <nav class="container">
-            <div class="logo">
-                <img src="img/logo.png" alt="ConnectTV Logo">
-                <h1>ConnectTV</h1>
+    <div id="main-app" class="hidden">
+        <div id="loader-wrapper">
+            <img src="img/logo.png" alt="ConnectTV Logo" class="loader-logo">
+            <div class="loader-dots">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-            <ul class="nav-links">
-                <li><a href="#" data-section="home" onclick="showSection('home')">🏠 Inicio</a></li>
-                <li><a href="#" data-section="store" onclick="showSection('store')">🛍️ Tienda</a></li>
-                <li><a href="#" data-section="how-it-works" onclick="showSection('how-it-works')">⚙️ Cómo Funciona</a></li>
-                <li><a href="#" data-section="about" onclick="showSection('about')">👥 Quienes Somos</a></li>
-                <li><a href="#" data-section="why-us" onclick="showSection('why-us')">✅ Por Qué Elegirnos</a></li>
-                <li><a href="#" data-section="support" onclick="showSection('support')">📞 Soporte</a></li>
-            </ul>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div class="theme-switch-wrapper desktop-theme-switch">
-                    <span class="theme-icon">🌙</span>
-                    <label class="theme-switch">
-                        <input type="checkbox" id="theme-toggle">
-                        <span class="slider"></span>
-                    </label>
-                    <span class="theme-icon">☀️</span>
-                </div>
-                <button class="cart-button" onclick="openCart()">
-                    🛒 Carrito
-                    <span class="cart-count" id="cartCount" style="display: none;">0</span>
-                </button>
-                <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <p class="loader-text">Cargando tu entretenimiento...</p>
+        </div>
+        <div id="sound-permission-modal">
+            <div class="modal-content">
+                <img src="img/logo.png" alt="ConnectTV Logo" style="height: 80px; margin-bottom: 1rem;">
+                <h2>Bienvenido a ConnectTV</h2>
+                <p>Para una mejor experiencia, nos gustaría activar las notificaciones de sonido.</p>
+                <button id="confirm-sound-btn">Entendido, ¡vamos a la tienda!</button>
             </div>
-            <div class="mobile-menu" id="mobileMenu">
-                <a href="#" data-section="home" onclick="showSection('home'); toggleMobileMenu();">🏠 Inicio</a>
-                <a href="#" data-section="store" onclick="showSection('store'); toggleMobileMenu();">🛍️ Tienda</a>
-                <a href="#" data-section="how-it-works" onclick="showSection('how-it-works'); toggleMobileMenu();">⚙️ Cómo Funciona</a>
-                <a href="#" data-section="about" onclick="showSection('about'); toggleMobileMenu();">👥 Quienes Somos</a>
-                <a href="#" data-section="why-us" onclick="showSection('why-us'); toggleMobileMenu();">✅ Por Que Elegirnos</a>
-                <a href="#" data-section="support" onclick="showSection('support'); toggleMobileMenu();">📞 Soporte</a>
-                <div class="theme-switch-wrapper">
-                    <span class="theme-icon">🌙</span>
-                    <label class="theme-switch">
-                        <input type="checkbox" id="mobile-theme-toggle">
-                        <span class="slider"></span>
-                    </label>
-                    <span class="theme-icon">☀️</span>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <main class="container">
-        <section id="home" class="section active">
-            <div class="hero">
-                <img src="img/logo.png" alt="ConnectTV Logo" style="height: 100px; margin-bottom: 1rem;">
-                <h2>🍿 Bienvenido a ConnectTV 🟢</h2>
-                <p>Tu mejor opción en servicios de streaming premium</p>
-                <div class="hero-features">
-                    <h3>🎯 Características de nuestros servicios:</h3>
-                    <div class="features-grid">
-                        <div>✅ <strong>Entrega Inmediata</strong></div>
-                        <div>✅ <strong>Precios Accesibles</strong></div>
-                        <div>✅ <strong>Garantía Incluida</strong></div>
-                        <div>✅ <strong>Soporte 24/7</strong></div>
-                    </div>
-                    <p style="margin-top: 1rem; color: var(--primary-color); font-size: 1rem;"><strong>🥳 Pagos al BCV 🇻🇪</strong></p>
-                    <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>👉🏻 Precios especiales para distribuidores 🤝🏻</strong></p>
-                </div>
-            </div>
-
-            <div class="carousel-container">
-                <div class="carousel-wrapper" id="carouselWrapper">
-                    <div class="carousel-item">
-                        <div class="carousel-image-container">
-                            <img src="img/estreno1.jpg" alt="Película o serie de estreno 1">
-                        </div>
-                        <div class="carousel-caption">
-                            <h3>OFERTAS POR TIEMPO LIMITADO</h3>
-                            <p>connecttv te tiene los combos que esperabas, no te quedes sin tu preferido.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="carousel-image-container">
-                            <img src="img/estreno2.jpg" alt="Película o serie de estreno 2">
-                        </div>
-                        <div class="carousel-caption">
-                            <h3>ADQUIERE TU SUSCRIPCION YA NETFLIX TE ESPERA</h3>
-                            <p>¿Qué puedes encontrar en Netflix?
-Películas y Series: Un amplio catálogo de producciones de diversos géneros como comedia, drama, acción, terror, ciencia ficción, y más.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="carousel-image-container">
-                            <img src="img/estreno3.jpg" alt="Película o serie de estreno 3">
-                        </div>
-                        <div class="carousel-caption">
-                            <h3>Adquiere tele latino todo en un solo lugar</h3>
-                            <p>para dispositivos Android, que ofrece acceso a películas, series y canales de televisión en vivo. La plataforma es conocida por su amplio catálogo de contenido en español, que incluye producciones para adultos, para niños y de anime.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-dots" id="carouselDots"></div>
-            <hr>
-            
-            <div class="testimonials-section">
-                <h2>🔥 Ofertas Exclusivas</h2>
-                <div class="services-grid" id="featuredOffersGrid"></div>
-            </div>
-            
-            <hr>
-            
-            <div class="testimonials-section">
-                <h2>💬 Lo que dicen nuestros clientes</h2>
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <img src="img/cliente1.jpg" alt="Cliente satisfecho José rojas." class="testimonial-img">
-                        <div class="testimonial-rating">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-quote">"¡Excelente servicio! La entrega fue inmediata y la calidad del streaming es perfecta. Muy recomendados."</p>
-                        <h4 class="testimonial-name">- José rojas.</h4>
-                    </div>
-                    <div class="testimonial-card">
-                        <img src="img/cliente2.jpg" alt="Cliente satisfecha abraham." class="testimonial-img">
-                        <div class="testimonial-rating">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-quote">"Los mejores precios y la atención es de primera. Siempre están disponibles para resolver cualquier duda. ¡Sigan así!"</p>
-                        <h4 class="testimonial-name">- abraham.</h4>
-                    </div>
-                    <div class="testimonial-card">
-                        <img src="img/cliente3.jpg" alt="Cliente satisfecho josgil." class="testimonial-img">
-                        <div class="testimonial-rating">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-quote">"Totalmente confiables y el soporte es súper rápido. Llevo meses con ellos y nunca he tenido un problema."</p>
-                        <h4 class="testimonial-name">- josgil.</h4>
-                    </div>
-                </div>
-            </div>
-
-            <hr>
-
-            <div class="faq-section">
-                <h2>❓ Preguntas Frecuentes</h2>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span>¿Cómo es el proceso de compra?</span>
-                        <span class="icon">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Simplemente selecciona el servicio que deseas, agrégalo a tu carrito y finaliza la compra por WhatsApp. Un agente te guiará con el pago y la entrega inmediata de tu cuenta.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span>¿En cuánto tiempo recibo mi cuenta?</span>
-                        <span class="icon">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Una vez verificado el pago, la entrega es *inmediata*. Recibirás los datos de tu cuenta en pocos minutos.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span>¿Qué métodos de pago aceptan?</span>
-                        <span class="icon">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Aceptamos pagos al BCV 🇻🇪. Para otros métodos, puedes consultarle a nuestro agente por WhatsApp.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span>¿Tienen garantía?</span>
-                        <span class="icon">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>¡Sí! Todos nuestros servicios incluyen una garantía completa. Si surge algún problema, lo solucionamos de inmediato.</p>
-                    </div>
-                </div>
-            </div>
-            
-        </section>
-
-        <section id="store" class="section">
-            <h2>Nuestros Servicios de Streaming</h2>
-            
-            <div class="search-container">
-                <input type="text" id="serviceSearch" class="search-bar" onkeyup="searchServices()" placeholder="🔍 Buscar por nombre...">
-            </div>
-            <div class="services-tabs">
-                <div class="tab-navigation">
-                    <button class="tab-btn active" data-tab="perfiles" onclick="showServicesTab('perfiles')">👤 PERFILES</button>
-                    <button class="tab-btn" data-tab="cuentas" onclick="showServicesTab('cuentas')">🏠 CUENTAS</button>
-                    <button class="tab-btn" data-tab="combos" onclick="showServicesTab('combos')">🧩 COMBOS</button>
-                    <button class="tab-btn" data-tab="otros" onclick="showServicesTab('otros')">🔧 OTROS</button>
-                </div>
-            </div>
-
-            <div class="loader-container" id="servicesLoader">
-                <div class="loader"></div>
-            </div>
-
-            <div id="noResultsMessage" class="no-results" style="display: none;">
-                😢 No se encontraron servicios con ese nombre. Intenta con otra búsqueda.
-            </div>
-
-            <div id="perfiles" class="services-container active">
-                <div class="services-grid" id="perfilesGrid"></div>
-            </div>
-
-            <div id="cuentas" class="services-container">
-                <div class="services-grid" id="cuentasGrid"></div>
-            </div>
-            
-            <div id="combos" class="services-container">
-                <div class="services-grid" id="combosGrid"></div>
-            </div>
-
-            <div id="otros" class="services-container">
-                <div class="services-grid" id="otrosGrid"></div>
-            </div>
-        </section>
+        </div>
+        <div class="particles" id="particles"></div>
         
-        <section id="how-it-works" class="section">
-            <h2>¿Cómo Comprar? ¡Es muy fácil!</h2>
-            <div class="how-it-works-steps">
-                <div class="step-card">
-                    <div class="step-icon">1</div>
-                    <h3>🛍️ Elige tu Plan</h3>
-                    <p>Navega por nuestra tienda, selecciona los servicios o combos que más te gusten y agrégalos a tu carrito de compras.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-icon">2</div>
-                    <h3>🛒 Revisa tu Carrito</h3>
-                    <p>Abre tu carrito, verifica tus productos, completa tu nombre y haz clic en "Confirmar" para generar tu pedido.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-icon">3</div>
-                    <h3>📲 Contacta por WhatsApp</h3>
-                    <p>Serás redirigido a WhatsApp con un resumen de tu pedido. Un agente te atenderá para coordinar el pago de forma segura.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-icon">4</div>
-                    <h3>🎉 ¡A Disfrutar!</h3>
-                    <p>Una vez confirmado el pago, recibirás los datos de tu cuenta de forma inmediata. ¡Así de rápido y sencillo!</p>
-                </div>
-            </div>
-        </section>
+        <audio id="addSound" src="https://www.zapsplat.com/wp-content/uploads/205/sound-effects-the-sound-pack-tree/tspt_bubble_pop_01_lifelike_shiny.mp3" preload="auto"></audio>
+        <audio id="removeSound" src="https://cdn.freesound.org/previews/253/253886_4429394-lq.mp3" preload="auto"></audio>
 
-
-        <section id="about" class="section">
-            <h2>Quienes Somos</h2>
-            <div class="section-content">
-                <p>ConnectTV es tu proveedor de confianza para servicios de streaming premium en Venezuela. Nos especializamos en ofrecer acceso a las mejores plataformas de entretenimiento con la más alta calidad y el mejor soporte técnico.</p>
-                <br>
-                <p>Con años de experiencia en el mercado venezolano, garantizamos un servicio confiable, seguro y de calidad superior para toda tu familia. Trabajamos con <strong>pagos al BCV 🇻🇪</strong> para tu comodidad.</p>
-                <br>
-                <div class="reseller-box">
-                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">🤝 ¿Quieres ser Distribuidor?</h4>
-                    <p>Ofrecemos excelentes precios mayoristas con tu panel personal, incluyendo usuario y contraseña personalizados. ¡Contáctanos para más información y empieza a vender hoy!</p>
-                    <button class="reseller-btn" onclick="sendResellerMessage()">
-                        <i class="fab fa-whatsapp"></i> Solicitar Información para Distribuidores
+        <header>
+            <nav class="container">
+                <div class="logo">
+                    <img src="img/logo.png" alt="ConnectTV Logo">
+                    <h1>ConnectTV</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" data-section="home" onclick="showSection('home')">🏠 Inicio</a></li>
+                    <li><a href="#" data-section="store" onclick="showSection('store')">🛍️ Tienda</a></li>
+                    <li><a href="#" data-section="how-it-works" onclick="showSection('how-it-works')">⚙️ Cómo Funciona</a></li>
+                    <li><a href="#" data-section="about-us" onclick="showSection('about-us')">🚀 Sobre Nosotros</a></li>
+                </ul>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div class="theme-switch-wrapper desktop-theme-switch">
+                        <span class="theme-icon">🌙</span>
+                        <label class="theme-switch">
+                            <input type="checkbox" id="theme-toggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="theme-icon">☀️</span>
+                    </div>
+                    <div id="user-container" class="user-container">
+                        <span id="user-email"></span>
+                        <button class="auth-btn" id="logout-btn">Salir</button>
+                    </div>
+                    <button class="cart-button" onclick="openCart()">
+                        🛒 Carrito
+                        <span class="cart-count" id="cartCount" style="display: none;">0</span>
                     </button>
+                    <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
                 </div>
-            </div>
-        </section>
-
-        <section id="why-us" class="section">
-            <h2>Por Que Elegirnos</h2>
-            <div class="section-content">
-                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">✅ Entrega Inmediata</h3>
-                <p>Activamos tu servicio de forma inmediata una vez verificado el pago. No esperas, ¡empiezas a disfrutar al instante!</p>
-                
-                <h3 style="color: var(--primary-color); margin: 2rem 0 1rem;">✅ Precios Accesibles</h3>
-                <p>Los mejores precios del mercado venezolano con pagos al BCV 🇻🇪. Calidad premium a precios que se ajustan a tu presupuesto.</p>
-                
-                <h3 style="color: var(--primary-color); margin: 2rem 0 1rem;">✅ Garantía Total</h3>
-                <p>Todos nuestros servicios incluyen garantía completa. Si tienes algún problema, lo solucionamos inmediatamente.</p>
-                
-                <h3 style="color: var(--primary-color); margin: 2rem 0 1rem;">✅ Soporte 24/7</h3>
-                <p>Nuestro equipo de soporte está disponible las 24 horas por WhatsApp para ayudarte con cualquier consulta o problema técnico.</p>
-
-                <h3 style="color: var(--primary-color); margin: 2rem 0 1rem;">🤝 Distribuidores Bienvenidos</h3>
-                <p>Ofrecemos excelentes condiciones para distribuidores con panel personal, usuario y contraseña exclusivos para tu negocio.</p>
-            </div>
-        </section>
-
-        <section id="support" class="section">
-            <h2>Soporte</h2>
-            <div class="section-content">
-                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Contacto de Soporte</h3>
-                <p><strong>WhatsApp:</strong> <a href="https://wa.me/584242357804" style="color: var(--primary-color);">+584242357804</a></p>
-                <p><strong>Email:</strong> <a href="mailto:davidstreaming78@gmail.com" style="color: var(--primary-color);">davidstreaming78@gmail.com</a></p>
-                <br>
-                <div style="background: rgba(0,255,0,0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">📱 Enlace Rápido:</h4>
-                    <p><a href="https://wa.link/kysx08" target="_blank" style="color: var(--primary-color); text-decoration: underline;">🔗 https://wa.link/kysx08</a></p>
-                </div>
-                <p>Nuestro equipo de soporte está disponible para ayudarte con:</p>
-                <ul style="margin-top: 1rem; padding-left: 20px;">
-                    <li>✅ Activación inmediata de servicios</li>
-                    <li>✅ Problemas técnicos</li>
-                    <li>✅ Configuración de dispositivos</li>
-                    <li>✅ Renovaciones y actualizaciones</li>
-                    <li>✅ Consultas sobre precios para distribuidores</li>
-                </ul>
-            </div>
-        </section>
-    </main>
-    
-    <div id="cartModal" class="cart-modal">
-        <div class="cart-content">
-            <div class="cart-header">
-                <h2 id="cart-title">🛒 Tu Carrito de Compras</h2>
-                <span class="close" onclick="closeCart()">&times;</span>
-            </div>
-            <div class="cart-body">
-                <div class="progress-bar" id="progressBar" style="display: none;">
-                    <div class="progress-step active" data-step="1">🛒 Carrito</div>
-                    <div class="progress-step" data-step="2">📝 Tus Datos</div>
-                    <div class="progress-step" data-step="3">✅ Confirmar</div>
-                </div>
-
-                <div id="cart-step-1" class="cart-step active">
-                    <div class="cart-items" id="cartItems"></div>
-                    <div class="cart-total" id="cartTotalSection">
-                        <h3>💰 Total a Pagar:</h3>
-                        <div class="total-amount" id="totalAmount">0,00 Bs</div>
+                <div class="mobile-menu" id="mobileMenu">
+                    <a href="#" data-section="home" onclick="showSection('home'); toggleMobileMenu();">🏠 Inicio</a>
+                    <a href="#" data-section="store" onclick="showSection('store'); toggleMobileMenu();">🛍️ Tienda</a>
+                    <a href="#" data-section="how-it-works" onclick="showSection('how-it-works'); toggleMobileMenu();">⚙️ Cómo Funciona</a>
+                    <a href="#" data-section="about-us" onclick="showSection('about-us'); toggleMobileMenu();">🚀 Sobre Nosotros</a>
+                    <div class="theme-switch-wrapper">
+                        <span class="theme-icon">🌙</span>
+                        <label class="theme-switch">
+                            <input type="checkbox" id="mobile-theme-toggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="theme-icon">☀️</span>
                     </div>
-                    <div class="cart-actions">
-                        <button class="empty-cart-btn" id="emptyCartBtn" onclick="emptyCart()">🗑️ Vaciar Carrito</button>
-                        <button class="checkout-btn" id="checkoutBtn" onclick="navigateToStep(2)">
-                            🚀 Continuar
-                        </button>
-                    </div>
-                    <div class="empty-cart" id="emptyCartMessage" style="display: none;">
-                        <h3>🛒 Tu carrito está vacío</h3>
-                        <p>¡Agrega algunos servicios para comenzar!</p>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container">
+            <section id="home" class="section active">
+                <div class="hero">
+                    <img src="img/logo.png" alt="ConnectTV Logo" style="height: 100px; margin-bottom: 1rem;">
+                    <h2>🍿 Bienvenido a ConnectTV 🟢</h2>
+                    <p>Tu mejor opción en servicios de streaming premium</p>
+                    <div class="hero-features">
+                        <h3>🎯 Características de nuestros servicios:</h3>
+                        <div class="features-grid">
+                            <div>✅ <strong>Entrega Inmediata</strong></div>
+                            <div>✅ <strong>Precios Accesibles</strong></div>
+                            <div>✅ <strong>Garantía Incluida</strong></div>
+                            <div>✅ <strong>Soporte 24/7</strong></div>
+                        </div>
+                        <p style="margin-top: 1rem; color: var(--primary-color); font-size: 1rem;"><strong>🥳 Pagos al BCV 🇻🇪</strong></p>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>👉🏻 Precios especiales para distribuidores 🤝🏻</strong></p>
                     </div>
                 </div>
 
-                <div id="cart-step-2" class="cart-step">
-                    <h3>Completa tus datos para continuar</h3>
+                <div class="carousel-container">
+                    <div class="carousel-wrapper" id="carouselWrapper">
+                        <div class="carousel-item">
+                            <div class="carousel-image-container">
+                                <img src="img/estreno1.jpg" alt="Película o serie de estreno 1">
+                            </div>
+                            <div class="carousel-caption">
+                                <h3>OFERTAS POR TIEMPO LIMITADO</h3>
+                                <p>connecttv te tiene los combos que esperabas, no te quedes sin tu preferido.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="carousel-image-container">
+                                <img src="img/estreno2.jpg" alt="Película o serie de estreno 2">
+                            </div>
+                            <div class="carousel-caption">
+                                <h3>ADQUIERE TU SUSCRIPCION YA NETFLIX TE ESPERA</h3>
+                                <p>¿Qué puedes encontrar en Netflix?
+    Películas y Series: Un amplio catálogo de producciones de diversos géneros como comedia, drama, acción, terror, ciencia ficción, y más.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="carousel-image-container">
+                                <img src="img/estreno3.jpg" alt="Película o serie de estreno 3">
+                            </div>
+                            <div class="carousel-caption">
+                                <h3>Adquiere tele latino todo en un solo lugar</h3>
+                                <p>para dispositivos Android, que ofrece acceso a películas, series y canales de televisión en vivo. La plataforma es conocida por su amplio catálogo de contenido en español, que incluye producciones para adultos, para niños y de anime.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+                <hr>
+                
+                <div class="testimonials-section">
+                    <h2>🔥 Ofertas Exclusivas</h2>
+                    <div class="services-grid" id="featuredOffersGrid"></div>
+                </div>
+                
+                <hr>
+                
+                <div class="testimonials-section">
+                    <h2>💬 Lo que dicen nuestros clientes</h2>
+                    <div class="testimonials-grid">
+                        <div class="testimonial-card">
+                            <img src="img/cliente1.jpg" alt="Cliente satisfecho José rojas." class="testimonial-img">
+                            <div class="testimonial-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="testimonial-quote">"¡Excelente servicio! La entrega fue inmediata y la calidad del streaming es perfecta. Muy recomendados."</p>
+                            <h4 class="testimonial-name">- José rojas.</h4>
+                        </div>
+                        <div class="testimonial-card">
+                            <img src="img/cliente2.jpg" alt="Cliente satisfecha abraham." class="testimonial-img">
+                            <div class="testimonial-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="testimonial-quote">"Los mejores precios y la atención es de primera. Siempre están disponibles para resolver cualquier duda. ¡Sigan así!"</p>
+                            <h4 class="testimonial-name">- abraham.</h4>
+                        </div>
+                        <div class="testimonial-card">
+                            <img src="img/cliente3.jpg" alt="Cliente satisfecho josgil." class="testimonial-img">
+                            <div class="testimonial-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="testimonial-quote">"Totalmente confiables y el soporte es súper rápido. Llevo meses con ellos y nunca he tenido un problema."</p>
+                            <h4 class="testimonial-name">- josgil.</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="faq-section">
+                    <h2>❓ Preguntas Frecuentes</h2>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>¿Cómo es el proceso de compra?</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Simplemente selecciona el servicio que deseas, agrégalo a tu carrito y finaliza la compra por WhatsApp. Un agente te guiará con el pago y la entrega inmediata de tu cuenta.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>¿En cuánto tiempo recibo mi cuenta?</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Una vez verificado el pago, la entrega es *inmediata*. Recibirás los datos de tu cuenta en pocos minutos.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>¿Qué métodos de pago aceptan?</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Aceptamos pagos al BCV 🇻🇪. Para otros métodos, puedes consultarle a nuestro agente por WhatsApp.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>¿Tienen garantía?</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>¡Sí! Todos nuestros servicios incluyen una garantía completa. Si surge algún problema, lo solucionamos de inmediato.</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+
+            <section id="store" class="section">
+                <h2>Nuestros Servicios de Streaming</h2>
+                
+                <div class="search-container">
+                    <input type="text" id="serviceSearch" class="search-bar" onkeyup="searchServices()" placeholder="🔍 Buscar por nombre...">
+                </div>
+                <div class="services-tabs">
+                    <div class="tab-navigation">
+                        <button class="tab-btn active" data-tab="perfiles" onclick="showServicesTab('perfiles')">👤 PERFILES</button>
+                        <button class="tab-btn" data-tab="cuentas" onclick="showServicesTab('cuentas')">🏠 CUENTAS</button>
+                        <button class="tab-btn" data-tab="combos" onclick="showServicesTab('combos')">🧩 COMBOS</button>
+                        <button class="tab-btn" data-tab="otros" onclick="showServicesTab('otros')">🔧 OTROS</button>
+                    </div>
+                </div>
+
+                <div class="loader-container" id="servicesLoader">
+                    <div class="loader"></div>
+                </div>
+
+                <div id="noResultsMessage" class="no-results" style="display: none;">
+                    😢 No se encontraron servicios con ese nombre. Intenta con otra búsqueda.
+                </div>
+
+                <div id="perfiles" class="services-container active">
+                    <div class="services-grid" id="perfilesGrid"></div>
+                </div>
+
+                <div id="cuentas" class="services-container">
+                    <div class="services-grid" id="cuentasGrid"></div>
+                </div>
+                
+                <div id="combos" class="services-container">
+                    <div class="services-grid" id="combosGrid"></div>
+                </div>
+
+                <div id="otros" class="services-container">
+                    <div class="services-grid" id="otrosGrid"></div>
+                </div>
+            </section>
+            
+            <section id="how-it-works" class="section">
+                <h2>¿Cómo Comprar? ¡Es muy fácil!</h2>
+                <div class="how-it-works-steps">
+                    <div class="step-card">
+                        <div class="step-icon">1</div>
+                        <h3>🛍️ Elige tu Plan</h3>
+                        <p>Navega por nuestra tienda, selecciona los servicios o combos que más te gusten y agrégalos a tu carrito de compras.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">2</div>
+                        <h3>🛒 Revisa tu Carrito</h3>
+                        <p>Abre tu carrito, verifica tus productos, completa tu nombre y haz clic en "Confirmar" para generar tu pedido.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">3</div>
+                        <h3>📲 Contacta por WhatsApp</h3>
+                        <p>Serás redirigido a WhatsApp con un resumen de tu pedido. Un agente te atenderá para coordinar el pago de forma segura.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">4</div>
+                        <h3>🎉 ¡A Disfrutar!</h3>
+                        <p>Una vez confirmado el pago, recibirás los datos de tu cuenta de forma inmediata. ¡Así de rápido y sencillo!</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="about-us" class="section">
+                <h2>🚀 Tu Aliado #1 en Streaming</h2>
+                <div class="section-content">
+                    <p style="text-align: center; font-size: 1.1em;">En <strong>ConnectTV</strong>, somos más que un proveedor; somos tu socio de confianza para el mejor entretenimiento en Venezuela. Con años de experiencia, nos dedicamos a ofrecerte acceso a tus plataformas de streaming favoritas de manera <strong>rápida, segura y económica</strong>.</p>
+                    
+                    <h3 style="color: var(--primary-color); margin: 2rem 0 1.5rem; text-align: center; font-size: 1.5em;">Nuestro Compromiso Contigo es Total</h3>
+                    
+                    <div class="how-it-works-steps" style="gap: 1.5rem;">
+                        <div class="step-card">
+                            <div class="step-icon">⚡</div>
+                            <h3>Entrega Inmediata</h3>
+                            <p>Tu tiempo es oro. Por eso, activamos tu servicio al instante después de verificar tu pago. Sin esperas, solo entretenimiento.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-icon">💰</div>
+                            <h3>Precios Insuperables</h3>
+                            <p>Disfruta de la mejor calidad a precios que cuidan tu bolsillo, con la comodidad de pagar a la tasa del BCV 🇻🇪.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-icon">🛡️</div>
+                            <h3>Garantía Blindada</h3>
+                            <p>Tu compra está protegida. Todos nuestros servicios incluyen una garantía completa durante la vigencia de tu plan. Si algo falla, lo resolvemos.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-icon">💬</div>
+                            <h3>Soporte 24/7</h3>
+                            <p>¿Tienes una duda o un problema? Nuestro equipo de soporte está disponible 24/7 por WhatsApp para asistirte en lo que necesites.</p>
+                        </div>
+                    </div>
+                    
                     <br>
-                    <form id="customerInfoForm" onsubmit="event.preventDefault(); navigateToStep(3);">
-                        <div class="form-group">
-                            <label for="customerName">Tu Nombre (Requerido):</label>
-                            <input type="text" id="customerName" placeholder="Escribe tu nombre y apellido" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customerEmail">Tu Email (Opcional):</label>
-                            <input type="email" id="customerEmail" placeholder="Para recibir una copia del pedido">
-                        </div>
-                    </form>
-                    <div class="cart-navigation">
-                        <button class="nav-btn" onclick="navigateToStep(1)">⬅️ Volver al Carrito</button>
-                        <button class="checkout-btn" style="width: auto;" onclick="navigateToStep(3)">Continuar a Confirmación ➡️</button>
-                    </div>
-                </div>
-
-                <div id="cart-step-3" class="cart-step">
-                    <h3>✅ ¡Estás a un paso! Revisa tu pedido</h3>
-                    <p>Este es el resumen que enviaremos a nuestro equipo por WhatsApp.</p>
-                    <div class="checkout-instructions" id="finalSummary">
-                        </div>
-                    <div class="cart-total">
-                        <h3>💰 Total Final a Pagar:</h3>
-                        <div class="total-amount" id="finalTotalAmount">0,00 Bs</div>
-                    </div>
-                     <div class="checkout-instructions">
-                        <p><strong>Próximo Paso:</strong> Al hacer clic en "Confirmar", tu pedido se enviará por WhatsApp y un agente te atenderá para coordinar el pago (Pago Móvil / Transferencia BCV).</p>
-                    </div>
-                    <div class="cart-navigation">
-                         <button class="nav-btn" onclick="navigateToStep(2)">⬅️ Volver a Datos</button>
-                         <button class="checkout-btn" onclick="processCheckout()">
-                            ✅ Confirmar y Enviar Pedido a WhatsApp
+                    <div class="reseller-box" style="margin-top: 2rem;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.3em;">🤝 ¿Quieres ser Nuestro Socio? Únete como Distribuidor</h4>
+                        <p>Impulsa tu propio negocio con nosotros. Ofrecemos precios de mayorista y un panel de control personal con usuario y contraseña exclusivos para que gestiones tus ventas. ¡Es tu oportunidad de crecer!</p>
+                        <button class="reseller-btn" onclick="sendResellerMessage()">
+                            <i class="fab fa-whatsapp"></i> Solicitar Información para Distribuidores
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+            </section>
 
-    <a href="#" onclick="sendSupportMessage()" class="whatsapp-btn" target="_blank">📞</a>
+        </main>
+        
+        <div id="cartModal" class="cart-modal">
+            <div class="cart-content">
+                <div class="cart-header">
+                    <h2 id="cart-title">🛒 Tu Carrito de Compras</h2>
+                    <span class="close" onclick="closeCart()">&times;</span>
+                </div>
+                <div class="cart-body">
+                    <div class="progress-bar" id="progressBar" style="display: none;">
+                        <div class="progress-step active" data-step="1">🛒 Carrito</div>
+                        <div class="progress-step" data-step="2">📝 Tus Datos</div>
+                        <div class="progress-step" data-step="3">✅ Confirmar</div>
+                    </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2024 ConnectTV. Todos los derechos reservados.</p>
-                <p><a href="#" id="termsLink" style="color: var(--primary-color); text-decoration: underline;">Términos y Condiciones</a></p>
-                <p>Email: davidstreaming78@gmail.com | WhatsApp: +584242357804</p>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/connect_tv3?igsh=MTc4bWVkMWlqM2MweA=" target="_blank" aria-label="Instagram de ConnectTV"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.facebook.com/connecttv.connect" target="_blank" aria-label="Facebook de ConnectTV"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://tiktok.com/@connecttv3" target="_blank" aria-label="TikTok de ConnectTV"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://t.me/CONNECT_TV3" target="_blank" aria-label="Telegram de ConnectTV"><i class="fab fa-telegram-plane"></i></a>
+                    <div id="cart-step-1" class="cart-step active">
+                        <div class="cart-items" id="cartItems"></div>
+                        <div class="cart-total" id="cartTotalSection">
+                            <h3>💰 Total a Pagar:</h3>
+                            <div class="total-amount" id="totalAmount">0,00 Bs</div>
+                        </div>
+                        <div class="cart-actions">
+                            <button class="empty-cart-btn" id="emptyCartBtn" onclick="emptyCart()">🗑️ Vaciar Carrito</button>
+                            <button class="checkout-btn" id="checkoutBtn" onclick="navigateToStep(2)">
+                                🚀 Continuar
+                            </button>
+                        </div>
+                        <div class="empty-cart" id="emptyCartMessage" style="display: none;">
+                            <h3>🛒 Tu carrito está vacío</h3>
+                            <p>¡Agrega algunos servicios para comenzar!</p>
+                        </div>
+                    </div>
+
+                    <div id="cart-step-2" class="cart-step">
+                        <h3>Completa tus datos para continuar</h3>
+                        <br>
+                        <form id="customerInfoForm" onsubmit="event.preventDefault(); navigateToStep(3);">
+                            <div class="form-group">
+                                <label for="customerName">Tu Nombre (Requerido):</label>
+                                <input type="text" id="customerName" placeholder="Escribe tu nombre y apellido" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerEmail">Tu Email (Opcional):</label>
+                                <input type="email" id="customerEmail" placeholder="Para recibir una copia del pedido">
+                            </div>
+                        </form>
+                        <div class="cart-navigation">
+                            <button class="nav-btn" onclick="navigateToStep(1)">⬅️ Volver al Carrito</button>
+                            <button class="checkout-btn" style="width: auto;" onclick="navigateToStep(3)">Continuar a Confirmación ➡️</button>
+                        </div>
+                    </div>
+
+                    <div id="cart-step-3" class="cart-step">
+                        <h3>✅ ¡Estás a un paso! Revisa tu pedido</h3>
+                        <p>Este es el resumen que enviaremos a nuestro equipo por WhatsApp.</p>
+                        <div class="checkout-instructions" id="finalSummary">
+                            </div>
+                        <div class="cart-total">
+                            <h3>💰 Total Final a Pagar:</h3>
+                            <div class="total-amount" id="finalTotalAmount">0,00 Bs</div>
+                        </div>
+                         <div class="checkout-instructions">
+                            <p><strong>Próximo Paso:</strong> Al hacer clic en "Confirmar", tu pedido se enviará por WhatsApp y un agente te atenderá para coordinar el pago (Pago Móvil / Transferencia BCV).</p>
+                        </div>
+                        <div class="cart-navigation">
+                             <button class="nav-btn" onclick="navigateToStep(2)">⬅️ Volver a Datos</button>
+                             <button class="checkout-btn" onclick="processCheckout()">
+                                ✅ Confirmar y Enviar Pedido a WhatsApp
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </footer>
 
-    <div id="termsModal" class="terms-modal-overlay">
-        <div class="terms-modal-content">
-            <span class="terms-modal-close">&times;</span>
-            <h2>Términos y Condiciones de Servicio</h2>
-            <div class="terms-modal-body">
-                <p><strong>Última actualización:</strong> 01 de septiembre de 2025</p>
-                <p>Al adquirir cualquiera de nuestros servicios, usted acepta los siguientes términos y condiciones:</p>
-                
-                <h4>1. Uso de las Cuentas</h4>
-                <ul>
-                    <li><strong>Perfiles:</strong> La compra de un "perfil" le otorga acceso a un único perfil dentro de una cuenta compartida. Está prohibido modificar los datos de inicio de sesión (correo, contraseña) o crear perfiles adicionales.</li>
-                    <li><strong>Cuentas Completas:</strong> La compra de una "cuenta completa" le otorga control administrativo sobre la misma. Puede gestionar los perfiles según el límite del plan adquirido.</li>
-                    <li>El incumplimiento de estas normas (ej: cambiar la contraseña de una cuenta compartida) resultará en la suspensión inmediata del servicio sin derecho a reembolso.</li>
-                </ul>
-    
-                <h4>2. Garantía y Soporte</h4>
-                <ul>
-                    <li>Todos nuestros servicios tienen una garantía de 30 días o por la duración del plan adquirido. Si la cuenta presenta algún problema, nos comprometemos a solucionarlo en un plazo razonable.</li>
-                    <li>El soporte técnico se brinda exclusivamente a través de nuestros canales oficiales (WhatsApp).</li>
-                </ul>
-    
-                <h4>3. Renovaciones y Pagos</h4>
-                <ul>
-                    <li>Los servicios no son renovables automáticamente. Es responsabilidad del cliente contactarnos para solicitar la renovación antes de la fecha de vencimiento.</li>
-                    <li>Los precios están sujetos a cambios sin previo aviso, de acuerdo con las variaciones en las tarifas de las plataformas de streaming.</li>
-                </ul>
-    
-                <h4>4. Política de Reembolso</h4>
-                <ul>
-                    <li>Una vez entregado el servicio y funcionando correctamente, no se realizan reembolsos. Solo se considerará un reembolso si es imposible para nosotros restaurar o reemplazar una cuenta defectuosa.</li>
-                </ul>
-                <p>ConnectTV se reserva el derecho de modificar estos términos en cualquier momento. Gracias por su confianza.</p>
+        <a href="#" onclick="sendSupportMessage()" class="whatsapp-btn" target="_blank">📞</a>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <p>&copy; 2024 ConnectTV. Todos los derechos reservados.</p>
+                    <p><a href="#" id="termsLink" style="color: var(--primary-color); text-decoration: underline;">Términos y Condiciones</a></p>
+                    <p>Email: davidstreaming78@gmail.com | WhatsApp: +584242357804</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/connect_tv3?igsh=MTc4bWVkMWlqM2MweA=" target="_blank" aria-label="Instagram de ConnectTV"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/connecttv.connect" target="_blank" aria-label="Facebook de ConnectTV"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://tiktok.com/@connecttv3" target="_blank" aria-label="TikTok de ConnectTV"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://t.me/CONNECT_TV3" target="_blank" aria-label="Telegram de ConnectTV"><i class="fab fa-telegram-plane"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <div id="termsModal" class="terms-modal-overlay">
+            <div class="terms-modal-content">
+                <span class="terms-modal-close">&times;</span>
+                <h2>Términos y Condiciones de Servicio</h2>
+                <div class="terms-modal-body">
+                    <p><strong>Última actualización:</strong> 01 de septiembre de 2025</p>
+                    <p>Al adquirir cualquiera de nuestros servicios, usted acepta los siguientes términos y condiciones:</p>
+                    
+                    <h4>1. Uso de las Cuentas</h4>
+                    <ul>
+                        <li><strong>Perfiles:</strong> La compra de un "perfil" le otorga acceso a un único perfil dentro de una cuenta compartida. Está prohibido modificar los datos de inicio de sesión (correo, contraseña) o crear perfiles adicionales.</li>
+                        <li><strong>Cuentas Completas:</strong> La compra de una "cuenta completa" le otorga control administrativo sobre la misma. Puede gestionar los perfiles según el límite del plan adquirido.</li>
+                        <li>El incumplimiento de estas normas (ej: cambiar la contraseña de una cuenta compartida) resultará en la suspensión inmediata del servicio sin derecho a reembolso.</li>
+                    </ul>
+        
+                    <h4>2. Garantía y Soporte</h4>
+                    <ul>
+                        <li>Todos nuestros servicios tienen una garantía de 30 días o por la duración del plan adquirido. Si la cuenta presenta algún problema, nos comprometemos a solucionarlo en un plazo razonable.</li>
+                        <li>El soporte técnico se brinda exclusivamente a través de nuestros canales oficiales (WhatsApp).</li>
+                    </ul>
+        
+                    <h4>3. Renovaciones y Pagos</h4>
+                    <ul>
+                        <li>Los servicios no son renovables automáticamente. Es responsabilidad del cliente contactarnos para solicitar la renovación antes de la fecha de vencimiento.</li>
+                        <li>Los precios están sujetos a cambios sin previo aviso, de acuerdo con las variaciones en las tarifas de las plataformas de streaming.</li>
+                    </ul>
+        
+                    <h4>4. Política de Reembolso</h4>
+                    <ul>
+                        <li>Una vez entregado el servicio y funcionando correctamente, no se realizan reembolsos. Solo se considerará un reembolso si es imposible para nosotros restaurar o reemplazar una cuenta defectuosa.</li>
+                    </ul>
+                    <p>ConnectTV se reserva el derecho de modificar estos términos en cualquier momento. Gracias por su confianza.</p>
+                </div>
             </div>
         </div>
-    </div>
+    </div> <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     
     <script src="script.js"></script>
 

@@ -411,6 +411,7 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     .hero h2 { font-size: 1.6rem; }
     .section h2 { font-size: 1.4rem; }
     .cart-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .auth-form-container { padding: 40px 20px; }
 }
 
 .mobile-menu { display: none; flex-direction: column; gap: 0.5rem; position: absolute; top: 100%; left: 0; right: 0; background: rgba(0, 0, 0, 0.95); padding: 1rem; border-radius: 0 0 10px 10px; backdrop-filter: blur(10px); animation: slideDown 0.3s ease; }
@@ -441,11 +442,6 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 .faq-item.active .faq-answer { max-height: 200px; padding: 1rem; }
 .faq-item.active .faq-question .icon { transform: rotate(180deg); }
 
-/* Form & Checkout */
-.form-group { margin-bottom: 1.5rem; text-align: left; }
-.form-group label { display: block; margin-bottom: 0.5rem; color: var(--primary-color); font-weight: bold; }
-.form-group input { width: 100%; padding: 0.8rem; font-size: 1rem; border-radius: 8px; border: 2px solid var(--card-border); background: var(--input-bg); color: var(--text-color); transition: all 0.3s ease; }
-.form-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); }
 .checkout-instructions { background: var(--cart-item-bg); border: 1px solid var(--card-border); padding: 1rem; border-radius: 8px; margin: 1.5rem 0; text-align: center; font-size: 0.9rem; }
 /* ==================================================== */
 /* ESTILOS PARA EL MODAL DE PERMISO DE SONIDO */
@@ -600,4 +596,197 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 
 .terms-modal-body::-webkit-scrollbar-thumb:hover {
   background: #00cc00;
+}
+
+/* ==================================================== */
+/* ESTILOS PARA LOGIN Y REGISTRO (MODIFICADO) */
+/* ==================================================== */
+.hidden {
+    display: none !important;
+}
+
+.user-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-container span {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.auth-btn {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.5rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.auth-btn:hover {
+    background: var(--primary-color);
+    color: black;
+}
+
+/* --- Auth Gate (Netflix Style) --- */
+#auth-gate {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('img/fondo-login.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+#auth-gate.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#auth-gate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.auth-gate-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 2;
+}
+.auth-gate-logo img {
+    height: 50px;
+}
+
+.auth-form-container {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 60px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 450px;
+    z-index: 2;
+    min-height: 550px;
+    animation: fadeInScale 0.6s ease;
+}
+
+.auth-form-container h2 {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2.5rem;
+}
+
+.auth-form-container .form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.auth-form-container .form-group i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #8c8c8c;
+    font-size: 1.1rem;
+}
+
+.auth-form-container .form-group input {
+    background: #333;
+    border: 1px solid #555;
+    color: #fff;
+    border-radius: 4px;
+    height: 50px;
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem; /* Padding for icon */
+    font-size: 1rem;
+    transition: background 0.2s ease, border 0.2s ease;
+}
+
+.auth-form-container .form-group input:focus {
+    background: #444;
+    border: 2px solid var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.auth-form-container .form-group input:focus + i {
+    color: var(--primary-color);
+}
+
+
+.auth-submit-btn {
+    background: linear-gradient(45deg, var(--primary-color), #00cc00);
+    color: black;
+    border: none;
+    padding: 1rem;
+    width: 100%;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 255, 0, 0.2);
+}
+
+.auth-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 0, 0.4);
+}
+.auth-submit-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(0, 255, 0, 0.2);
+}
+
+.auth-error {
+    background: rgba(255, 68, 68, 0.1);
+    border: 1px solid var(--danger-color);
+    color: var(--danger-color);
+    font-size: 0.9rem;
+    text-align: left;
+    margin-top: 1.5rem;
+    padding: 0.8rem;
+    border-radius: 4px;
+}
+.auth-error:empty {
+    display: none;
+}
+
+.auth-toggle-text {
+    margin-top: 2.5rem;
+    color: #8c8c8c;
+    font-size: 1rem;
+}
+.auth-toggle-text a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+.auth-toggle-text a:hover {
+    color: #fff;
+    text-decoration: underline;
 }
