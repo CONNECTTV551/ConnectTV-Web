@@ -395,7 +395,8 @@
                     <div class="progress-bar" id="progressBar" style="display: none;">
                         <div class="progress-step active" data-step="1">🛒 Carrito</div>
                         <div class="progress-step" data-step="2">📝 Tus Datos</div>
-                        <div class="progress-step" data-step="3">✅ Confirmar</div>
+                        <div class="progress-step" data-step="3">🏦 Pago</div>
+                        <div class="progress-step" data-step="4">✅ Confirmar</div>
                     </div>
 
                     <div id="cart-step-1" class="cart-step active">
@@ -425,17 +426,50 @@
                                 <input type="text" id="customerName" placeholder="Escribe tu nombre y apellido" required>
                             </div>
                             <div class="form-group">
-                                <label for="customerEmail">Tu Email (Opcional):</label>
-                                <input type="email" id="customerEmail" placeholder="Para recibir una copia del pedido">
+                                <label for="customerContact">Correo o WhatsApp (Opcional):</label>
+                                <input type="text" id="customerContact" placeholder="Para enviarte el comprobante y los datos">
                             </div>
                         </form>
                         <div class="cart-navigation">
                             <button class="nav-btn" onclick="navigateToStep(1)">⬅️ Volver al Carrito</button>
-                            <button class="checkout-btn" style="width: auto;" onclick="navigateToStep(3)">Continuar a Confirmación ➡️</button>
+                            <button class="checkout-btn" style="width: auto;" onclick="navigateToStep(3)">Continuar al Pago ➡️</button>
                         </div>
                     </div>
 
                     <div id="cart-step-3" class="cart-step">
+                        <h3>🏦 Realiza tu Pago</h3>
+                        <p>Por favor, realiza el pago a través de una de las siguientes opciones. Luego, presiona "Continuar" para generar tu factura y enviarla por WhatsApp.</p>
+                        <div class="payment-options">
+                            <div class="payment-option">
+                                <h4><img src="icons/venezuela.png" alt="Banco de Venezuela" class="payment-icon"> Pago Móvil (Banco de Venezuela)</h4>
+                                <ul>
+                                    <li><strong>Banco:</strong> 0102 - Banco de Venezuela</li>
+                                    <li><strong>Teléfono:</strong> 0412-3790923</li>
+                                    <li><strong>Cédula:</strong> V-28.308.736</li>
+                                </ul>
+                            </div>
+                            <div class="payment-option">
+                                <h4><img src="icons/bancamiga.png" alt="Bancamiga" class="payment-icon"> Pago Móvil (Bancamiga)</h4>
+                                <ul>
+                                    <li><strong>Banco:</strong> 0172 - Bancamiga</li>
+                                    <li><strong>Teléfono:</strong> 0412-3790923</li>
+                                    <li><strong>Cédula:</strong> V-28.308.736</li>
+                                </ul>
+                            </div>
+                            <div class="payment-option">
+                                <h4><img src="icons/binance.png" alt="Binance Pay" class="payment-icon"> Binance Pay</h4>
+                                <ul>
+                                    <li><strong>Pay ID o Email:</strong> gilbertogotera1998@gmail.com</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cart-navigation">
+                            <button class="nav-btn" onclick="navigateToStep(2)">⬅️ Volver a Datos</button>
+                            <button class="checkout-btn" style="width: auto;" onclick="navigateToStep(4)">Continuar a Confirmación ➡️</button>
+                        </div>
+                    </div>
+
+                    <div id="cart-step-4" class="cart-step">
                         <h3>✅ ¡Estás a un paso! Revisa tu pedido</h3>
                         <p>Este es el resumen que enviaremos a nuestro equipo por WhatsApp.</p>
                         <div class="checkout-instructions" id="finalSummary">
@@ -445,10 +479,10 @@
                             <div class="total-amount" id="finalTotalAmount">0,00 Bs</div>
                         </div>
                          <div class="checkout-instructions">
-                            <p><strong>Próximo Paso:</strong> Al hacer clic en "Confirmar", tu pedido se enviará por WhatsApp y un agente te atenderá para coordinar el pago (Pago Móvil / Transferencia BCV).</p>
+                            <p><strong>Próximo Paso:</strong> Al hacer clic en "Confirmar", tu pedido se enviará por WhatsApp y un agente te atenderá para verificar el pago.</p>
                         </div>
                         <div class="cart-navigation">
-                             <button class="nav-btn" onclick="navigateToStep(2)">⬅️ Volver a Datos</button>
+                             <button class="nav-btn" onclick="navigateToStep(3)">⬅️ Volver a Pago</button>
                              <button class="checkout-btn" onclick="processCheckout()">
                                 ✅ Confirmar y Enviar Pedido a WhatsApp
                             </button>
@@ -530,4 +564,5 @@
         }
     </script>
     </body>
+
 </html>

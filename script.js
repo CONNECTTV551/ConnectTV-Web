@@ -1001,51 +1001,53 @@ function processCheckout() {
         return;
     }
 
-    const purchaseDate = new Date();
-    const formattedPurchaseDate = purchaseDate.toLocaleDateString('es-VE', {
+    // Helper para formatear fechas
+    const formatDate = (date) => date.toLocaleDateString('es-VE', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
     });
 
+    const today = new Date();
+    const orderId = Date.now().toString().slice(-6); // Genera un ID de pedido de 6 dígitos
+
+    // Calcular la fecha de vencimiento basada en el item con mayor duración
+    const maxMonths = cart.length > 0 ? Math.max(...cart.map(item => item.months)) : 1;
+    const expiryDate = new Date(today);
+    expiryDate.setMonth(expiryDate.getMonth() + maxMonths);
+
     const total = cart.reduce((sum, item) => sum + item.finalSubtotal, 0);
 
     const itemsList = cart.map(item => {
-        let priceDetail = ` - ${item.finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`;
-        if (item.months === 3 && item.type !== 'combo') {
-            priceDetail += ` (dcto. aplicado)`;
-        }
+        let priceDetail = `(${item.finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs)`;
+        return `• ${item.quantity}x ${item.name} / ${item.months} ${item.months > 1 ? 'Meses' : 'Mes'} ${priceDetail}`;
+    }).join('\n');
 
-        const cutOffDate = new Date(purchaseDate);
-        cutOffDate.setMonth(cutOffDate.getMonth() + item.months);
-        const formattedCutOffDate = cutOffDate.toLocaleDateString('es-VE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
-
-        return `• ${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})${priceDetail}\n  └─ *Vence:* ${formattedCutOffDate}`;
-    }).join('\n\n');
-
-    const message = `👋 *Hola, mi nombre es ${customerName}*.\n\n` +
-                    `🛒 *Quisiera confirmar el siguiente pedido (Factura Proforma):*\n\n` +
-                    `*Fecha de Compra:* ${formattedPurchaseDate}\n` +
+    // Usamos el formato de factura solicitado
+    const message = `✨ *¡FACTURA DE COMPRA - CONNECTTV!* ✨\n` +
                     `-----------------------------------\n` +
+                    `👤 *Cliente:* ${customerName}\n` +
+                    `🗓️ *Fecha:* ${formatDate(today)}\n` +
+                    `🔖 *ID de Pedido:* ${orderId}\n` +
+                    `-----------------------------------\n` +
+                    `🛍️ *DETALLES DEL PEDIDO:*\n` +
                     `${itemsList}\n` +
                     `-----------------------------------\n` +
-                    `💰 *TOTAL A PAGAR:* ${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs\n\n` +
-                    `✅ *Pedido generado desde la web.*\n\n` +
-                    `Quedo atento a las instrucciones para el pago. ¡Gracias!\n\n` +
-                    `====================\n\n` +
-                    `*PARA USO DEL VENDEDOR (ConnectTV)*\n` +
-                    `_(Copiar, completar y enviar al cliente tras confirmar el pago)_\n\n` +
-                    `🟢 *¡Gracias por tu compra! Aquí están los datos de tu servicio:*\n\n` +
-                    `*Servicio:* \n` +
-                    `*Correo/Usuario:* \n` +
-                    `*Contraseña:* \n` +
-                    `*N° de Perfil/Pantalla:* \n` +
-                    `*PIN del Perfil:* \n\n` +
-                    `*¡A disfrutar!* 🍿`;
+                    `⏳ *PERÍODO DEL SERVICIO:*\n` +
+                    `   *Activación:* ${formatDate(today)}\n` +
+                    `   *Vencimiento:* ${formatDate(expiryDate)}\n` +
+                    `-----------------------------------\n` +
+                    `💳 *TOTAL A PAGAR:* *${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs*\n` +
+                    `-----------------------------------\n` +
+                    `🔐 *TUS CREDENCIALES DE ACCESO*\n` +
+                    `_(Una vez verificado tu pago, recibirás los datos aquí)_\n\n` +
+                    `*▫️ Correo/Usuario:*\n` +
+                    `*▫️ Contraseña:*\n` +
+                    `*▫️ Perfil:*\n` +
+                    `*▫️ PIN:*\n` +
+                    `-----------------------------------\n` +
+                    `*¡Gracias por tu compra!* 🍿 A disfrutar.\n` +
+                    `Para soporte, contáctanos. 💚`;
 
 
     window.open(`https://wa.me/584242357804?text=${encodeURIComponent(message)}`, '_blank');
@@ -1281,9 +1283,11 @@ function openCart() { document.getElementById('cartModal').style.display = 'bloc
 function closeCart() { document.getElementById('cartModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
 function navigateToStep(step) {
-    if (step === 3 && !document.getElementById('customerName').value.trim()) {
+    // Validar que el nombre esté ingresado antes de pasar del paso 2
+    if (step > 2 && !document.getElementById('customerName').value.trim()) {
         alert('Por favor, ingresa tu nombre para continuar.');
         document.getElementById('customerName').focus();
+        navigateToStep(2); // Mantener en el paso de datos
         return;
     }
     document.querySelectorAll('.cart-step').forEach(s => s.classList.remove('active'));
@@ -1308,7 +1312,8 @@ function navigateToStep(step) {
     const cartTitle = document.getElementById('cart-title');
     if(step === 1) cartTitle.innerText = "🛒 Tu Carrito de Compras";
     if(step === 2) cartTitle.innerText = "📝 Completa tus Datos";
-    if(step === 3) {
+    if(step === 3) cartTitle.innerText = "🏦 Realiza tu Pago";
+    if(step === 4) {
         cartTitle.innerText = "✅ Confirma tu Pedido";
         generateFinalSummary();
     }

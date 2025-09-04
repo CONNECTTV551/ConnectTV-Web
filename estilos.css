@@ -789,4 +789,100 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 .auth-toggle-text a:hover {
     color: #fff;
     text-decoration: underline;
+
+}
+
+/* --- ESTILOS PARA OPCIONES DE PAGO --- */
+.payment-options {
+    margin: 1.5rem 0;
+    display: grid;
+    gap: 1rem;
+    text-align: left;
+}
+
+.payment-option {
+    background: var(--cart-item-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+}
+
+.payment-option h4 {
+    color: var(--primary-color);
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 0.8rem;
+    font-size: 1.1em;
+}
+
+.payment-option ul {
+    list-style: none;
+    padding: 0;
+}
+
+.payment-option li {
+    padding: 0.3rem 0;
+    font-size: 0.95em;
+}
+
+.payment-option li strong {
+    color: #ccc;
+}
+
+.light-theme .payment-option li strong {
+    color: #555;
+}
+
+/* ==================================================== */
+/* === NUEVOS ESTILOS PARA FORMULARIO Y PAGO (AÑADIR) === */
+/* ==================================================== */
+
+/* --- Mejora visual para el formulario de datos (Paso 2) --- */
+#cart-step-2 .form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+#cart-step-2 .form-group label {
+    display: block;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+#cart-step-2 .form-group input {
+    width: 100%;
+    padding: 1rem;
+    background: var(--input-bg);
+    border: 2px solid var(--card-border);
+    color: var(--text-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Animación y colores al hacer clic en el input */
+#cart-step-2 .form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5), 0 0 5px rgba(0, 255, 0, 0.8) inset;
+}
+
+#cart-step-2 .form-group input:focus + label,
+#cart-step-2 .form-group input:not(:placeholder-shown) + label {
+    color: var(--primary-color);
+}
+
+/* --- Estilos para los íconos de métodos de pago --- */
+.payment-icon {
+    width: 32px;  /* Tamaño recomendado */
+    height: 32px; /* Tamaño recomendado */
+    margin-right: 12px; /* Espacio entre el ícono y el texto */
+    object-fit: contain;
+}
+
+.payment-option h4 {
+    display: flex;       /* Activa Flexbox */
+    align-items: center; /* Centra verticalmente el ícono con el texto */
 }
