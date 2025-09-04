@@ -688,8 +688,8 @@ const otros = [
 const featuredOffers = [
     { 
         name: "max perfil estandar", 
-        price: "300,00 Bs", 
-        numericPrice: 300.00,
+        price: "380,00 Bs", 
+        numericPrice: 380.00,
         duration: "1 MES", 
         devices: "1 DISPOSITIVO",
         image: "img/MAXOFERTA.png",
@@ -704,8 +704,8 @@ const featuredOffers = [
     },
     { 
         name: "paramount Estándar perfil", 
-        price: "300,00 Bs", 
-        numericPrice: 300.00,
+        price: "380,00 Bs", 
+        numericPrice: 380.00,
         duration: "1 MES", 
         devices: "1 DISPOSITIVO",
         image: "img/PARAMOUNTPROMO.png",
@@ -1341,4 +1341,5 @@ window.sendResellerMessage = sendResellerMessage;
 window.searchServices = searchServices;
 window.navigateToStep = navigateToStep;
 window.updateDuration = updateDuration;
+
 window.emptyCart = emptyCart;
