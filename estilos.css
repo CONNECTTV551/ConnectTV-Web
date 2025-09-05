@@ -651,24 +651,60 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     .tab-navigation { flex-direction: column; width: 100%; }
     .tab-btn { padding: 0.8rem 1.5rem; font-size: 0.9rem; width: 100%; max-width: 300px; margin-bottom: 0.5rem; }
 }
+/* --- INICIO: MODIFICACIÓN PARA PANTALLAS PEQUEÑAS --- */
 @media (max-width: 480px) {
-    nav { flex-wrap: wrap; justify-content: center; gap: 0.8rem; }
-    .logo h1 { font-size: 1.4rem; }
-    .cart-button { padding: 0.6rem 1rem; }
+    nav { 
+        flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
+        justify-content: space-between; 
+        gap: 0.5rem; 
+    }
+    .logo h1 { font-size: 1.2rem; }
+    .logo img { height: 35px; }
+    .cart-button { padding: 0.5rem 0.9rem; font-size: 0.8rem; }
+    .auth-btn { padding: 0.4rem 0.7rem; font-size: 0.75rem; }
+    .user-container span { font-size: 0.75rem; padding: 0.3rem 0.6rem; max-width: 80px;}
+
     .hero h2 { font-size: 1.6rem; }
     .hero .hero-logo {
-        height: 85px; /* Se reduce el tamaño del logo en el hero */
+        height: 85px;
     }
     .search-icon {
-        left: 22px; /* Se ajusta la posición del ícono de búsqueda */
+        left: 22px;
     }
     .section h2 { font-size: 1.4rem; }
     .cart-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .auth-form-container { padding: 40px 20px; }
 }
+/* --- FIN: MODIFICACIÓN PARA PANTALLAS PEQUEÑAS --- */
 
-.mobile-menu { display: none; flex-direction: column; gap: 0.5rem; position: absolute; top: 100%; left: 0; right: 0; background: rgba(0, 0, 0, 0.95); padding: 1rem; border-radius: 0 0 10px 10px; backdrop-filter: blur(10px); animation: slideDown 0.3s ease; }
-.mobile-menu a { color: white; text-decoration: none; padding: 0.8rem; border-radius: 5px; transition: all 0.3s ease; text-align: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }
+/* --- INICIO: MODIFICACIÓN MENÚ MÓVIL --- */
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: absolute;
+    top: 100%;
+    right: 10px; /* Alineado a la derecha */
+    width: 250px; /* Ancho más angosto */
+    background: rgba(0, 0, 0, 0.95);
+    padding: 1rem;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    animation: slideDown 0.3s ease;
+    border: 1px solid var(--card-border);
+}
+
+.mobile-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 0.8rem 1.5rem; /* Ajuste de padding */
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    text-align: left; /* Alineación a la izquierda */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+/* --- FIN: MODIFICACIÓN MENÚ MÓVIL --- */
 .mobile-menu a:hover, .mobile-menu a.active { background: var(--primary-color); color: black; transform: translateX(10px); }
 /* --- INICIO: MODIFICACIÓN DE PRECISIÓN --- */
 .mobile-menu a:active {
@@ -729,7 +765,30 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 .hidden { display: none !important; }
 
 .user-container { display: flex; align-items: center; gap: 0.5rem; }
-.user-container span { font-size: 0.8rem; font-weight: bold; color: var(--primary-color); max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* --- INICIO: MODIFICACIÓN NOMBRE DE USUARIO --- */
+.user-container span {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: rgba(0, 255, 0, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    cursor: default;
+}
+.user-container span:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+    border-color: var(--primary-color);
+}
+/* --- FIN: MODIFICACIÓN NOMBRE DE USUARIO --- */
+
 .auth-btn { background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 0.5rem 0.8rem; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; font-size: 0.85rem; }
 .auth-btn:hover { background: var(--primary-color); color: black; }
 /* --- INICIO: MODIFICACIÓN DE PRECISIÓN --- */
