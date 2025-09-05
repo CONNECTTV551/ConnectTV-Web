@@ -235,6 +235,59 @@ nav {
     animation: bounce-cart 0.4s ease-in-out;
 }
 
+/* ====== INICIO: MODIFICACIÓN - Estilos del Menú Móvil Reorganizados ====== */
+.menu-toggle { 
+    display: none; 
+    background: none; 
+    border: none; 
+    color: var(--text-color); 
+    font-size: 1.5rem; 
+    cursor: pointer; 
+    padding: 0.5rem; 
+    transition: transform 0.3s ease; 
+}
+.menu-toggle:hover { 
+    transform: scale(1.2) rotate(90deg); 
+}
+
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: absolute;
+    top: 100%;
+    right: 10px;
+    width: 250px;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 1rem;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    animation: slideDown 0.3s ease;
+    border: 1px solid var(--card-border);
+}
+
+.mobile-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.mobile-menu a:hover, .mobile-menu a.active { 
+    background: var(--primary-color); 
+    color: black; 
+    transform: translateX(10px); 
+}
+.mobile-menu a:active {
+    transform: translateX(0) scale(0.95);
+    background: #00e600;
+    transition: transform 0.1s, background-color 0.1s;
+}
+/* ====== FIN: MODIFICACIÓN ====== */
+
 main { margin-top: 80px; padding: 2rem 0; position: relative; z-index: 2; }
 
 /* Loader */
@@ -657,8 +710,6 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 .social-links a:hover { color: var(--primary-color); transform: scale(1.2); }
 
 .mobile-menu .theme-switch-wrapper { display: none; align-items: center; justify-content: center; gap: 10px; padding: 0.8rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 5px; margin-top: 0.5rem; }
-.menu-toggle { display: none; background: none; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; transition: transform 0.3s ease; }
-.menu-toggle:hover { transform: scale(1.2) rotate(90deg); }
 
 @media (max-width: 992px) {
     .nav-links, .desktop-theme-switch { display: none; }
@@ -743,39 +794,6 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     .section h2 { font-size: 1.4rem; }
     .cart-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .auth-form-container { padding: 40px 20px; }
-}
-
-.mobile-menu {
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
-    position: absolute;
-    top: 100%;
-    right: 10px;
-    width: 250px;
-    background: rgba(0, 0, 0, 0.95);
-    padding: 1rem;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    animation: slideDown 0.3s ease;
-    border: 1px solid var(--card-border);
-}
-
-.mobile-menu a {
-    color: white;
-    text-decoration: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    text-align: left;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-.mobile-menu a:hover, .mobile-menu a.active { background: var(--primary-color); color: black; transform: translateX(10px); }
-.mobile-menu a:active {
-    transform: translateX(0) scale(0.95);
-    background: #00e600;
-    transition: transform 0.1s, background-color 0.1s;
 }
 
 .testimonials-section, .faq-section { padding: 2rem 0; }
