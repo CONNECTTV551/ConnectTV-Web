@@ -149,6 +149,13 @@ nav {
 .logo img:hover { transform: rotate(360deg); }
 .logo h1 { color: var(--primary-color); font-size: 1.8rem; font-weight: bold; text-shadow: var(--text-shadow-glow); }
 
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-shrink: 0; /* Evita que este contenedor se encoja y solape otros elementos */
+}
+
 .nav-links { 
     display: flex; 
     list-style: none; 

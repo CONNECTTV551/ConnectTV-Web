@@ -551,11 +551,13 @@ function setupAuth() {
     });
 
     logoutBtn.addEventListener('click', () => {
-        auth.signOut().then(() => {
-            console.log('User signed out');
-        }).catch((error) => {
-            console.error('Sign out error', error);
-        });
+        if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+            auth.signOut().then(() => {
+                console.log('User signed out');
+            }).catch((error) => {
+                console.error('Sign out error', error);
+            });
+        }
     });
 }
 
