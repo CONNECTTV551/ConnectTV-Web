@@ -565,7 +565,7 @@ function setupAuth() {
             });
     });
 
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
@@ -573,8 +573,9 @@ function setupAuth() {
         errorP.textContent = '';
 
         auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 console.log('User logged in:', userCredential.user);
+                await playSound('loginSound');
             })
             .catch((error) => {
                  errorP.textContent = error.message;
@@ -622,8 +623,13 @@ setInterval(autoSlide, 5000);
 function createParticles() { const particles = document.getElementById('particles'); if(!particles) return; for (let i = 0; i < 15; i++) { const particle = document.createElement('div'); particle.className = 'particle'; particle.style.left = Math.random() * 100 + '%'; particle.style.animationDelay = Math.random() * 15 + 's'; particle.style.animationDuration = (Math.random() * 10 + 10) + 's'; particles.appendChild(particle); } }
 function toggleDetails(serviceId) { const detailsElement = document.getElementById(`details-${serviceId}`); if (detailsElement.classList.contains('active')) { detailsElement.classList.remove('active'); event.target.innerHTML = 'ℹ️ Ver Detalles'; } else { document.querySelectorAll('.service-details-content.active').forEach(el => el.classList.remove('active')); document.querySelectorAll('.details-toggle').forEach(btn => btn.innerHTML = 'ℹ️ Ver Detalles'); detailsElement.classList.add('active'); event.target.innerHTML = '❌ Cerrar Detalles'; } }
 
+// ✅ INICIO: FUNCIÓN playSound CORREGIDA
 async function playSound(soundId) {
-    if (!hasSoundPermission && !localStorage.getItem('soundPermissionGiven')) return;
+    // Excepción para el sonido de login: como el login es una acción del usuario,
+    // se permite que suene incluso antes de que aparezca el modal de permiso.
+    if (soundId !== 'loginSound' && !hasSoundPermission && !localStorage.getItem('soundPermissionGiven')) {
+        return;
+    }
     
     const sound = document.getElementById(soundId);
     if (!sound) {
@@ -639,6 +645,7 @@ async function playSound(soundId) {
         console.error(`Error playing sound "${soundId}":`, error);
     }
 }
+// ✅ FIN: FUNCIÓN playSound CORREGIDA
 
 function showNotification(message, type = 'add') { const notification = document.createElement('div'); const color = type === 'add' ? 'linear-gradient(45deg, var(--primary-color), #00cc00)' : 'linear-gradient(45deg, #ff9800, #ff5722)'; notification.style.cssText = `position: fixed; top: 100px; right: 20px; background: ${color}; color: black; padding: 1rem 1.5rem; border-radius: 10px; font-weight: bold; z-index: 10000; animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 2.7s; box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);`; notification.innerHTML = message; document.body.appendChild(notification); setTimeout(() => notification.remove(), 3000); }
 function openCart() { document.getElementById('cartModal').style.display = 'block'; document.body.style.overflow = 'hidden'; navigateToStep(1); }
