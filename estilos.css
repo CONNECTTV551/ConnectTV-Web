@@ -235,7 +235,6 @@ nav {
     animation: bounce-cart 0.4s ease-in-out;
 }
 
-/* ====== INICIO: MODIFICACIÓN - Estilos del Menú Móvil Reorganizados ====== */
 .menu-toggle { 
     display: none; 
     background: none; 
@@ -286,7 +285,6 @@ nav {
     background: #00e600;
     transition: transform 0.1s, background-color 0.1s;
 }
-/* ====== FIN: MODIFICACIÓN ====== */
 
 main { margin-top: 80px; padding: 2rem 0; position: relative; z-index: 2; }
 
@@ -310,10 +308,69 @@ main { margin-top: 80px; padding: 2rem 0; position: relative; z-index: 2; }
     max-width: 100%;
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.hero-features { margin-top: 1.5rem; padding: 1rem; background: rgba(0,255,0,0.1); border-radius: 10px; border: 1px solid rgba(0,255,0,0.3); backdrop-filter: blur(5px); animation: slideInLeft 1s ease 0.5s both; }
+
+/* ====== INICIO: MODIFICACIÓN - Estilos para Características Desplegables ====== */
+.hero-features {
+    margin-top: 1.5rem;
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    backdrop-filter: blur(5px);
+    animation: slideInLeft 1s ease 0.5s both;
+    overflow: hidden; /* Clave para la animación de altura */
+}
+
 @keyframes slideInLeft { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-.hero-features h3 { color: var(--primary-color); margin-bottom: 1rem; font-size: 1.2rem; }
-.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; text-align: left; font-size: 0.9rem; }
+
+.features-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 1rem;
+    margin: 0 !important; /* Anula el margen por defecto de h3 */
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+}
+
+.features-toggle:hover {
+    background-color: rgba(0, 255, 0, 0.05);
+}
+
+.features-icon {
+    font-size: 1.5rem;
+    transition: transform 0.4s ease;
+}
+
+.features-content {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 1rem; /* Mantiene el padding horizontal al estar cerrado */
+    transition: max-height 0.5s ease-out, opacity 0.4s ease-out, padding 0.5s ease-out;
+}
+
+.features-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+    gap: 0.8rem; 
+    text-align: left; 
+    font-size: 0.9rem; 
+}
+
+/* Estado Activo (cuando se hace clic) */
+.hero-features.active .features-content {
+    max-height: 300px; /* Altura suficiente para mostrar el contenido */
+    opacity: 1;
+    padding: 0 1rem 1rem 1rem; /* Añade padding inferior al abrirse */
+}
+
+.hero-features.active .features-icon {
+    transform: rotate(180deg);
+}
+/* ====== FIN: MODIFICACIÓN ====== */
+
 
 .pulse-circle {
     display: inline-block;
@@ -721,20 +778,18 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 @media (max-width: 768px) {
     .container { padding: 0 15px; }
 
-    /* ====== INICIO: MODIFICACIÓN PARA HEADER DESLIZABLE EN MÓVIL ====== */
     nav.container {
-        overflow-x: auto; /* Permite el deslizamiento horizontal */
-        justify-content: flex-start; /* Alinea los elementos a la izquierda */
-        -ms-overflow-style: none;  /* Oculta la barra de scroll en IE y Edge */
-        scrollbar-width: none;  /* Oculta la barra de scroll en Firefox */
+        overflow-x: auto;
+        justify-content: flex-start;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
     nav.container::-webkit-scrollbar {
-        display: none; /* Oculta la barra de scroll en Chrome, Safari y Opera */
+        display: none;
     }
     .logo, .nav-actions {
-        flex-shrink: 0; /* Evita que los elementos se encojan */
+        flex-shrink: 0;
     }
-    /* ====== FIN: MODIFICACIÓN PARA HEADER DESLIZABLE ====== */
 
     .hero h2 { font-size: 1.8rem; }
     .hero p { font-size: 1rem; }
@@ -752,7 +807,6 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     .section-content { padding: 1rem; font-size: 0.9rem; }
     .features-grid { grid-template-columns: 1fr; gap: 0.5rem; font-size: 0.85rem; }
     .cart-content { margin: 5% auto; width: 95%; max-height: 85vh; }
-    .hero-features { padding: 0.8rem; }
     
     .services-tabs {
         display: none;
@@ -777,7 +831,7 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
         gap: 0.5rem; 
     }
     .logo h1 { 
-        font-size: 1rem; /* Tamaño de texto pequeño pero legible */
+        font-size: 1rem;
     }
     .logo img { height: 35px; }
     .cart-button { padding: 0.5rem 0.9rem; font-size: 0.8rem; }

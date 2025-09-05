@@ -271,7 +271,7 @@ function sortServices(criteria) {
     } else if (criteria === 'price-asc') {
         servicesArray.sort((a, b) => a.numericPrice - b.numericPrice);
     } else if (criteria === 'price-desc') {
-        servicesArray.sort((a, b) => b.numericPrice - b.numericPrice);
+        servicesArray.sort((a, b) => b.numericPrice - a.numericPrice);
     }
 
     // Actualiza los botones de escritorio
@@ -347,6 +347,15 @@ function showServicesTab(tabName) {
     sortServices(sortCriteria);
 }
 // ====== FIN: MODIFICACIÓN DE LA FUNCIÓN showServicesTab ======
+
+// ====== INICIO: NUEVA FUNCIÓN PARA ACORDEÓN DE CARACTERÍSTICAS ======
+function toggleFeatures() {
+    const featuresContainer = document.querySelector('.hero-features');
+    if (featuresContainer) {
+        featuresContainer.classList.toggle('active');
+    }
+}
+// ====== FIN: NUEVA FUNCIÓN ======
 
 
 // --- Mensajes de WhatsApp ---
@@ -712,3 +721,4 @@ window.updateDuration = updateDuration;
 window.sortServices = sortServices;
 window.copyToClipboard = copyToClipboard;
 window.emptyCart = emptyCart;
+window.toggleFeatures = toggleFeatures;
