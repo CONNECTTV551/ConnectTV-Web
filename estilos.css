@@ -242,6 +242,11 @@ main { margin-top: 80px; padding: 2rem 0; position: relative; z-index: 2; }
 @keyframes glow { from { text-shadow: 0 0 20px rgba(0, 255, 0, 0.5); } to { text-shadow: 0 0 30px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.6); } }
 .light-theme .hero h2 { text-shadow: 0 0 20px rgba(0, 143, 0, 0.5); }
 .hero p { font-size: 1.1rem; margin-bottom: 1.5rem; opacity: 0.9; animation: fadeIn 1.2s ease 0.3s both; }
+.hero .hero-logo {
+    height: 100px;
+    margin-bottom: 1rem;
+    max-width: 100%;
+}
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .hero-features { margin-top: 1.5rem; padding: 1rem; background: rgba(0,255,0,0.1); border-radius: 10px; border: 1px solid rgba(0,255,0,0.3); backdrop-filter: blur(5px); animation: slideInLeft 1s ease 0.5s both; }
 @keyframes slideInLeft { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -638,6 +643,12 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     .logo h1 { font-size: 1.4rem; }
     .cart-button { padding: 0.6rem 1rem; }
     .hero h2 { font-size: 1.6rem; }
+    .hero .hero-logo {
+        height: 85px; /* Se reduce el tamaño del logo en el hero */
+    }
+    .search-icon {
+        left: 22px; /* Se ajusta la posición del ícono de búsqueda */
+    }
     .section h2 { font-size: 1.4rem; }
     .cart-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .auth-form-container { padding: 40px 20px; }
