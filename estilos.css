@@ -348,7 +348,8 @@ main { margin-top: 80px; padding: 2rem 0; position: relative; z-index: 2; }
 }
 /* =========== FIN: ESTILOS DEL BUSCADOR ACTUALIZADOS =========== */
 
-.sort-container {
+/* --- INICIO: MODIFICACIÓN ORDENAR POR PRECIO --- */
+.desktop-sort {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -372,6 +373,29 @@ main { margin-top: 80px; padding: 2rem 0; position: relative; z-index: 2; }
     border-color: var(--primary-color);
     transform: scale(1.05);
 }
+.mobile-sort {
+    display: none;
+}
+.sort-select {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-color);
+    padding: 0.7rem 2.5rem 0.7rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ff00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 1.2em;
+    cursor: pointer;
+}
+.light-theme .sort-select {
+    background-image: url("data:image/svg+xml;charset=UTF8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23008f00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+/* --- FIN: MODIFICACIÓN ORDENAR POR PRECIO --- */
 
 .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 1.5rem 0; }
 .services-container { display: none; animation: fadeInScale 0.6s ease; }
@@ -650,11 +674,22 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     .hero-features { padding: 0.8rem; }
     .tab-navigation { flex-direction: column; width: 100%; }
     .tab-btn { padding: 0.8rem 1.5rem; font-size: 0.9rem; width: 100%; max-width: 300px; margin-bottom: 0.5rem; }
+
+    /* --- INICIO: MODIFICACIÓN ORDENAR POR PRECIO (MEDIA QUERY) --- */
+    .desktop-sort { display: none; }
+    .mobile-sort {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    /* --- FIN: MODIFICACIÓN ORDENAR POR PRECIO (MEDIA QUERY) --- */
 }
-/* --- INICIO: MODIFICACIÓN PARA PANTALLAS PEQUEÑAS --- */
+
 @media (max-width: 480px) {
     nav { 
-        flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
+        flex-wrap: nowrap;
         justify-content: space-between; 
         gap: 0.5rem; 
     }
@@ -675,17 +710,15 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     .cart-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .auth-form-container { padding: 40px 20px; }
 }
-/* --- FIN: MODIFICACIÓN PARA PANTALLAS PEQUEÑAS --- */
 
-/* --- INICIO: MODIFICACIÓN MENÚ MÓVIL --- */
 .mobile-menu {
     display: none;
     flex-direction: column;
     gap: 0.5rem;
     position: absolute;
     top: 100%;
-    right: 10px; /* Alineado a la derecha */
-    width: 250px; /* Ancho más angosto */
+    right: 10px;
+    width: 250px;
     background: rgba(0, 0, 0, 0.95);
     padding: 1rem;
     border-radius: 10px;
@@ -697,22 +730,19 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 .mobile-menu a {
     color: white;
     text-decoration: none;
-    padding: 0.8rem 1.5rem; /* Ajuste de padding */
+    padding: 0.8rem 1.5rem;
     border-radius: 5px;
     transition: all 0.3s ease;
-    text-align: left; /* Alineación a la izquierda */
+    text-align: left;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
-/* --- FIN: MODIFICACIÓN MENÚ MÓVIL --- */
 .mobile-menu a:hover, .mobile-menu a.active { background: var(--primary-color); color: black; transform: translateX(10px); }
-/* --- INICIO: MODIFICACIÓN DE PRECISIÓN --- */
 .mobile-menu a:active {
     transform: translateX(0) scale(0.95);
     background: #00e600;
     transition: transform 0.1s, background-color 0.1s;
 }
-/* --- FIN: MODIFICACIÓN DE PRECISIÓN --- */
 
 .testimonials-section, .faq-section { padding: 2rem 0; }
 .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
@@ -765,8 +795,6 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 .hidden { display: none !important; }
 
 .user-container { display: flex; align-items: center; gap: 0.5rem; }
-
-/* --- INICIO: MODIFICACIÓN NOMBRE DE USUARIO --- */
 .user-container span {
     font-size: 0.9rem;
     font-weight: bold;
@@ -787,18 +815,15 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     background-color: rgba(0, 255, 0, 0.2);
     border-color: var(--primary-color);
 }
-/* --- FIN: MODIFICACIÓN NOMBRE DE USUARIO --- */
 
 .auth-btn { background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 0.5rem 0.8rem; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; font-size: 0.85rem; }
 .auth-btn:hover { background: var(--primary-color); color: black; }
-/* --- INICIO: MODIFICACIÓN DE PRECISIÓN --- */
 .auth-btn:active {
     transform: scale(0.95);
     background: var(--primary-color);
     color: black;
     transition: transform 0.1s;
 }
-/* --- FIN: MODIFICACIÓN DE PRECISIÓN --- */
 
 #auth-gate { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('img/fondo-login.jpg'); background-size: cover; background-position: center; z-index: 10000; display: flex; justify-content: center; align-items: center; color: white; transition: opacity 0.5s ease, visibility 0.5s ease; }
 #auth-gate.hidden { opacity: 0; visibility: hidden; }

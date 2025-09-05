@@ -250,6 +250,7 @@ function renderServices(gridId, servicesArray) {
     }
 }
 
+// --- INICIO: MODIFICACIÓN FUNCIÓN sortServices ---
 function sortServices(criteria) {
     const activeTab = document.querySelector('.services-container.active');
     if (!activeTab) return;
@@ -257,7 +258,6 @@ function sortServices(criteria) {
     const gridId = activeTab.querySelector('.services-grid').id;
     let servicesArray;
     
-    // Mapea el ID del grid al array de datos correspondiente
     switch(gridId) {
         case 'perfilesGrid': servicesArray = [...perfiles]; break;
         case 'cuentasGrid': servicesArray = [...cuentas]; break;
@@ -271,19 +271,26 @@ function sortServices(criteria) {
     } else if (criteria === 'price-asc') {
         servicesArray.sort((a, b) => a.numericPrice - b.numericPrice);
     } else if (criteria === 'price-desc') {
-        servicesArray.sort((a, b) => b.numericPrice - a.numericPrice);
+        servicesArray.sort((a, b) => b.numericPrice - b.numericPrice);
     }
 
-    // Actualiza los botones activos
-    document.querySelectorAll('.sort-btn').forEach(btn => {
+    // Actualiza los botones de escritorio
+    document.querySelectorAll('.desktop-sort .sort-btn').forEach(btn => {
         btn.classList.remove('active');
         if (btn.getAttribute('onclick').includes(criteria)) {
             btn.classList.add('active');
         }
     });
 
+    // Actualiza el select de móvil
+    const sortSelect = document.getElementById('sort-select');
+    if (sortSelect) {
+        sortSelect.value = criteria;
+    }
+
     renderServices(gridId, servicesArray);
 }
+// --- FIN: MODIFICACIÓN FUNCIÓN sortServices ---
 
 function loadServices() {
     const loader = document.getElementById('servicesLoader');
@@ -320,7 +327,6 @@ function showServicesTab(tabName) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(tabName).classList.add('active');
     document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-    // Al cambiar de pestaña, re-aplica el ordenamiento actual
     const activeSortBtn = document.querySelector('.sort-btn.active');
     const sortCriteria = activeSortBtn ? activeSortBtn.getAttribute('onclick').match(/'([^']+)'/)[1] : 'popular';
     sortServices(sortCriteria);
