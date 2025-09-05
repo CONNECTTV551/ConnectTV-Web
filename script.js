@@ -632,7 +632,51 @@ const otros = [
     
         ]
    
+    },
+    { 
+        name: "Spotify",
+        price: "624,00 Bs", 
+        numericPrice: 624.00,
+        duration: "30 DÍAS", 
+        devices: "1 DISPOSITIVO",
+        image: "img/spotify1.png",
+        type: "otro",
+        available: true,
+        details: [
+            "🎵✨tu música favorita sin anuncios, con descargas",
+            "✅Sin anuncios, modo offlinemejor calidad de sonido",
+            "⚠ Importante: Si la contraseña es cambiada,la garantía se anula",
+            "✅Ideal para individuos,emprendedores y diseñadores independientes",
+            "✅RENOVABLE"
+        ]   
+    
      },
+    { 
+        name: "Deezer",
+        price: "624,00 Bs", 
+        numericPrice: 624.00,
+        duration: "30 DÍAS", 
+        devices: "1 DISPOSITIVO",
+        image: "img/Deezer1.png",
+        type: "otro",
+        available: true,
+        details: [
+            "🎵✨servicio de música en streaming",
+            "✅el cual alberga más de 73.000.000 de canciones",
+            "✅con licencia oficial de muchos artistas importantes de todo el mundo ",
+            "✅RENOVABLE"
+        ]   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    },
     { 
         name: "CANVA 1",
         price: "569,00 Bs", 
