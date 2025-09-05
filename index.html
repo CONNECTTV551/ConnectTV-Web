@@ -1,597 +1,1068 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:title" content="ConnectTV: Tu Streaming al Mejor Precio">
-    <meta property="og:description" content="Disfruta de tus series y películas favoritas con entrega inmediata, precios accesibles y soporte 24/7 en Venezuela. ¡Haz tu pedido ahora!">
-    <meta property="og:image" content="https://connecttv551.github.io/ConnectTV-Web/img/logo.png">
-    <meta property="og:url" content="https://connecttv551.github.io/ConnectTV-Web/">
-    <meta property="og:type" content="website">
-    <meta name="description" content="ConnectTV te ofrece servicios de streaming premium a precios accesibles en Venezuela, con cuentas completas, perfiles y soporte 24/7. ¡Tu entretenimiento garantizado!">
-    <meta name="keywords" content="ConnectTV, streaming, Netflix, Disney+, Amazon Prime Video, HBO Max, cuentas de streaming, perfiles de streaming, Venezuela, tv, series, películas, entretenimiento">
+/* nombre: estilos.css */
+:root {
+    /* Tema Oscuro (Default) */
+    --bg-gradient: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d4a2d 100%);
+    --text-color: white;
+    --primary-color: #00ff00;
+    --header-bg: rgba(0, 0, 0, 0.7);
+    --card-bg: linear-gradient(145deg, rgba(0, 0, 0, 0.8), rgba(45, 74, 45, 0.3));
+    --card-border: rgba(0, 255, 0, 0.3);
+    --text-shadow-glow: 0 0 10px rgba(0, 255, 0, 0.5);
+    --section-content-bg: rgba(255, 255, 255, 0.1);
+    --input-bg: rgba(0,0,0,0.5);
+    --modal-bg: linear-gradient(145deg, #1a1a1a, #2d4a2d);
+    --cart-item-bg: rgba(0, 255, 0, 0.1);
+    --danger-color: #ff4444;
+}
+
+.light-theme {
+    /* Tema Claro */
+    --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 50%, #b0c4de 100%);
+    --text-color: #333;
+    --primary-color: #008f00;
+    --header-bg: rgba(255, 255, 255, 0.7);
+    --card-bg: linear-gradient(145deg, #ffffff, #f0f0f0);
+    --card-border: rgba(0, 143, 0, 0.4);
+    --text-shadow-glow: 0 0 10px rgba(0, 143, 0, 0.3);
+    --section-content-bg: rgba(0, 0, 0, 0.05);
+    --input-bg: rgba(255,255,255,0.8);
+    --modal-bg: linear-gradient(145deg, #f0f4f8, #e6e9ed);
+    --cart-item-bg: rgba(0, 143, 0, 0.1);
+    --danger-color: #cc0000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background 0.5s ease, color 0.5s ease;
+}
+
+/* ===== ESTILOS DE LA PANTALLA DE CARGA ===== */
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    background: var(--bg-gradient);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeOut 1s forwards 2.5s; 
+}
+
+.loader-logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 2rem;
+    animation: pulse-logo 2s infinite ease-in-out;
+}
+
+@keyframes pulse-logo {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.loader-text {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+    text-shadow: var(--text-shadow-glow);
+}
+
+.loader-dots span {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    margin: 0 5px;
+    animation: bounce-dots 1.4s infinite ease-in-out both;
+}
+
+.loader-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loader-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce-dots {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+/* ============================================= */
+
+/* --- Theme Toggle Switch --- */
+.theme-switch-wrapper { display: flex; align-items: center; gap: 10px; }
+.theme-switch { display: inline-block; height: 28px; position: relative; width: 50px; }
+.theme-switch input { display:none; }
+.slider { background-color: #333; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 28px; }
+.slider:before { background-color: #fff; bottom: 4px; content: ""; height: 20px; left: 4px; position: absolute; transition: .4s; width: 20px; border-radius: 50%; }
+input:checked + .slider { background-color: #ccc; }
+input:checked + .slider:before { transform: translateX(22px); background-color: #008f00; }
+.theme-icon { font-size: 1.2rem; color: var(--text-color); }
+
+.container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 0 20px; 
+}
+
+/* Floating particles animation */
+.particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+.particle { position: absolute; width: 4px; height: 4px; background: rgba(0, 255, 0, 0.3); border-radius: 50%; animation: float 15s infinite linear; }
+@keyframes float {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+/* Header */
+header { background: var(--header-bg); padding: 1rem 0; position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(10px); border-bottom: 1px solid var(--card-border); animation: slideDown 0.8s ease; }
+@keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+nav { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 0.8rem;
+}
+.logo { display: flex; align-items: center; gap: 10px; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.logo img { height: 40px; transition: transform 0.3s ease; }
+.logo img:hover { transform: rotate(360deg); }
+.logo h1 { color: var(--primary-color); font-size: 1.8rem; font-weight: bold; text-shadow: var(--text-shadow-glow); }
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-shrink: 0;
+}
+
+.nav-links { 
+    display: flex; 
+    list-style: none; 
+    gap: 0.4rem;
+    flex-wrap: nowrap; 
+}
+.nav-links a { 
+    color: var(--text-color); 
+    text-decoration: none; 
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px; 
+    transition: all 0.3s ease; 
+    font-weight: bold; 
+    background: rgba(255, 255, 255, 0.1); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    white-space: nowrap; 
+    font-size: 0.95rem;
+}
+.nav-links a:hover, .nav-links a.active { 
+    background: rgba(0, 255, 0, 0.15);
+    color: var(--primary-color); 
+    transform: translateY(-3px); 
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px var(--primary-color), inset 0 0 5px rgba(0, 255, 0, 0.5);
+}
+.nav-links a:active {
+    transform: translateY(0px) scale(0.95);
+    transition: transform 0.1s;
+}
+.light-theme .nav-links a { background: rgba(0, 0, 0, 0.05); border-color: rgba(0, 0, 0, 0.1); }
+.light-theme .nav-links a:hover, .light-theme .nav-links a.active { color: var(--primary-color); }
+
+.cart-button {
+    position: relative;
+    background: linear-gradient(45deg, var(--primary-color), #00cc00);
+    color: black;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+}
+.cart-button:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0, 255, 0, 0.5); }
+.cart-button:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 10px rgba(0, 255, 0, 0.4);
+    transition: transform 0.1s ease;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff0000;
+    color: white;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+@keyframes bounce-cart {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); background-color: #39ff14; box-shadow: 0 0 10px #39ff14; }
+    100% { transform: scale(1); }
+}
+
+.cart-count.cart-updated {
+    animation: bounce-cart 0.4s ease-in-out;
+}
+
+main { margin-top: 80px; padding: 2rem 0; position: relative; z-index: 2; }
+
+/* Loader */
+.loader-container { display: flex; justify-content: center; align-items: center; padding: 4rem 0; }
+.loader { border: 5px solid rgba(0, 255, 0, 0.2); border-radius: 50%; border-top: 5px solid var(--primary-color); width: 50px; height: 50px; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.no-results { text-align: center; padding: 2rem; color: var(--primary-color); font-size: 1.2rem; font-weight: bold; }
+
+.hero { text-align: center; padding: 2rem 0; animation: fadeInUp 1s ease; }
+.hero h2 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary-color); text-shadow: 0 0 20px rgba(0, 255, 0, 0.5); animation: glow 2s ease-in-out infinite alternate; }
+@keyframes glow { from { text-shadow: 0 0 20px rgba(0, 255, 0, 0.5); } to { text-shadow: 0 0 30px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.6); } }
+.light-theme .hero h2 { text-shadow: 0 0 20px rgba(0, 143, 0, 0.5); }
+.hero p { font-size: 1.1rem; margin-bottom: 1.5rem; opacity: 0.9; animation: fadeIn 1.2s ease 0.3s both; }
+.hero .hero-logo {
+    height: 100px;
+    margin-bottom: 1rem;
+    max-width: 100%;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ====== INICIO: ESTILOS PARA CARACTERÍSTICAS DESPLEGABLES ====== */
+.features-accordion {
+    background: rgba(0, 255, 0, 0.05);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    margin: 1.5rem auto;
+    max-width: 800px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(5px);
+    animation: slideInLeft 1s ease 0.5s both;
+}
+
+.features-question {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+.light-theme .features-question {
+    background: rgba(0,0,0,0.03);
+}
+
+.features-question:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+.light-theme .features-question:hover {
+    background: rgba(0,0,0,0.06);
+}
+
+.features-question .icon {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.features-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+
+.features-answer-content {
+    padding: 1.5rem;
+    padding-top: 0;
+}
+
+.features-accordion.active .features-answer {
+    max-height: 300px;
+}
+
+.features-accordion.active .features-answer-content {
+    padding-top: 1.5rem;
+    transition: padding 0.4s ease;
+}
+
+.features-accordion.active .features-question .icon {
+    transform: rotate(180deg);
+}
+
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; text-align: left; font-size: 0.9rem; }
+/* ====== FIN: ESTILOS PARA CARACTERÍSTICAS DESPLEGABLES ====== */
+
+.pulse-circle {
+    display: inline-block;
+    animation: pulse-green-dot 2s infinite ease-in-out;
+}
+@keyframes pulse-green-dot {
+    0% { transform: scale(1); filter: drop-shadow(0 0 3px var(--primary-color)); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 10px var(--primary-color)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 3px var(--primary-color)); }
+}
+
+.carousel-container { position: relative; width: 100%; max-width: 900px; margin: 2rem auto; overflow: hidden; }
+.carousel-wrapper { display: flex; transition: transform 0.5s ease-in-out; }
+.carousel-item { min-width: 100%; position: relative; overflow: hidden; background-color: #000; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3); border: 2px solid rgba(0, 255, 0, 0.5); }
+.carousel-image-container { width: 100%; aspect-ratio: 16 / 9; overflow: hidden; }
+.carousel-item img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0.9); transition: transform 0.4s ease; }
+.carousel-item:hover img { transform: scale(1.05); }
+.carousel-caption { background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7)); padding: 1rem 1.5rem; color: #fff; max-height: 80px; overflow: hidden; transition: max-height 0.5s ease-in-out; cursor: pointer; border-top: 1px solid rgba(0, 255, 0, 0.4); }
+.carousel-item:hover .carousel-caption { max-height: 200px; }
+.carousel-caption h3 { margin: 0 0 0.5rem 0; font-size: 1.5rem; color: var(--primary-color); }
+.carousel-caption p { margin: 5px 0 0; font-size: 1rem; opacity: 0.9; }
+.carousel-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); cursor: pointer; transition: background 0.3s ease; }
+.dot.active { background: var(--primary-color); }
+
+.services-tabs { margin: 2rem 0; animation: slideInUp 1s ease 0.8s both; }
+.tab-navigation { display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; }
+@keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.tab-btn { background: rgba(0, 0, 0, 0.8); color: white; border: 2px solid var(--card-border); padding: 1rem 2rem; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; font-weight: bold; text-transform: uppercase; position: relative; overflow: hidden; }
+.light-theme .tab-btn { background: rgba(255, 255, 255, 0.8); color: var(--text-color); }
+.tab-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent); transition: left 0.6s; }
+.tab-btn:hover::before { left: 100%; }
+.tab-btn.active, .tab-btn:hover { background: linear-gradient(45deg, var(--primary-color), #00cc00); color: black; border-color: var(--primary-color); transform: translateY(-2px) scale(1.05); box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3); }
+.light-theme .tab-btn.active, .light-theme .tab-btn:hover { color: white; }
+.tab-btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 10px rgba(0, 255, 0, 0.3);
+    transition: transform 0.1s ease;
+}
+
+.search-container {
+    margin: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+.search-bar {
+    width: 100%;
+    max-width: 500px;
+    padding: 1rem 1rem 1rem 3.5rem;
+    font-size: 1rem;
+    border-radius: 50px;
+    border: 2px solid var(--card-border);
+    background: var(--input-bg);
+    color: var(--text-color);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+.search-bar:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 25px;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+.light-theme .search-icon {
+    color: #555;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7);
+}
+.search-bar:focus + .search-icon {
+    color: var(--primary-color);
+    transform: translateY(-50%) scale(1.1);
+    text-shadow: 0 0 8px var(--primary-color);
+}
+
+.desktop-sort {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+.sort-btn {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+.sort-btn:hover, .sort-btn.active {
+    background: var(--primary-color);
+    color: black;
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+.sort-btn:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
+}
+.mobile-sort {
+    display: none;
+}
+.sort-select {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-color);
+    padding: 0.7rem 2.5rem 0.7rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ff00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 1.2em;
+    cursor: pointer;
+}
+.light-theme .sort-select {
+    background-image: url("data:image/svg+xml;charset=UTF8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23008f00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.mobile-services-nav {
+    display: none;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.mobile-services-nav label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+#service-category-select {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 1.5rem 0; }
+.services-container { display: none; animation: fadeInScale 0.6s ease; }
+.services-container.active { display: block; }
+@keyframes fadeInScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.section { padding: 2rem 0; display: none; }
+.section.active { display: block; animation: fadeInUp 0.8s ease; }
+.section h2 { color: var(--primary-color); font-size: 2rem; text-align: center; margin-bottom: 1.5rem; text-shadow: 0 0 15px rgba(0, 255, 0, 0.5); }
+.section-content { background: var(--section-content-bg); padding: 1.5rem; border-radius: 12px; backdrop-filter: blur(10px); border: 1px solid var(--card-border); font-size: 0.95rem; line-height: 1.6; animation: slideInRight 0.8s ease 0.2s both; }
+@keyframes slideInRight { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+.service-card { background: var(--card-bg); border-radius: 12px; padding: 1rem; text-align: center; border: 2px solid var(--card-border); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); min-height: 380px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; animation: cardSlideIn 0.8s ease; animation-delay: calc(var(--card-index) * 0.1s); }
+@keyframes cardSlideIn { from { transform: translateY(50px) rotateX(-15deg); opacity: 0; } to { transform: translateY(0) rotateX(0); opacity: 1; } }
+.service-card:hover:not(.out-of-stock) { transform: translateY(-10px) scale(1.05); border-color: var(--primary-color); box-shadow: 0 15px 35px rgba(0, 255, 0, 0.4); }
+.light-theme .service-card:hover:not(.out-of-stock) { box-shadow: 0 15px 35px rgba(0, 143, 0, 0.4); }
+.service-card img { width: 120px; height: 120px; object-fit: contain; border-radius: 12px; margin: 0 auto 1rem; background: rgba(255, 255, 255, 0.1); padding: 12px; transition: transform 0.3s ease; }
+.light-theme .service-card img { background: rgba(0, 0, 0, 0.05); }
+.service-card:hover:not(.out-of-stock) img { transform: scale(1.1) rotate(5deg); }
+.service-card h3 { color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1rem; line-height: 1.2; text-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+.service-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.service-details { font-size: 0.8rem; margin: 0.3rem 0; opacity: 0.9; }
+.service-card .price { font-size: 1.3rem; color: var(--text-color); margin: 0.5rem 0; font-weight: bold; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+.light-theme .service-card .price { text-shadow: none; }
+.alt-price { font-size: 0.85rem; color: #00cc00; margin: 0.3rem 0; }
+.light-theme .alt-price { color: #008f00; }
+
+.service-card.out-of-stock {
+    filter: grayscale(85%);
+    cursor: not-allowed;
+}
+.service-card.out-of-stock > * {
+    opacity: 0.6;
+    pointer-events: none;
+}
+.service-card.out-of-stock::before {
+    content: 'Agotado';
+    position: absolute;
+    top: 25px;
+    right: -35px;
+    background: var(--danger-color);
+    color: white;
+    padding: 5px 10px;
+    width: 150px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    transform: rotate(45deg);
+    z-index: 3;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    animation: slideInRibbon 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+}
+@keyframes slideInRibbon {
+    from {
+        opacity: 0;
+        transform: rotate(45deg) scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(45deg) scale(1);
+    }
+}
+.add-to-cart-btn.out-of-stock {
+    background: linear-gradient(45deg, #666666, #444444);
+    color: #cccccc;
+    cursor: not-allowed;
+}
+.add-to-cart-btn.out-of-stock i {
+    margin-right: 8px;
+}
+
+.stock-badge { position: absolute; top: 10px; right: 10px; background: linear-gradient(45deg, #ff4444, #cc0000); color: white; padding: 0.3rem 0.6rem; border-radius: 15px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4); }
+.popular-badge { position: absolute; top: 10px; left: 10px; background: linear-gradient(45deg, #ff9800, #ff5722); color: white; padding: 0.3rem 0.6rem; border-radius: 15px; font-size: 0.7rem; font-weight: bold; }
+
+.details-toggle { background: rgba(0, 255, 0, 0.1); border: 1px solid var(--card-border); color: var(--primary-color); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; margin: 0.5rem 0; transition: all 0.3s ease; font-size: 0.8rem; }
+.details-toggle:hover { background: rgba(0, 255, 0, 0.2); transform: scale(1.05); }
+.details-toggle:active {
+    transform: scale(0.98);
+}
+.service-details-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: rgba(0, 0, 0, 0.5); border-radius: 8px; margin: 0.5rem 0; }
+.light-theme .service-details-content { background: rgba(0, 0, 0, 0.05); }
+.service-details-content.active { max-height: 200px; padding: 1rem; }
+.service-details-content ul { list-style: none; padding: 0; margin: 0; }
+.service-details-content li { padding: 0.3rem 0; font-size: 0.8rem; color: #cccccc; border-bottom: 1px solid rgba(0, 255, 0, 0.1); }
+.light-theme .service-details-content li { color: var(--text-color); border-bottom-color: rgba(0, 143, 0, 0.2); }
+.service-details-content li:last-child { border-bottom: none; }
+
+.add-to-cart-btn, .checkout-btn, .auth-submit-btn, .reseller-btn {
+    position: relative;
+    overflow: hidden;
+}
+.add-to-cart-btn::before, .checkout-btn::before, .cart-button::before, .auth-submit-btn::before, .reseller-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 75%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: skewX(-25deg);
+    transition: left 0.7s ease;
+}
+.add-to-cart-btn:hover::before, .checkout-btn:hover::before, .cart-button:hover::before, .auth-submit-btn:hover::before, .reseller-btn:hover::before {
+    left: 125%;
+}
+
+.add-to-cart-btn { background: linear-gradient(45deg, var(--primary-color), #00cc00); color: black; border: none; padding: 0.8rem 2rem; border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; width: 100%; }
+.light-theme .add-to-cart-btn { color: white; }
+.add-to-cart-btn:hover:not(.out-of-stock) { background: linear-gradient(45deg, #00cc00, #009900); transform: scale(1.05); box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4); }
+.add-to-cart-btn:active:not(.out-of-stock) {
+    transform: scale(0.98);
+    box-shadow: 0 2px 10px rgba(0, 255, 0, 0.3);
+    transition: transform 0.1s ease;
+}
+
+.add-to-cart-btn.loading {
+    pointer-events: none;
+    color: transparent;
+}
+.add-to-cart-btn.loading::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0,0,0,0.5);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+.light-theme .add-to-cart-btn.loading::after {
+    border-color: rgba(255,255,255,0.5);
+    border-top-color: #fff;
+}
+
+.how-it-works-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
+.step-card { background: var(--section-content-bg); border: 1px solid var(--card-border); border-radius: 15px; padding: 2rem; text-align: center; transition: all 0.3s ease; }
+.step-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3); border-color: var(--primary-color); }
+.step-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--primary-color); color: black; font-size: 2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+.step-card h3 { color: var(--primary-color); margin-bottom: 1rem; }
+.step-card p { font-size: 0.9rem; }
+
+.reseller-box { background: rgba(0,255,0,0.1); padding: 1.5rem; border-radius: 8px; margin-top: 1rem; }
+.reseller-btn { background: linear-gradient(45deg, #f39c12, #e67e22); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem; }
+.reseller-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4); }
+.reseller-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 10px rgba(243, 156, 18, 0.3);
+    transition: transform 0.1s ease;
+}
+
+.cart-modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px); animation: fadeIn 0.3s ease; }
+.cart-content { background: var(--modal-bg); margin: 2% auto; padding: 0; border-radius: 20px; width: 90%; max-width: 800px; border: 2px solid var(--primary-color); box-shadow: 0 20px 60px rgba(0, 255, 0, 0.3); animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; display: flex; flex-direction: column; }
+@keyframes modalSlideIn { from { opacity: 0; transform: translateY(-50px) scale(0.8) rotateX(-15deg); } to { opacity: 1; transform: translateY(0) scale(1) rotateX(0); } }
+.cart-header { background: linear-gradient(45deg, var(--primary-color), #00cc00); color: black; padding: 1.5rem; border-radius: 18px 18px 0 0; position: relative; display: flex; align-items: center; justify-content: space-between; }
+.light-theme .cart-header { color: white; }
+.cart-header h2 { margin: 0; font-size: 1.5rem; font-weight: bold; }
+.close { color: black; font-size: 28px; font-weight: bold; cursor: pointer; background: rgba(255,255,255,0.2); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+.close:hover { background: rgba(255,255,255,0.4); transform: scale(1.1) rotate(90deg); }
+.close:active {
+    transform: scale(0.95) rotate(90deg);
+}
+.cart-body { padding: 2rem; overflow-y: auto; flex-grow: 1; }
+.cart-items { margin-bottom: 2rem; }
+.cart-item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: var(--cart-item-bg); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; border: 1px solid var(--card-border); animation: slideInLeft 0.5s ease; }
+.cart-item-info { flex-grow: 1; }
+.cart-item-name { color: var(--primary-color); font-weight: bold; margin-bottom: 0.5rem; }
+.cart-item-price { color: var(--text-color); font-size: 1.1rem; }
+.cart-item-controls { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
+.quantity-controls { display: flex; align-items: center; gap: 0.5rem; }
+.quantity-btn { background: rgba(0, 255, 0, 0.2); border: 1px solid var(--primary-color); color: var(--primary-color); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+.quantity-btn:hover { background: var(--primary-color); color: black; }
+.quantity-btn:active { transform: scale(0.9); }
+.quantity { color: var(--text-color); font-weight: bold; min-width: 30px; text-align: center; }
+.remove-btn { background: rgba(255, 0, 0, 0.2); border: 1px solid var(--danger-color); color: var(--danger-color); padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; transition: all 0.3s ease; }
+.remove-btn:hover { background: var(--danger-color); color: white; }
+.remove-btn:active {
+    transform: scale(0.95);
+}
+.discount-details { font-size: 0.9em; color: var(--primary-color); }
+.discount-details .original-price { text-decoration: line-through; opacity: 0.7; margin-right: 0.5rem; }
+.cart-total { background: var(--cart-item-bg); padding: 1.5rem; border-radius: 10px; border: 2px solid var(--card-border); text-align: center; margin-bottom: 2rem; }
+.cart-total h3 { color: var(--primary-color); margin-bottom: 1rem; font-size: 1.5rem; }
+.total-amount { color: var(--text-color); font-size: 2rem; font-weight: bold; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+.cart-actions { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.empty-cart-btn { background: transparent; border: 2px solid var(--danger-color); color: var(--danger-color); padding: 1rem 1.5rem; border-radius: 15px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
+.empty-cart-btn:hover { background: var(--danger-color); color: white; }
+.empty-cart-btn:active {
+    transform: scale(0.98);
+    background: var(--danger-color);
+    color: white;
+}
+.checkout-btn { background: linear-gradient(45deg, var(--primary-color), #00cc00); color: black; border: none; padding: 1.2rem 2rem; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; width: 100%; flex-grow: 1; }
+.light-theme .checkout-btn { color: white; }
+.checkout-btn:hover { background: linear-gradient(45deg, #00cc00, #009900); transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 35px rgba(0, 255, 0, 0.5); }
+.checkout-btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 8px 25px rgba(0, 255, 0, 0.4);
+    transition: transform 0.1s ease;
+}
+.empty-cart { text-align: center; color: #cccccc; padding: 2rem; }
+.light-theme .empty-cart { color: #888; }
+.empty-cart h3 { color: var(--primary-color); margin-bottom: 1rem; }
+
+.progress-bar { display: flex; justify-content: space-around; padding: 1rem 0; border-bottom: 1px solid var(--card-border); margin-bottom: 1.5rem; }
+.progress-step { text-align: center; font-weight: bold; position: relative; flex: 1; transition: color 0.4s ease; color: #888; }
+.progress-step::before { content: ''; display: block; margin: 0 auto 0.5rem; width: 30px; height: 30px; border-radius: 50%; background-color: transparent; border: 2px solid #888; transition: all 0.4s ease; }
+.progress-step::after { content: ''; position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; background-color: #444; z-index: -1; transition: background-color 0.4s ease; }
+.progress-step:last-child::after { display: none; }
+.progress-step.completed { color: var(--primary-color); }
+.progress-step.completed::before { content: '✓'; background-color: var(--primary-color); border-color: var(--primary-color); color: black; line-height: 28px; font-size: 1rem; }
+.progress-step.completed::after { background-color: var(--primary-color); }
+.progress-step.active { color: var(--primary-color); }
+.progress-step.active::before { border-color: var(--primary-color); animation: pulse-active-step 1.5s infinite; }
+@keyframes pulse-active-step {
+    0% { transform: scale(1); box-shadow: 0 0 5px rgba(0, 255, 0, 0.2); }
+    50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(0, 255, 0, 0.6); }
+    100% { transform: scale(1); box-shadow: 0 0 5px rgba(0, 255, 0, 0.2); }
+}
+
+.cart-step { display: none; animation: fadeInStep 0.5s ease-in-out; }
+.cart-step.active { display: block; }
+@keyframes fadeInStep { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.cart-navigation { display: flex; justify-content: space-between; margin-top: 2rem; }
+.nav-btn { background: rgba(0, 255, 0, 0.2); border: 1px solid var(--primary-color); color: var(--primary-color); padding: 0.8rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; }
+.nav-btn:hover { background: var(--primary-color); color: black; }
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+.whatsapp-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: #25D366;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.whatsapp-btn::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background-color: inherit;
+    border-radius: 50%;
+    animation: pulse-ping 2s infinite;
+}
+.whatsapp-btn img {
+    width: 32px;
+    height: 32px;
+}
+.whatsapp-btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+}
+@keyframes pulse-ping {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    70% { transform: scale(1.6); opacity: 0; }
+    100% { transform: scale(0.95); opacity: 0; }
+}
+
+footer { background: var(--header-bg); text-align: center; padding: 2rem 0; margin-top: 4rem; border-top: 1px solid var(--card-border); animation: slideInUp 1s ease; }
+.footer-content { color: var(--primary-color); animation: pulse 2s infinite; }
+.social-links { margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; }
+.social-links a { color: var(--text-color); font-size: 1.5rem; transition: color 0.3s ease, transform 0.3s ease; }
+.social-links a:hover { color: var(--primary-color); transform: scale(1.2); }
+
+.mobile-menu .theme-switch-wrapper { display: none; align-items: center; justify-content: center; gap: 10px; padding: 0.8rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 5px; margin-top: 0.5rem; }
+.menu-toggle { display: none; background: none; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; transition: transform 0.3s ease; }
+.menu-toggle:hover { transform: scale(1.2) rotate(90deg); }
+.menu-toggle:active {
+    transform: scale(0.9) rotate(90deg);
+}
+
+@media (max-width: 992px) {
+    .nav-links, .desktop-theme-switch { display: none; }
+    .menu-toggle { display: block; }
+    .mobile-menu.active { display: flex; }
+    .mobile-menu .theme-switch-wrapper { display: flex; }
+}
+
+@media (max-width: 768px) {
+    .container { padding: 0 15px; }
+
+    nav.container {
+        overflow-x: auto;
+        justify-content: flex-start;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        -webkit-mask-image: linear-gradient(to right, transparent 0, black 15px, black 95%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0, black 15px, black 95%, transparent 100%);
+    }
+    nav.container::-webkit-scrollbar {
+        display: none;
+    }
+    .logo, .nav-actions {
+        flex-shrink: 0;
+    }
+
+    .hero h2 { font-size: 1.8rem; }
+    .hero p { font-size: 1rem; }
+    .carousel-image-container { aspect-ratio: 16 / 10; }
+    .carousel-caption { max-height: 70px; }
+    .carousel-caption h3 { font-size: 1.2rem; }
+    .carousel-caption p { font-size: 0.8rem; }
+    .services-grid, .testimonials-grid, .how-it-works-steps { grid-template-columns: 1fr; gap: 1rem; }
+    .service-card { min-height: auto; padding: 0.8rem; }
+    .service-card img { width: 90px; height: 90px; }
+    .service-card h3 { font-size: 0.9rem; }
+    .service-card .price { font-size: 1.1rem; }
+    .section { padding: 1.5rem 0; }
+    .section h2 { font-size: 1.6rem; }
+    .section-content { padding: 1rem; font-size: 0.9rem; }
+    .features-grid { grid-template-columns: 1fr; gap: 0.5rem; font-size: 0.85rem; }
+    .cart-content { margin: 5% auto; width: 95%; max-height: 85vh; }
     
-    <title>ConnectTV - Tu Mejor Opción en Streaming</title>
+    .services-tabs {
+        display: none;
+    }
+    .mobile-services-nav {
+        display: block;
+    }
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="estilos.css">
+    .desktop-sort { display: none; }
+    .mobile-sort {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+}
 
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2d4a2d"/>
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    </head>
-<body>
-    <div id="auth-gate">
-        <div class="auth-gate-logo">
-             <img src="img/logo.png" alt="ConnectTV Logo">
-        </div>
-        <div class="auth-form-container">
-            <div id="login-view">
-                <h2>Iniciar Sesión</h2>
-                <form id="login-form">
-                    <div class="form-group">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="login-email" placeholder="Correo Electrónico" required>
-                    </div>
-                    <div class="form-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="login-password" placeholder="Contraseña" required>
-                    </div>
-                    <p id="login-error" class="auth-error"></p>
-                    <button type="submit" class="auth-submit-btn">Ingresar</button>
-                </form>
-                <p class="auth-toggle-text">¿Primera vez en ConnectTV? <a href="#" id="show-register">Regístrate ahora.</a></p>
-            </div>
+@media (max-width: 480px) {
+    nav { 
+        flex-wrap: nowrap;
+        gap: 0.5rem; 
+    }
+    .logo h1 { 
+        font-size: 1rem;
+    }
+    .logo img { height: 35px; }
+    .cart-button { padding: 0.5rem 0.9rem; font-size: 0.8rem; }
+    .auth-btn { padding: 0.4rem 0.7rem; font-size: 0.75rem; }
+    .user-container span { font-size: 0.75rem; padding: 0.3rem 0.6rem; max-width: 80px;}
 
-            <div id="register-view" class="hidden">
-                <h2>Crear Cuenta</h2>
-                <form id="register-form">
-                    <div class="form-group">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="register-name" placeholder="Nombre y Apellido" required>
-                    </div>
-                    <div class="form-group">
-                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="register-email" placeholder="Correo Electrónico" required>
-                    </div>
-                    <div class="form-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="register-password" placeholder="Contraseña (mín. 6 caracteres)" required>
-                    </div>
-                    <div class="form-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="register-confirm-password" placeholder="Confirmar Contraseña" required>
-                    </div>
-                    <p id="register-error" class="auth-error"></p>
-                    <button type="submit" class="auth-submit-btn">Registrarse</button>
-                </form>
-                <p class="auth-toggle-text">¿Ya tienes una cuenta? <a href="#" id="show-login">Inicia sesión.</a></p>
-            </div>
-        </div>
-    </div>
-    
-    <div id="main-app" class="hidden">
-        <div id="loader-wrapper">
-            <img src="img/logo.png" alt="ConnectTV Logo" class="loader-logo">
-            <div class="loader-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <p class="loader-text">Cargando tu entretenimiento...</p>
-        </div>
-        <div id="sound-permission-modal">
-            <div class="modal-content">
-                <img src="img/logo.png" alt="ConnectTV Logo" style="height: 80px; margin-bottom: 1rem;">
-                <h2>Bienvenido a ConnectTV</h2>
-                <p>Para una mejor experiencia, nos gustaría activar las notificaciones de sonido.</p>
-                <button id="confirm-sound-btn">Entendido, ¡vamos a la tienda!</button>
-            </div>
-        </div>
-        <div class="particles" id="particles"></div>
-        
-        <audio id="addSound" src="https://www.zapsplat.com/wp-content/uploads/205/sound-effects-the-sound-pack-tree/tspt_bubble_pop_01_lifelike_shiny.mp3" preload="auto"></audio>
-        <audio id="removeSound" src="https://cdn.freesound.org/previews/253/253886_4429394-lq.mp3" preload="auto"></audio>
+    .hero h2 { font-size: 1.6rem; }
+    .hero .hero-logo {
+        height: 85px;
+    }
+    .search-icon {
+        left: 22px;
+    }
+    .section h2 { font-size: 1.4rem; }
+    .cart-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .auth-form-container { padding: 40px 20px; }
+}
 
-        <header>
-            <nav class="container">
-                <div class="logo">
-                    <img src="img/logo.png" alt="ConnectTV Logo">
-                    <h1>ConnectTV</h1>
-                </div>
-                <ul class="nav-links">
-                    <li><a href="#" data-section="home" onclick="showSection('home')">🏠 Inicio</a></li>
-                    <li><a href="#" data-section="store" onclick="showSection('store')">🛍️ Tienda</a></li>
-                    <li><a href="#" data-section="how-it-works" onclick="showSection('how-it-works')">⚙️ Cómo Funciona</a></li>
-                    <li><a href="#" data-section="about-us" onclick="showSection('about-us')">🚀 Sobre Nosotros</a></li>
-                </ul>
-                <div class="nav-actions">
-                    <div class="theme-switch-wrapper desktop-theme-switch">
-                        <span class="theme-icon">🌙</span>
-                        <label class="theme-switch">
-                            <input type="checkbox" id="theme-toggle">
-                            <span class="slider"></span>
-                        </label>
-                        <span class="theme-icon">☀️</span>
-                    </div>
-                    <button class="cart-button" onclick="openCart()">
-                        🛒 Carrito
-                        <span class="cart-count" id="cartCount" style="display: none;">0</span>
-                    </button>
-                    <div id="user-container" class="user-container">
-                        <span id="user-email"></span>
-                        <button class="auth-btn" id="logout-btn">Salir</button>
-                    </div>
-                    <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
-                </div>
-                <div class="mobile-menu" id="mobileMenu">
-                    <a href="#" data-section="home" onclick="showSection('home'); toggleMobileMenu();">🏠 Inicio</a>
-                    <a href="#" data-section="store" onclick="showSection('store'); toggleMobileMenu();">🛍️ Tienda</a>
-                    <a href="#" data-section="how-it-works" onclick="showSection('how-it-works'); toggleMobileMenu();">⚙️ Cómo Funciona</a>
-                    <a href="#" data-section="about-us" onclick="showSection('about-us'); toggleMobileMenu();">🚀 Sobre Nosotros</a>
-                    <div class="theme-switch-wrapper">
-                        <span class="theme-icon">🌙</span>
-                        <label class="theme-switch">
-                            <input type="checkbox" id="mobile-theme-toggle">
-                            <span class="slider"></span>
-                        </label>
-                        <span class="theme-icon">☀️</span>
-                    </div>
-                </div>
-            </nav>
-        </header>
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: absolute;
+    top: 100%;
+    right: 10px;
+    width: 250px;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 1rem;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    animation: slideDown 0.3s ease;
+    border: 1px solid var(--card-border);
+}
 
-        <main class="container">
-            <section id="home" class="section active">
-                <div class="hero">
-                    <img src="img/logo.png" alt="ConnectTV Logo" class="hero-logo">
-                    <h2>🍿 Bienvenido a ConnectTV <span class="pulse-circle">🟢</span></h2>
-                    <p>Tu mejor opción en servicios de streaming premium</p>
-                    <div class="hero-features">
-                        <h3>🎯 Características de nuestros servicios:</h3>
-                        <div class="features-grid">
-                            <div>✅ <strong>Entrega Inmediata</strong></div>
-                            <div>✅ <strong>Precios Accesibles</strong></div>
-                            <div>✅ <strong>Garantía Incluida</strong></div>
-                            <div>✅ <strong>Soporte 24/7</strong></div>
-                        </div>
-                        <p style="margin-top: 1rem; color: var(--primary-color); font-size: 1rem;"><strong>🥳 Pagos al BCV 🇻🇪</strong></p>
-                        <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>👉🏻 Precios especiales para distribuidores 🤝🏻</strong></p>
-                    </div>
-                </div>
+.mobile-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.mobile-menu a:hover, .mobile-menu a.active { background: var(--primary-color); color: black; transform: translateX(10px); }
+.mobile-menu a:active {
+    transform: translateX(0) scale(0.95);
+    background: #00e600;
+    transition: transform 0.1s, background-color 0.1s;
+}
 
-                <div class="carousel-container">
-                    <div class="carousel-wrapper" id="carouselWrapper">
-                        <div class="carousel-item">
-                            <div class="carousel-image-container">
-                                <img src="img/estreno1.jpg" alt="Película o serie de estreno 1">
-                            </div>
-                            <div class="carousel-caption">
-                                <h3>OFERTAS POR TIEMPO LIMITADO</h3>
-                                <p>connecttv te tiene los combos que esperabas, no te quedes sin tu preferido.</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="carousel-image-container">
-                                <img src="img/estreno2.jpg" alt="Película o serie de estreno 2">
-                            </div>
-                            <div class="carousel-caption">
-                                <h3>ADQUIERE TU SUSCRIPCION YA NETFLIX TE ESPERA</h3>
-                                <p>¿Qué puedes encontrar en Netflix?
-    Películas y Series: Un amplio catálogo de producciones de diversos géneros como comedia, drama, acción, terror, ciencia ficción, y más.</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="carousel-image-container">
-                                <img src="img/estreno3.jpg" alt="Película o serie de estreno 3">
-                            </div>
-                            <div class="carousel-caption">
-                                <h3>Adquiere tele latino todo en un solo lugar</h3>
-                                <p>para dispositivos Android, que ofrece acceso a películas, series y canales de televisión en vivo. La plataforma es conocida por su amplio catálogo de contenido en español, que incluye producciones para adultos, para niños y de anime.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-dots" id="carouselDots"></div>
-                <hr>
-                
-                <div class="testimonials-section">
-                    <h2>🔥 Ofertas Exclusivas</h2>
-                    <div class="services-grid" id="featuredOffersGrid"></div>
-                </div>
-                
-                <hr>
-                
-                <div class="testimonials-section">
-                    <h2>💬 Lo que dicen nuestros clientes</h2>
-                    <div class="testimonials-grid">
-                        <div class="testimonial-card">
-                            <img src="img/cliente1.jpg" alt="Cliente satisfecho José rojas." class="testimonial-img">
-                            <div class="testimonial-rating">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                            </div>
-                            <p class="testimonial-quote">"¡Excelente servicio! La entrega fue inmediata y la calidad del streaming es perfecta. Muy recomendados."</p>
-                            <h4 class="testimonial-name">- José rojas.</h4>
-                        </div>
-                        <div class="testimonial-card">
-                            <img src="img/cliente2.jpg" alt="Cliente satisfecha abraham." class="testimonial-img">
-                            <div class="testimonial-rating">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                            </div>
-                            <p class="testimonial-quote">"Los mejores precios y la atención es de primera. Siempre están disponibles para resolver cualquier duda. ¡Sigan así!"</p>
-                            <h4 class="testimonial-name">- abraham.</h4>
-                        </div>
-                        <div class="testimonial-card">
-                            <img src="img/cliente3.jpg" alt="Cliente satisfecho josgil." class="testimonial-img">
-                            <div class="testimonial-rating">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                            </div>
-                            <p class="testimonial-quote">"Totalmente confiables y el soporte es súper rápido. Llevo meses con ellos y nunca he tenido un problema."</p>
-                            <h4 class="testimonial-name">- josgil.</h4>
-                        </div>
-                    </div>
-                </div>
+.testimonials-section, .faq-section { padding: 2rem 0; }
+.testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+.testimonial-card { background: rgba(0, 255, 0, 0.1); border: 2px solid var(--card-border); border-radius: 15px; padding: 2rem 1.5rem; backdrop-filter: blur(5px); animation: fadeInUp 0.8s ease; display: flex; flex-direction: column; align-items: center; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.testimonial-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3); border-color: var(--primary-color); }
+.testimonial-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-color); box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); margin-bottom: 1rem; }
+.testimonial-rating { color: #f1c40f; margin-bottom: 1rem; font-size: 1.1rem; }
+.testimonial-quote { font-style: italic; margin-bottom: 1.5rem; position: relative; padding: 0 1rem; font-size: 0.95rem; color: #e0e0e0; }
+.light-theme .testimonial-quote { color: #555; }
+.testimonial-quote::before { content: '“'; position: absolute; top: -10px; left: -5px; font-size: 3rem; color: rgba(0, 255, 0, 0.3); font-family: 'Georgia', serif; }
+.testimonial-quote::after { content: '”'; position: absolute; bottom: -20px; right: -5px; font-size: 3rem; color: rgba(0, 255, 0, 0.3); font-family: 'Georgia', serif; }
+.testimonial-name { color: var(--primary-color); margin: 0; font-weight: bold; margin-top: auto; }
 
-                <hr>
+.faq-item { background: rgba(0, 255, 0, 0.1); border: 1px solid var(--card-border); border-radius: 10px; margin-bottom: 1rem; overflow: hidden; transition: all 0.4s ease; }
+.faq-question { background: rgba(0, 0, 0, 0.5); padding: 1rem; font-size: 1.1rem; font-weight: bold; color: var(--primary-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; }
+.light-theme .faq-question { background: rgba(0,0,0,0.05); }
+.faq-question:hover { background: rgba(0, 0, 0, 0.7); }
+.light-theme .faq-question:hover { background: rgba(0,0,0,0.1); }
+.faq-question .icon { font-size: 1.5rem; transition: transform 0.3s ease; }
+.faq-answer { max-height: 0; overflow: hidden; padding: 0 1rem; transition: max-height 0.4s ease-out, padding 0.4s ease-out; background: rgba(0, 0, 0, 0.3); }
+.light-theme .faq-answer { background: transparent; }
+.faq-answer p { padding: 1rem 0; }
+.faq-item.active .faq-answer { max-height: 200px; padding: 1rem; }
+.faq-item.active .faq-question .icon { transform: rotate(180deg); }
 
-                <div class="faq-section">
-                    <h2>❓ Preguntas Frecuentes</h2>
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            <span>¿Cómo es el proceso de compra?</span>
-                            <span class="icon">▼</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Simplemente selecciona el servicio que deseas, agrégalo a tu carrito y finaliza la compra por WhatsApp. Un agente te guiará con el pago y la entrega inmediata de tu cuenta.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            <span>¿En cuánto tiempo recibo mi cuenta?</span>
-                            <span class="icon">▼</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Una vez verificado el pago, la entrega es *inmediata*. Recibirás los datos de tu cuenta en pocos minutos.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            <span>¿Qué métodos de pago aceptan?</span>
-                            <span class="icon">▼</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Aceptamos pagos al BCV 🇻🇪. Para otros métodos, puedes consultarle a nuestro agente por WhatsApp.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            <span>¿Tienen garantía?</span>
-                            <span class="icon">▼</span>
-                        </div>
-                        <div class="faq-answer">
-                            <p>¡Sí! Todos nuestros servicios incluyen una garantía completa. Si surge algún problema, lo solucionamos de inmediato.</p>
-                        </div>
-                    </div>
-                </div>
-                
-            </section>
+.checkout-instructions { background: var(--cart-item-bg); border: 1px solid var(--card-border); padding: 1rem; border-radius: 8px; margin: 1.5rem 0; text-align: center; font-size: 0.9rem; }
 
-            <section id="store" class="section">
-                <h2>Nuestros Servicios de Streaming</h2>
-                
-                <div class="search-container">
-                    <input type="text" id="serviceSearch" class="search-bar" onkeyup="searchServices()" placeholder="Buscar por nombre...">
-                    <i class="fas fa-search search-icon"></i>
-                </div>
-                
-                <div class="sort-container desktop-sort">
-                    <span style="font-weight: bold;">Ordenar por:</span>
-                    <button class="sort-btn active" onclick="sortServices('popular')">🔥 Populares</button>
-                    <button class="sort-btn" onclick="sortServices('price-asc')">💰 Precio (Menor a Mayor)</button>
-                    <button class="sort-btn" onclick="sortServices('price-desc')">💰 Precio (Mayor a Menor)</button>
-                </div>
+#sound-permission-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center; color: var(--text-color); text-align: center; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+#sound-permission-modal.visible { opacity: 1; visibility: visible; }
+#sound-permission-modal .modal-content { background: var(--modal-bg); padding: 2rem 3rem; border-radius: 15px; border: 2px solid var(--primary-color); box-shadow: 0 10px 40px rgba(0, 255, 0, 0.3); max-width: 400px; animation: modalSlideIn 0.5s ease; }
+#sound-permission-modal h2 { color: var(--primary-color); margin-bottom: 1rem; }
+#sound-permission-modal p { margin-bottom: 2rem; opacity: 0.9; }
+#sound-permission-modal button { background: linear-gradient(45deg, var(--primary-color), #00cc00); color: black; border: none; padding: 1rem 2rem; border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
+#sound-permission-modal button:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(0, 255, 0, 0.4); }
 
-                <div class="sort-container mobile-sort">
-                    <label for="sort-select" style="font-weight: bold;">Ordenar por:</label>
-                    <select id="sort-select" class="sort-select" onchange="sortServices(this.value)">
-                        <option value="popular">🔥 Populares</option>
-                        <option value="price-asc">💰 Menor a Mayor</option>
-                        <option value="price-desc">💰 Mayor a Menor</option>
-                    </select>
-                </div>
-                
-                <div class="mobile-services-nav">
-                    <label for="service-category-select">Selecciona una categoría:</label>
-                    <select id="service-category-select" class="sort-select" onchange="showServicesTab(this.value)">
-                        <option value="perfiles">👤 PERFILES</option>
-                        <option value="cuentas">🏠 CUENTAS</option>
-                        <option value="combos">🧩 COMBOS</option>
-                        <option value="otros">🔧 OTROS</option>
-                    </select>
-                </div>
-                <div class="services-tabs">
-                    <div class="tab-navigation">
-                        <button class="tab-btn active" data-tab="perfiles" onclick="showServicesTab('perfiles')">👤 PERFILES</button>
-                        <button class="tab-btn" data-tab="cuentas" onclick="showServicesTab('cuentas')">🏠 CUENTAS</button>
-                        <button class="tab-btn" data-tab="combos" onclick="showServicesTab('combos')">🧩 COMBOS</button>
-                        <button class="tab-btn" data-tab="otros" onclick="showServicesTab('otros')">🔧 OTROS</button>
-                    </div>
-                </div>
+.terms-modal-overlay { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); animation: fadeIn 0.3s ease; }
+.terms-modal-content { background: var(--modal-bg); margin: 5% auto; padding: 2rem; border: 2px solid var(--primary-color); width: 90%; max-width: 800px; border-radius: 15px; position: relative; animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.terms-modal-close { color: var(--text-color); position: absolute; top: 15px; right: 25px; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
+.terms-modal-close:hover { color: var(--primary-color); transform: scale(1.2); }
+.terms-modal-content h2 { color: var(--primary-color); margin-bottom: 1.5rem; border-bottom: 1px solid var(--card-border); padding-bottom: 1rem; }
+.terms-modal-body { max-height: 60vh; overflow-y: auto; padding-right: 1rem; }
+.terms-modal-body h4 { color: var(--primary-color); margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.terms-modal-body ul { list-style-position: inside; padding-left: 1rem; }
+.terms-modal-body li { margin-bottom: 0.5rem; line-height: 1.5; }
+.terms-modal-body::-webkit-scrollbar { width: 8px; }
+.terms-modal-body::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); border-radius: 10px; }
+.terms-modal-body::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
+.terms-modal-body::-webkit-scrollbar-thumb:hover { background: #00cc00; }
 
-                <div class="loader-container" id="servicesLoader">
-                    <div class="loader"></div>
-                </div>
+.hidden { display: none !important; }
 
-                <div id="noResultsMessage" class="no-results" style="display: none;">
-                    😢 No se encontraron servicios con ese nombre. Intenta con otra búsqueda.
-                </div>
+.user-container { display: flex; align-items: center; gap: 0.5rem; }
+.user-container span {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: rgba(0, 255, 0, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    cursor: default;
+}
+.user-container span:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+    border-color: var(--primary-color);
+}
 
-                <div id="perfiles" class="services-container active">
-                    <div class="services-grid" id="perfilesGrid"></div>
-                </div>
+.auth-btn { background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 0.5rem 0.8rem; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; font-size: 0.85rem; }
+.auth-btn:hover { background: var(--primary-color); color: black; }
+.auth-btn:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+}
 
-                <div id="cuentas" class="services-container">
-                    <div class="services-grid" id="cuentasGrid"></div>
-                </div>
-                
-                <div id="combos" class="services-container">
-                    <div class="services-grid" id="combosGrid"></div>
-                </div>
+#auth-gate { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('img/fondo-login.jpg'); background-size: cover; background-position: center; z-index: 10000; display: flex; justify-content: center; align-items: center; color: white; transition: opacity 0.5s ease, visibility 0.5s ease; }
+#auth-gate.hidden { opacity: 0; visibility: hidden; }
+#auth-gate::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1; }
+.auth-gate-logo { position: absolute; top: 20px; left: 20px; z-index: 2; }
+.auth-gate-logo img { height: 50px; }
+.auth-form-container { background: rgba(0, 0, 0, 0.8); padding: 60px; border-radius: 8px; width: 90%; max-width: 450px; z-index: 2; min-height: 550px; animation: fadeInScale 0.6s ease; }
+.auth-form-container h2 { color: #fff; font-size: 2rem; font-weight: bold; margin-bottom: 2.5rem; }
+.auth-form-container .form-group { position: relative; margin-bottom: 1.5rem; }
+.auth-form-container .form-group i { position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: #8c8c8c; font-size: 1.1rem; }
+.auth-form-container .form-group input { background: #333; border: 1px solid #555; color: #fff; border-radius: 4px; height: 50px; width: 100%; padding: 1rem 1rem 1rem 3rem; font-size: 1rem; transition: background 0.2s ease, border 0.2s ease; }
+.auth-form-container .form-group input:focus { background: #444; border: 2px solid var(--primary-color); outline: none; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
+.auth-form-container .form-group input:focus + i { color: var(--primary-color); }
+.auth-submit-btn { background: linear-gradient(45deg, var(--primary-color), #00cc00); color: black; border: none; padding: 1rem; width: 100%; border-radius: 4px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; margin-top: 2rem; box-shadow: 0 4px 15px rgba(0, 255, 0, 0.2); }
+.auth-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 255, 0, 0.4); }
+.auth-submit-btn:active { transform: translateY(0); box-shadow: 0 4px 15px rgba(0, 255, 0, 0.2); }
+.auth-error { background: rgba(255, 68, 68, 0.1); border: 1px solid var(--danger-color); color: var(--danger-color); font-size: 0.9rem; text-align: left; margin-top: 1.5rem; padding: 0.8rem; border-radius: 4px; }
+.auth-error:empty { display: none; }
+.auth-toggle-text { margin-top: 2.5rem; color: #8c8c8c; font-size: 1rem; }
+.auth-toggle-text a { color: var(--primary-color); text-decoration: none; font-weight: bold; transition: color 0.2s ease; }
+.auth-toggle-text a:hover { color: #fff; text-decoration: underline; }
 
-                <div id="otros" class="services-container">
-                    <div class="services-grid" id="otrosGrid"></div>
-                </div>
-            </section>
-            
-            <section id="how-it-works" class="section">
-                <h2>¿Cómo Comprar? ¡Es muy fácil!</h2>
-                <div class="how-it-works-steps">
-                    <div class="step-card">
-                        <div class="step-icon">1</div>
-                        <h3>🛍️ Elige tu Plan</h3>
-                        <p>Navega por nuestra tienda, selecciona los servicios o combos que más te gusten y agrégalos a tu carrito de compras.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-icon">2</div>
-                        <h3>🛒 Revisa tu Carrito</h3>
-                        <p>Abre tu carrito, verifica tus productos, completa tu nombre y haz clic en "Confirmar" para generar tu pedido.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-icon">3</div>
-                        <h3>📲 Contacta por WhatsApp</h3>
-                        <p>Serás redirigido a WhatsApp con un resumen de tu pedido. Un agente te atenderá para coordinar el pago de forma segura.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-icon">4</div>
-                        <h3>🎉 ¡A Disfrutar!</h3>
-                        <p>Una vez confirmado el pago, recibirás los datos de tu cuenta de forma inmediata. ¡Así de rápido y sencillo!</p>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="about-us" class="section">
-                <h2>🚀 Tu Aliado #1 en Streaming</h2>
-                <div class="section-content">
-                    <p style="text-align: center; font-size: 1.1em;">En <strong>ConnectTV</strong>, somos más que un proveedor; somos tu socio de confianza para el mejor entretenimiento en Venezuela. Con años de experiencia, nos dedicamos a ofrecerte acceso a tus plataformas de streaming favoritas de manera <strong>rápida, segura y económica</strong>.</p>
-                    
-                    <h3 style="color: var(--primary-color); margin: 2rem 0 1.5rem; text-align: center; font-size: 1.5em;">Nuestro Compromiso Contigo es Total</h3>
-                    
-                    <div class="how-it-works-steps commitment-cards">
-                        <div class="step-card">
-                            <div class="step-icon"><i class="fas fa-bolt"></i></div>
-                            <h3>Entrega Inmediata</h3>
-                            <p>Tu tiempo es oro. Por eso, activamos tu servicio al instante después de verificar tu pago. Sin esperas, solo entretenimiento.</p>
-                        </div>
-                        <div class="step-card">
-                            <div class="step-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                            <h3>Precios Insuperables</h3>
-                            <p>Disfruta de la mejor calidad a precios que cuidan tu bolsillo, con la comodidad de pagar a la tasa del BCV 🇻🇪.</p>
-                        </div>
-                        <div class="step-card">
-                            <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
-                            <h3>Garantía Blindada</h3>
-                            <p>Tu compra está protegida. Todos nuestros servicios incluyen una garantía completa durante la vigencia de tu plan. Si algo falla, lo resolvemos.</p>
-                        </div>
-                        <div class="step-card">
-                            <div class="step-icon"><i class="fas fa-headset"></i></div>
-                            <h3>Soporte 24/7</h3>
-                            <p>¿Tienes una duda o un problema? Nuestro equipo de soporte está disponible 24/7 por WhatsApp para asistirte en lo que necesites.</p>
-                        </div>
-                    </div>
-                    
-                    <br>
-                    <div class="reseller-box" style="margin-top: 2rem;">
-                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.3em;">🤝 ¿Quieres ser Nuestro Socio? Únete como Distribuidor</h4>
-                        <p>Impulsa tu propio negocio con nosotros. Ofrecemos precios de mayorista y un panel de control personal con usuario y contraseña exclusivos para que gestiones tus ventas. ¡Es tu oportunidad de crecer!</p>
-                        <button class="reseller-btn" onclick="sendResellerMessage()">
-                            <i class="fab fa-whatsapp"></i> Solicitar Información para Distribuidores
-                        </button>
-                    </div>
-                </div>
-            </section>
-            </main>
-        
-        <div id="cartModal" class="cart-modal">
-            <div class="cart-content">
-                <div class="cart-header">
-                    <h2 id="cart-title">🛒 Tu Carrito de Compras</h2>
-                    <span class="close" onclick="closeCart()">&times;</span>
-                </div>
-                <div class="cart-body">
-                    <div class="progress-bar" id="progressBar" style="display: none;">
-                        <div class="progress-step active" data-step="1">🛒 Carrito</div>
-                        <div class="progress-step" data-step="2">📝 Tus Datos</div>
-                        <div class="progress-step" data-step="3">🏦 Pago</div>
-                        <div class="progress-step" data-step="4">✅ Confirmar</div>
-                    </div>
+.payment-options { margin: 1.5rem 0; display: grid; gap: 1rem; text-align: left; }
+.payment-option { background: var(--cart-item-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem 1.5rem; }
+.payment-option h4 { color: var(--primary-color); margin-bottom: 0.8rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.8rem; font-size: 1.1em; }
+.payment-option ul { list-style: none; padding: 0; }
+.payment-option li { padding: 0.3rem 0; font-size: 0.95em; }
+.payment-option li strong { color: #ccc; }
+.light-theme .payment-option li strong { color: #555; }
+.copy-btn {
+    background: none;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 5px;
+    margin-left: 8px;
+    font-size: 0.8em;
+    transition: all 0.2s ease;
+    vertical-align: middle;
+}
+.copy-btn:hover {
+    background: var(--primary-color);
+    color: black;
+}
+.copy-btn:active {
+    transform: scale(0.9);
+}
 
-                    <div id="cart-step-1" class="cart-step active">
-                        <div class="cart-items" id="cartItems"></div>
-                        <div class="cart-total" id="cartTotalSection">
-                            <h3>💰 Total a Pagar:</h3>
-                            <div class="total-amount" id="totalAmount">0,00 Bs</div>
-                        </div>
-                        <div class="cart-actions">
-                            <button class="empty-cart-btn" id="emptyCartBtn" onclick="emptyCart()">🗑️ Vaciar Carrito</button>
-                            <button class="checkout-btn" id="checkoutBtn" onclick="navigateToStep(2)">
-                                🚀 Continuar
-                            </button>
-                        </div>
-                        <div class="empty-cart" id="emptyCartMessage" style="display: none;">
-                            <h3>🛒 Tu carrito está vacío</h3>
-                            <p>¡Agrega algunos servicios para comenzar!</p>
-                        </div>
-                    </div>
+#cart-step-2 .form-group { position: relative; margin-bottom: 1.5rem; }
+#cart-step-2 .form-group label { display: block; color: var(--primary-color); font-weight: bold; margin-bottom: 0.5rem; transition: all 0.3s ease; }
+#cart-step-2 .form-group input { width: 100%; padding: 1rem; background: var(--input-bg); border: 2px solid var(--card-border); color: var(--text-color); border-radius: 8px; font-size: 1rem; transition: all 0.3s ease-in-out; }
+#cart-step-2 .form-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 15px rgba(0, 255, 0, 0.5), 0 0 5px rgba(0, 255, 0, 0.8) inset; }
+#cart-step-2 .form-group input:focus + label,
+#cart-step-2 .form-group input:not(:placeholder-shown) + label { color: var(--primary-color); }
 
-                    <div id="cart-step-2" class="cart-step">
-                        <h3>Completa tus datos para continuar</h3>
-                        <br>
-                        <form id="customerInfoForm" onsubmit="event.preventDefault(); navigateToStep(3);">
-                            <div class="form-group">
-                                <label for="customerName">Tu Nombre (Requerido):</label>
-                                <input type="text" id="customerName" placeholder="Escribe tu nombre y apellido" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="customerContact">Correo o WhatsApp (Opcional):</label>
-                                <input type="text" id="customerContact" placeholder="Para enviarte el comprobante y los datos">
-                            </div>
-                        </form>
-                        <div class="cart-navigation">
-                            <button class="nav-btn" onclick="navigateToStep(1)">⬅️ Volver al Carrito</button>
-                            <button class="checkout-btn" style="width: auto;" onclick="navigateToStep(3)">Continuar al Pago ➡️</button>
-                        </div>
-                    </div>
+.payment-icon { width: 32px; height: 32px; margin-right: 12px; object-fit: contain; }
+.payment-option h4 { display: flex; align-items: center; }
 
-                    <div id="cart-step-3" class="cart-step">
-                        <h3>🏦 Realiza tu Pago</h3>
-                        <p>Por favor, realiza el pago a través de una de las siguientes opciones. Luego, presiona "Continuar" para generar tu factura y enviarla por WhatsApp.</p>
-                        <div class="payment-options">
-                            <div class="payment-option">
-                                <h4><img src="icons/venezuela.png" alt="Banco de Venezuela" class="payment-icon"> Pago Móvil (Banco de Venezuela)</h4>
-                                <ul>
-                                    <li><strong>Banco:</strong> 0102 - Banco de Venezuela</li>
-                                    <li><strong>Teléfono:</strong> <span id="paymentPhoneVzla">0412-3790923</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentPhoneVzla')">📋</button></li>
-                                    <li><strong>Cédula:</strong> <span id="paymentIdVzla">V-28.308.736</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentIdVzla')">📋</button></li>
-                                </ul>
-                            </div>
-                            <div class="payment-option">
-                                <h4><img src="icons/bancamiga.png" alt="Bancamiga" class="payment-icon"> Pago Móvil (Bancamiga)</h4>
-                                <ul>
-                                    <li><strong>Banco:</strong> 0172 - Bancamiga</li>
-                                    <li><strong>Teléfono:</strong> <span id="paymentPhoneBancamiga">0412-3790923</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentPhoneBancamiga')">📋</button></li>
-                                    <li><strong>Cédula:</strong> <span id="paymentIdBancamiga">V-28.308.736</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentIdBancamiga')">📋</button></li>
-                                </ul>
-                            </div>
-                            <div class="payment-option">
-                                <h4><img src="icons/binance.png" alt="Binance Pay" class="payment-icon"> Binance Pay</h4>
-                                <ul>
-                                    <li><strong>Pay ID o Email:</strong> <span id="paymentBinance">gilbertogotera1998@gmail.com</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentBinance')">📋</button></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="cart-navigation">
-                            <button class="nav-btn" onclick="navigateToStep(2)">⬅️ Volver a Datos</button>
-                            <button class="checkout-btn" style="width: auto;" onclick="navigateToStep(4)">Continuar a Confirmación ➡️</button>
-                        </div>
-                    </div>
-
-                    <div id="cart-step-4" class="cart-step">
-                        <h3>✅ ¡Estás a un paso! Revisa tu pedido</h3>
-                        <p>Este es el resumen que enviaremos a nuestro equipo por WhatsApp.</p>
-                        <div class="checkout-instructions" id="finalSummary">
-                            </div>
-                        <div class="cart-total">
-                            <h3>💰 Total Final a Pagar:</h3>
-                            <div class="total-amount" id="finalTotalAmount">0,00 Bs</div>
-                        </div>
-                         <div class="checkout-instructions">
-                            <p><strong>Próximo Paso:</strong> Al hacer clic en "Confirmar", tu pedido se enviará por WhatsApp y un agente te atenderá para verificar el pago.</p>
-                        </div>
-                        <div class="cart-navigation">
-                             <button class="nav-btn" onclick="navigateToStep(3)">⬅️ Volver a Pago</button>
-                             <button class="checkout-btn" onclick="processCheckout()">
-                                ✅ Confirmar y Enviar Pedido a WhatsApp
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <a href="#" onclick="sendSupportMessage()" class="whatsapp-btn" target="_blank">
-            <img src="icons/whatsapp.png" alt="Contactar por WhatsApp">
-        </a>
-
-        <footer>
-            <div class="container">
-                <div class="footer-content">
-                    <p>&copy; 2024 ConnectTV. Todos los derechos reservados.</p>
-                    <p><a href="#" id="termsLink" style="color: var(--primary-color); text-decoration: underline;">Términos y Condiciones</a></p>
-                    <div class="social-links">
-                        <a href="https://www.instagram.com/connect_tv3?igsh=MTc4bWVkMWlqM2MweA=" target="_blank" aria-label="Instagram de ConnectTV"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.facebook.com/connecttv.connect" target="_blank" aria-label="Facebook de ConnectTV"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://tiktok.com/@connecttv3" target="_blank" aria-label="TikTok de ConnectTV"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://t.me/CONNECT_TV3" target="_blank" aria-label="Telegram de ConnectTV"><i class="fab fa-telegram-plane"></i></a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-
-        <div id="termsModal" class="terms-modal-overlay">
-            <div class="terms-modal-content">
-                <span class="terms-modal-close">&times;</span>
-                <h2>Términos y Condiciones de Servicio</h2>
-                <div class="terms-modal-body">
-                    <p><strong>Última actualización:</strong> 01 de septiembre de 2025</p>
-                    <p>Al adquirir cualquiera de nuestros servicios, usted acepta los siguientes términos y condiciones:</p>
-                    
-                    <h4>1. Uso de las Cuentas</h4>
-                    <ul>
-                        <li><strong>Perfiles:</strong> La compra de un "perfil" le otorga acceso a un único perfil dentro de una cuenta compartida. Está prohibido modificar los datos de inicio de sesión (correo, contraseña) o crear perfiles adicionales.</li>
-                        <li><strong>Cuentas Completas:</strong> La compra de una "cuenta completa" le otorga control administrativo sobre la misma. Puede gestionar los perfiles según el límite del plan adquirido.</li>
-                        <li>El incumplimiento de estas normas (ej: cambiar la contraseña de una cuenta compartida) resultará en la suspensión inmediata del servicio sin derecho a reembolso.</li>
-                    </ul>
-        
-                    <h4>2. Garantía y Soporte</h4>
-                    <ul>
-                        <li>Todos nuestros servicios tienen una garantía de 30 días o por la duración del plan adquirido. Si la cuenta presenta algún problema, nos comprometemos a solucionarlo en un plazo razonable.</li>
-                        <li>El soporte técnico se brinda exclusivamente a través de nuestros canales oficiales (WhatsApp).</li>
-                    </ul>
-        
-                    <h4>3. Renovaciones y Pagos</h4>
-                    <ul>
-                        <li>Los servicios no son renovables automáticamente. Es responsabilidad del cliente contactarnos para solicitar la renovación antes de la fecha de vencimiento.</li>
-                        <li>Los precios están sujetos a cambios sin previo aviso, de acuerdo con las variaciones en las tarifas de las plataformas de streaming.</li>
-                    </ul>
-        
-                    <h4>4. Política de Reembolso</h4>
-                    <ul>
-                        <li>Una vez entregado el servicio y funcionando correctamente, no se realizan reembolsos. Solo se considerará un reembolso si es imposible para nosotros restaurar o reemplazar una cuenta defectuosa.</li>
-                    </ul>
-                    <p>ConnectTV se reserva el derecho de modificar estos términos en cualquier momento. Gracias por su confianza.</p>
-                </div>
-            </div>
-        </div>
-    </div> 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    
-    <script src="servicios.js"></script>
-    <script src="script.js"></script>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registrado con éxito:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Fallo en el registro del ServiceWorker:', error);
-                    });
-            });
-        }
-    </script>
-    </body>
-
-</html>
+#about-us .commitment-cards {
+    gap: 2rem;
+}
+@media (min-width: 768px) {
+    #about-us .commitment-cards {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+#about-us .step-card {
+    background: transparent;
+    border: 2px solid var(--card-border);
+    backdrop-filter: blur(5px);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    opacity: 0;
+    animation: slideInUp 0.6s ease-out forwards;
+}
+#about-us .step-card:nth-child(1) { animation-delay: 0.2s; }
+#about-us .step-card:nth-child(2) { animation-delay: 0.4s; }
+#about-us .step-card:nth-child(3) { animation-delay: 0.6s; }
+#about-us .step-card:nth-child(4) { animation-delay: 0.8s; }
+#about-us .step-card::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: -1;
+}
+#about-us .step-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-15px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(0, 255, 0, 0.3);
+}
+#about-us .step-icon {
+    width: 80px;
+    height: 80px;
+    background: transparent;
+    border: 3px solid var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.7), inset 0 0 10px rgba(0, 255, 0, 0.5);
+    font-size: 2.5rem;
+    transition: all 0.4s ease;
+}
+#about-us .step-card:hover .step-icon {
+    background: var(--primary-color);
+    color: #000;
+    transform: rotate(360deg) scale(1.1);
+    box-shadow: 0 0 25px var(--primary-color);
+}
