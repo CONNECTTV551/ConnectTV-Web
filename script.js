@@ -107,16 +107,19 @@ function updateCartDisplay() {
 
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     
+    // Evita la animación en la carga inicial de la página
     const isInitialLoad = cartCount.textContent === '' && totalItems > 0;
 
     cartCount.textContent = totalItems;
     cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
 
+    // --- LÓGICA PARA LA NUEVA ANIMACIÓN DEL CONTADOR ---
     if (!isInitialLoad && totalItems >= 0) {
         cartCount.classList.remove('cart-updated'); 
         void cartCount.offsetWidth; 
         cartCount.classList.add('cart-updated');
     }
+    // --- FIN DE LA LÓGICA DE ANIMACIÓN ---
 
     if (cart.length === 0) {
         if(emptyCartMessage) emptyCartMessage.style.display = 'block';
@@ -247,6 +250,7 @@ function renderServices(gridId, servicesArray) {
     }
 }
 
+// --- INICIO: MODIFICACIÓN FUNCIÓN sortServices ---
 function sortServices(criteria) {
     const activeTab = document.querySelector('.services-container.active');
     if (!activeTab) return;
@@ -267,9 +271,10 @@ function sortServices(criteria) {
     } else if (criteria === 'price-asc') {
         servicesArray.sort((a, b) => a.numericPrice - b.numericPrice);
     } else if (criteria === 'price-desc') {
-        servicesArray.sort((a, b) => b.numericPrice - a.numericPrice);
+        servicesArray.sort((a, b) => b.numericPrice - b.numericPrice);
     }
 
+    // Actualiza los botones de escritorio
     document.querySelectorAll('.desktop-sort .sort-btn').forEach(btn => {
         btn.classList.remove('active');
         if (btn.getAttribute('onclick').includes(criteria)) {
@@ -277,6 +282,7 @@ function sortServices(criteria) {
         }
     });
 
+    // Actualiza el select de móvil
     const sortSelect = document.getElementById('sort-select');
     if (sortSelect) {
         sortSelect.value = criteria;
@@ -284,6 +290,7 @@ function sortServices(criteria) {
 
     renderServices(gridId, servicesArray);
 }
+// --- FIN: MODIFICACIÓN FUNCIÓN sortServices ---
 
 function loadServices() {
     const loader = document.getElementById('servicesLoader');
@@ -296,7 +303,7 @@ function loadServices() {
         renderServices('combosGrid', combos);
         renderServices('otrosGrid', otros);
         renderServices('featuredOffersGrid', featuredOffers);
-        sortServices('popular');
+        sortServices('popular'); // Ordena por popularidad por defecto
         loader.style.display = 'none';
     }, 500);
 }
@@ -315,25 +322,31 @@ function showSection(sectionId) {
     if (sectionId === 'store') showServicesTab('perfiles');
 }
 
+// ====== INICIO: MODIFICACIÓN DE LA FUNCIÓN showServicesTab ======
 function showServicesTab(tabName) {
+    // Muestra el contenedor de servicios correcto
     document.querySelectorAll('.services-container').forEach(c => c.classList.remove('active'));
     document.getElementById(tabName).classList.add('active');
 
+    // Marca como activo el botón del tab correspondiente (solo en escritorio)
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     const activeButton = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
     if (activeButton) {
         activeButton.classList.add('active');
     }
 
+    // Sincroniza el valor del menú desplegable (para móvil)
     const categorySelect = document.getElementById('service-category-select');
     if (categorySelect) {
         categorySelect.value = tabName;
     }
 
+    // Vuelve a aplicar el criterio de ordenamiento actual
     const activeSortBtn = document.querySelector('.sort-btn.active');
     const sortCriteria = activeSortBtn ? activeSortBtn.getAttribute('onclick').match(/'([^']+)'/)[1] : 'popular';
     sortServices(sortCriteria);
 }
+// ====== FIN: MODIFICACIÓN DE LA FUNCIÓN showServicesTab ======
 
 
 // --- Mensajes de WhatsApp ---
@@ -579,7 +592,6 @@ function initializeApp() {
     createDots();
     showSection('home');
     setupFAQAccordion();
-    setupFeaturesAccordion(); // <-- LLAMADA A LA NUEVA FUNCIÓN
     setupTermsModal();
     loadTheme();
     document.querySelectorAll('audio').forEach(audio => audio.load());
@@ -671,21 +683,7 @@ async function copyToClipboard(elementId) {
 }
 
 function generateFinalSummary() { const customerName = document.getElementById('customerName').value.trim(); const itemsList = cart.map(item => `<tr><td style="padding: 5px; text-align: left;">${item.quantity}x ${item.name} (${item.months} ${item.months > 1 ? 'Meses' : 'Mes'})</td><td style="padding: 5px; text-align: right;">${item.finalSubtotal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs</td></tr>`).join(''); const summaryHTML = `<div style="text-align: left; padding: 10px;"><p><strong>Cliente:</strong> ${customerName}</p><hr style="border-color: rgba(0,255,0,0.2); margin: 1rem 0;"><table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="text-align: left; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Descripción</th><th style="text-align: right; padding-bottom: 5px; border-bottom: 1px solid rgba(0,255,0,0.2);">Subtotal</th></tr></thead><tbody>${itemsList}</tbody></table></div>`; document.getElementById('finalSummary').innerHTML = summaryHTML; const total = cart.reduce((sum, item) => sum + item.finalSubtotal, 0); document.getElementById('finalTotalAmount').textContent = `${total.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs`; }
-
-// ====== INICIO: NUEVA FUNCIÓN PARA ACORDEÓN DE CARACTERÍSTICAS ======
-function setupFeaturesAccordion() {
-    const accordion = document.querySelector('.features-accordion');
-    if (!accordion) return;
-
-    const question = accordion.querySelector('.features-question');
-    
-    question.addEventListener('click', () => {
-        accordion.classList.toggle('active');
-    });
-}
-// ====== FIN: NUEVA FUNCIÓN PARA ACORDEÓN DE CARACTERÍSTICAS ======
-
-function setupFAQAccordion() { document.querySelectorAll('.faq-item').forEach(q => { q.addEventListener('click', () => { const parentItem = q.parentElement; const isActive = parentItem.classList.contains('active'); document.querySelectorAll('.faq-item.active').forEach(i => i.classList.remove('active')); if (!isActive) parentItem.classList.add('active'); }); }); }
+function setupFAQAccordion() { document.querySelectorAll('.faq-question').forEach(q => { q.addEventListener('click', () => { const parentItem = q.parentElement; const isActive = parentItem.classList.contains('active'); document.querySelectorAll('.faq-item.active').forEach(i => i.classList.remove('active')); if (!isActive) parentItem.classList.add('active'); }); }); }
 function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
 window.onclick = (event) => { if (event.target == document.getElementById('cartModal')) closeCart(); }
 const desktopToggle = document.getElementById('theme-toggle');
