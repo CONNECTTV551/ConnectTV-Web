@@ -499,18 +499,14 @@ function setupSoundPermission() {
 // ============================================
 // LÓGICA DE AUTENTICACIÓN (MODIFICADA)
 // ============================================
+
 function setupAuth() {
     const authGate = document.getElementById('auth-gate');
     const mainApp = document.getElementById('main-app');
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
-    
-    // Botones y spans de usuario para ambas vistas
     const logoutBtn = document.getElementById('logout-btn');
-    const mobileLogoutBtn = document.getElementById('mobile-logout-btn'); // <-- AÑADIDO
     const userEmailSpan = document.getElementById('user-email');
-    const mobileUserEmailSpan = document.getElementById('mobile-user-email'); // <-- AÑADIDO
-
     const showRegisterLink = document.getElementById('show-register');
     const showLoginLink = document.getElementById('show-login');
     const loginView = document.getElementById('login-view');
@@ -532,15 +528,12 @@ function setupAuth() {
         if (user) {
             authGate.classList.add('hidden');
             mainApp.classList.remove('hidden');
-            const userName = user.displayName || user.email;
-            userEmailSpan.textContent = userName;
-            mobileUserEmailSpan.textContent = userName; // <-- AÑADIDO: Actualiza el email en el menú móvil
+            userEmailSpan.textContent = user.displayName || user.email;
             initializeApp(); 
         } else {
             authGate.classList.remove('hidden');
             mainApp.classList.add('hidden');
             userEmailSpan.textContent = '';
-            mobileUserEmailSpan.textContent = ''; // <-- AÑADIDO: Limpia el email en el menú móvil
         }
     });
 
@@ -572,6 +565,9 @@ function setupAuth() {
             });
     });
 
+    // #############################################
+    // ## INICIO: BLOQUE DE CÓDIGO ACTUALIZADO    ##
+    // #############################################
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
@@ -582,18 +578,22 @@ function setupAuth() {
         auth.signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 console.log('User logged in:', userCredential.user);
+                
+                // Agregamos un pequeño retraso para asegurar que el navegador permita el sonido.
                 setTimeout(() => {
                     playSound('loginSound');
-                }, 150);
+                }, 150); // 150 milisegundos es suficiente.
+
             })
             .catch((error) => {
                  errorP.textContent = error.message;
             });
     });
+    // #############################################
+    // ## FIN: BLOQUE DE CÓDIGO ACTUALIZADO       ##
+    // #############################################
 
-    // --- LÓGICA DE LOGOUT CENTRALIZADA ---
-    const handleLogout = (event) => {
-        if (event) event.preventDefault(); // Previene que el enlace '#' recargue la página
+    logoutBtn.addEventListener('click', () => {
         if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
             auth.signOut().then(() => {
                 console.log('User signed out');
@@ -601,10 +601,7 @@ function setupAuth() {
                 console.error('Sign out error', error);
             });
         }
-    };
-
-    logoutBtn.addEventListener('click', handleLogout);
-    mobileLogoutBtn.addEventListener('click', handleLogout); // <-- AÑADIDO: Funcionalidad al botón móvil
+    });
 }
 
 function initializeApp() {
