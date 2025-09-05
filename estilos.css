@@ -769,7 +769,8 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 .mobile-menu .theme-switch-wrapper { display: none; align-items: center; justify-content: center; gap: 10px; padding: 0.8rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 5px; margin-top: 0.5rem; }
 
 @media (max-width: 992px) {
-    .nav-links, .desktop-theme-switch { display: none; }
+    /* Ocultamos los enlaces, el switch de tema de escritorio Y el contenedor del usuario */
+    .nav-links, .desktop-theme-switch, #user-container { display: none; }
     .menu-toggle { display: block; }
     .mobile-menu.active { display: flex; }
     .mobile-menu .theme-switch-wrapper { display: flex; }
