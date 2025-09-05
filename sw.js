@@ -1,9 +1,11 @@
+// nombre: sw.js
 const CACHE_NAME = 'connect-tv-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
   '/estilos.css',
   '/script.js',
+  '/servicios.js', // <-- AÑADIDO EL NUEVO ARCHIVO DE SERVICIOS AL CACHÉ
   '/img/logo.png',
   '/img/estreno1.jpg',
   '/img/estreno2.jpg',

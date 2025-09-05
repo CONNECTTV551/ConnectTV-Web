@@ -145,7 +145,7 @@
             <section id="home" class="section active">
                 <div class="hero">
                     <img src="img/logo.png" alt="ConnectTV Logo" style="height: 100px; margin-bottom: 1rem;">
-                    <h2>🍿 Bienvenido a ConnectTV 🟢</h2>
+                    <h2>🍿 Bienvenido a ConnectTV <span class="pulse-circle">🟢</span></h2>
                     <p>Tu mejor opción en servicios de streaming premium</p>
                     <div class="hero-features">
                         <h3>🎯 Características de nuestros servicios:</h3>
@@ -280,8 +280,16 @@
                 <h2>Nuestros Servicios de Streaming</h2>
                 
                 <div class="search-container">
-                    <input type="text" id="serviceSearch" class="search-bar" onkeyup="searchServices()" placeholder="🔍 Buscar por nombre...">
+                    <input type="text" id="serviceSearch" class="search-bar" onkeyup="searchServices()" placeholder="Buscar por nombre...">
+                    <i class="fas fa-search search-icon"></i>
                 </div>
+                <div class="sort-container">
+                    <span style="font-weight: bold;">Ordenar por:</span>
+                    <button class="sort-btn active" onclick="sortServices('popular')">🔥 Populares</button>
+                    <button class="sort-btn" onclick="sortServices('price-asc')">💰 Precio (Menor a Mayor)</button>
+                    <button class="sort-btn" onclick="sortServices('price-desc')">💰 Precio (Mayor a Menor)</button>
+                </div>
+                
                 <div class="services-tabs">
                     <div class="tab-navigation">
                         <button class="tab-btn active" data-tab="perfiles" onclick="showServicesTab('perfiles')">👤 PERFILES</button>
@@ -349,24 +357,24 @@
                     
                     <h3 style="color: var(--primary-color); margin: 2rem 0 1.5rem; text-align: center; font-size: 1.5em;">Nuestro Compromiso Contigo es Total</h3>
                     
-                    <div class="how-it-works-steps" style="gap: 1.5rem;">
+                    <div class="how-it-works-steps commitment-cards">
                         <div class="step-card">
-                            <div class="step-icon">⚡</div>
+                            <div class="step-icon"><i class="fas fa-bolt"></i></div>
                             <h3>Entrega Inmediata</h3>
                             <p>Tu tiempo es oro. Por eso, activamos tu servicio al instante después de verificar tu pago. Sin esperas, solo entretenimiento.</p>
                         </div>
                         <div class="step-card">
-                            <div class="step-icon">💰</div>
+                            <div class="step-icon"><i class="fas fa-hand-holding-usd"></i></div>
                             <h3>Precios Insuperables</h3>
                             <p>Disfruta de la mejor calidad a precios que cuidan tu bolsillo, con la comodidad de pagar a la tasa del BCV 🇻🇪.</p>
                         </div>
                         <div class="step-card">
-                            <div class="step-icon">🛡️</div>
+                            <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
                             <h3>Garantía Blindada</h3>
                             <p>Tu compra está protegida. Todos nuestros servicios incluyen una garantía completa durante la vigencia de tu plan. Si algo falla, lo resolvemos.</p>
                         </div>
                         <div class="step-card">
-                            <div class="step-icon">💬</div>
+                            <div class="step-icon"><i class="fas fa-headset"></i></div>
                             <h3>Soporte 24/7</h3>
                             <p>¿Tienes una duda o un problema? Nuestro equipo de soporte está disponible 24/7 por WhatsApp para asistirte en lo que necesites.</p>
                         </div>
@@ -382,8 +390,7 @@
                     </div>
                 </div>
             </section>
-
-        </main>
+            </main>
         
         <div id="cartModal" class="cart-modal">
             <div class="cart-content">
@@ -444,22 +451,22 @@
                                 <h4><img src="icons/venezuela.png" alt="Banco de Venezuela" class="payment-icon"> Pago Móvil (Banco de Venezuela)</h4>
                                 <ul>
                                     <li><strong>Banco:</strong> 0102 - Banco de Venezuela</li>
-                                    <li><strong>Teléfono:</strong> 0412-3790923</li>
-                                    <li><strong>Cédula:</strong> V-28.308.736</li>
+                                    <li><strong>Teléfono:</strong> <span id="paymentPhoneVzla">0412-3790923</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentPhoneVzla')">📋</button></li>
+                                    <li><strong>Cédula:</strong> <span id="paymentIdVzla">V-28.308.736</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentIdVzla')">📋</button></li>
                                 </ul>
                             </div>
                             <div class="payment-option">
                                 <h4><img src="icons/bancamiga.png" alt="Bancamiga" class="payment-icon"> Pago Móvil (Bancamiga)</h4>
                                 <ul>
                                     <li><strong>Banco:</strong> 0172 - Bancamiga</li>
-                                    <li><strong>Teléfono:</strong> 0412-3790923</li>
-                                    <li><strong>Cédula:</strong> V-28.308.736</li>
+                                    <li><strong>Teléfono:</strong> <span id="paymentPhoneBancamiga">0412-3790923</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentPhoneBancamiga')">📋</button></li>
+                                    <li><strong>Cédula:</strong> <span id="paymentIdBancamiga">V-28.308.736</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentIdBancamiga')">📋</button></li>
                                 </ul>
                             </div>
                             <div class="payment-option">
                                 <h4><img src="icons/binance.png" alt="Binance Pay" class="payment-icon"> Binance Pay</h4>
                                 <ul>
-                                    <li><strong>Pay ID o Email:</strong> gilbertogotera1998@gmail.com</li>
+                                    <li><strong>Pay ID o Email:</strong> <span id="paymentBinance">gilbertogotera1998@gmail.com</span> <button class="copy-btn" title="Copiar" onclick="copyToClipboard('paymentBinance')">📋</button></li>
                                 </ul>
                             </div>
                         </div>
@@ -547,9 +554,11 @@
                 </div>
             </div>
         </div>
-    </div> <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    </div> 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     
+    <script src="servicios.js"></script>
     <script src="script.js"></script>
 
     <script>
