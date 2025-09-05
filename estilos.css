@@ -693,7 +693,12 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
         justify-content: space-between; 
         gap: 0.5rem; 
     }
-    .logo h1 { font-size: 1.2rem; }
+    /* --- INICIO: MODIFICACIÓN PARA CELULARES --- */
+    /* Se oculta el H1 para dar más espacio a los íconos de la derecha */
+    .logo h1 { 
+        display: none; 
+    }
+    /* --- FIN: MODIFICACIÓN PARA CELULARES --- */
     .logo img { height: 35px; }
     .cart-button { padding: 0.5rem 0.9rem; font-size: 0.8rem; }
     .auth-btn { padding: 0.4rem 0.7rem; font-size: 0.75rem; }
