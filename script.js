@@ -565,7 +565,10 @@ function setupAuth() {
             });
     });
 
-    loginForm.addEventListener('submit', async (e) => {
+    // #############################################
+    // ## INICIO: BLOQUE DE CÓDIGO ACTUALIZADO    ##
+    // #############################################
+    loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
@@ -573,14 +576,22 @@ function setupAuth() {
         errorP.textContent = '';
 
         auth.signInWithEmailAndPassword(email, password)
-            .then(async (userCredential) => {
+            .then((userCredential) => {
                 console.log('User logged in:', userCredential.user);
-                await playSound('loginSound');
+                
+                // Agregamos un pequeño retraso para asegurar que el navegador permita el sonido.
+                setTimeout(() => {
+                    playSound('loginSound');
+                }, 150); // 150 milisegundos es suficiente.
+
             })
             .catch((error) => {
                  errorP.textContent = error.message;
             });
     });
+    // #############################################
+    // ## FIN: BLOQUE DE CÓDIGO ACTUALIZADO       ##
+    // #############################################
 
     logoutBtn.addEventListener('click', () => {
         if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
