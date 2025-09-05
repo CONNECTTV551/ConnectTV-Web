@@ -778,15 +778,6 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
 @media (max-width: 768px) {
     .container { padding: 0 15px; }
 
-    nav.container {
-        overflow-x: auto;
-        justify-content: flex-start;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    nav.container::-webkit-scrollbar {
-        display: none;
-    }
     .logo, .nav-actions {
         flex-shrink: 0;
     }
@@ -832,6 +823,10 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     }
     .logo h1 { 
         font-size: 1rem;
+        display: none; /* Oculta el texto en pantallas muy pequeñas para más espacio */
+    }
+    .nav-actions {
+        gap: 0.4rem; /* Reduce el espacio entre los botones de acción */
     }
     .logo img { height: 35px; }
     .cart-button { padding: 0.5rem 0.9rem; font-size: 0.8rem; }
