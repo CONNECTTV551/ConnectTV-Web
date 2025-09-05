@@ -299,6 +299,16 @@
                         <option value="price-desc">💰 Mayor a Menor</option>
                     </select>
                 </div>
+                
+                <div class="mobile-services-nav">
+                    <label for="service-category-select">Selecciona una categoría:</label>
+                    <select id="service-category-select" class="sort-select" onchange="showServicesTab(this.value)">
+                        <option value="perfiles">👤 PERFILES</option>
+                        <option value="cuentas">🏠 CUENTAS</option>
+                        <option value="combos">🧩 COMBOS</option>
+                        <option value="otros">🔧 OTROS</option>
+                    </select>
+                </div>
                 <div class="services-tabs">
                     <div class="tab-navigation">
                         <button class="tab-btn active" data-tab="perfiles" onclick="showServicesTab('perfiles')">👤 PERFILES</button>

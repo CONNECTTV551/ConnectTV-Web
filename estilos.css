@@ -397,6 +397,28 @@ main { margin-top: 80px; padding: 2rem 0; position: relative; z-index: 2; }
 }
 /* --- FIN: MODIFICACIÓN ORDENAR POR PRECIO --- */
 
+/* ====== INICIO: ESTILOS PARA MENÚ DESPLEGABLE MÓVIL DE CATEGORÍAS ====== */
+.mobile-services-nav {
+    display: none; /* Oculto por defecto en escritorio */
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.mobile-services-nav label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+#service-category-select {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+}
+/* ====== FIN: ESTILOS PARA MENÚ DESPLEGABLE MÓVIL DE CATEGORÍAS ====== */
+
+
 .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 1.5rem 0; }
 .services-container { display: none; animation: fadeInScale 0.6s ease; }
 .services-container.active { display: block; }
@@ -672,10 +694,16 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     .features-grid { grid-template-columns: 1fr; gap: 0.5rem; font-size: 0.85rem; }
     .cart-content { margin: 5% auto; width: 95%; max-height: 85vh; }
     .hero-features { padding: 0.8rem; }
-    .tab-navigation { flex-direction: column; width: 100%; }
-    .tab-btn { padding: 0.8rem 1.5rem; font-size: 0.9rem; width: 100%; max-width: 300px; margin-bottom: 0.5rem; }
-
-    /* --- INICIO: MODIFICACIÓN ORDENAR POR PRECIO (MEDIA QUERY) --- */
+    
+    /* ====== INICIO: MODIFICACIÓN NAVEGACIÓN DE CATEGORÍAS MÓVIL ====== */
+    .services-tabs {
+        display: none; /* Oculta los botones en móvil */
+    }
+    .mobile-services-nav {
+        display: block; /* Muestra el menú desplegable en móvil */
+    }
+    /* ====== FIN: MODIFICACIÓN NAVEGACIÓN DE CATEGORÍAS MÓVIL ====== */
+    
     .desktop-sort { display: none; }
     .mobile-sort {
         display: flex;
@@ -684,7 +712,6 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
         gap: 1rem;
         margin-bottom: 1.5rem;
     }
-    /* --- FIN: MODIFICACIÓN ORDENAR POR PRECIO (MEDIA QUERY) --- */
 }
 
 @media (max-width: 480px) {
@@ -693,15 +720,12 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
         justify-content: space-between; 
         gap: 0.5rem; 
     }
-    /* --- INICIO: MODIFICACIÓN PARA CELULARES --- */
-    /* Se reduce el tamaño del nombre y el espacio para que quepa todo */
     .logo {
-        gap: 5px; /* Reduce el espacio entre la imagen y el texto */
+        gap: 5px;
     }
     .logo h1 { 
-        font-size: 1rem; /* Reduce el tamaño del texto "ConnectTV" */
+        font-size: 1rem;
     }
-    /* --- FIN: MODIFICACIÓN PARA CELULARES --- */
     .logo img { height: 35px; }
     .cart-button { padding: 0.5rem 0.9rem; font-size: 0.8rem; }
     .auth-btn { padding: 0.4rem 0.7rem; font-size: 0.75rem; }

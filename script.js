@@ -322,15 +322,31 @@ function showSection(sectionId) {
     if (sectionId === 'store') showServicesTab('perfiles');
 }
 
+// ====== INICIO: MODIFICACIÓN DE LA FUNCIÓN showServicesTab ======
 function showServicesTab(tabName) {
+    // Muestra el contenedor de servicios correcto
     document.querySelectorAll('.services-container').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(tabName).classList.add('active');
-    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+    // Marca como activo el botón del tab correspondiente (solo en escritorio)
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const activeButton = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+
+    // Sincroniza el valor del menú desplegable (para móvil)
+    const categorySelect = document.getElementById('service-category-select');
+    if (categorySelect) {
+        categorySelect.value = tabName;
+    }
+
+    // Vuelve a aplicar el criterio de ordenamiento actual
     const activeSortBtn = document.querySelector('.sort-btn.active');
     const sortCriteria = activeSortBtn ? activeSortBtn.getAttribute('onclick').match(/'([^']+)'/)[1] : 'popular';
     sortServices(sortCriteria);
 }
+// ====== FIN: MODIFICACIÓN DE LA FUNCIÓN showServicesTab ======
 
 
 // --- Mensajes de WhatsApp ---
