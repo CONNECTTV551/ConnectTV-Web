@@ -694,9 +694,12 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
         gap: 0.5rem; 
     }
     /* --- INICIO: MODIFICACIÓN PARA CELULARES --- */
-    /* Se oculta el H1 para dar más espacio a los íconos de la derecha */
+    /* Se reduce el tamaño del nombre y el espacio para que quepa todo */
+    .logo {
+        gap: 5px; /* Reduce el espacio entre la imagen y el texto */
+    }
     .logo h1 { 
-        display: none; 
+        font-size: 1rem; /* Reduce el tamaño del texto "ConnectTV" */
     }
     /* --- FIN: MODIFICACIÓN PARA CELULARES --- */
     .logo img { height: 35px; }
