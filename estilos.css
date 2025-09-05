@@ -1036,3 +1036,22 @@ footer { background: var(--header-bg); text-align: center; padding: 2rem 0; marg
     transform: rotate(360deg) scale(1.1);
     box-shadow: 0 0 25px var(--primary-color);
 }
+
+/* ======================================================= */
+/* INICIO: MODIFICACIÓN - Elimina efecto de brillo en botones */
+/* ======================================================= */
+/*
+  Esta regla deshabilita el elemento que crea el efecto de 
+  barrido brillante (sombra blanca/gris) en los botones
+  cuando se pasa el mouse sobre ellos.
+*/
+.add-to-cart-btn::before, 
+.checkout-btn::before, 
+.cart-button::before, 
+.auth-submit-btn::before, 
+.reseller-btn::before {
+    display: none;
+}
+/* ======================================================= */
+/* FIN: MODIFICACIÓN                                       */
+/* ======================================================= */
